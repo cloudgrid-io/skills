@@ -50,10 +50,10 @@ Drop `--follow` for a one-time tail. `--since 5m` limits how far back to read.
 
 ### 4. Share
 
-Make the entity reachable by anyone with the link, then read back the URL:
+Make the entity reachable by anyone with the link. The command prints the URL:
 
 ```
-cloudgrid visibility my-thing link
+cloudgrid visibility set my-thing link
 ```
 
 ### 5. Read feedback
