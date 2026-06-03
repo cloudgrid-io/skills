@@ -34,10 +34,20 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
    Claude Code users can also run `/plugin marketplace add cloudgrid-io/skills`.
    See [INSTALL.md](INSTALL.md) for Codex, Cursor, and manual methods.
 
+## Share something in one step, no login
+
+```
+/cloudgrid:drop index.html
+```
+
+`cloudgrid-drop` publishes an HTML page or file and hands back a public URL. No
+account, no CLI. The link lasts 7 days, and you can sign in later to keep it.
+
 ## Skills
 
 | Skill | Invoke | What it does |
 |---|---|---|
+| `cloudgrid-drop` | `/cloudgrid:drop` | Share an HTML page or file, get a public URL. No login. |
 | `cloudgrid-init` | `/cloudgrid:init` | Scaffold a new app or agent. |
 | `cloudgrid-plug` | `/cloudgrid:plug` | Deploy a directory or URL. Live in about 30 seconds. |
 | `cloudgrid-logs` | `/cloudgrid:logs` | Tail logs for an entity. |

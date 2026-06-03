@@ -7,11 +7,20 @@
 
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { readFile } from "node:fs/promises";
+import { basename } from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
 const execFileAsync = promisify(execFile);
+
+// Public API base. The anonymous drop calls this directly — there is no CLI and
+// no login in that path, so there is nothing to read it from.
+const API_BASE = (process.env.CLOUDGRID_API_URL || "https://api.cloudgrid.io").replace(/\/+$/, "");
+
+// Anonymous HTML drops are capped at 2 MB by the platform.
+const ANON_HTML_MAX_BYTES = 2_000_000;
 
 // Run the cloudgrid CLI with an argument array. No shell, so no injection: args
 // are passed to execFile verbatim. Returns trimmed stdout (or stderr) as text.
@@ -53,6 +62,79 @@ function cliTool(buildArgs) {
       return fail(err.message);
     }
   };
+}
+
+// True when a string already opens a full HTML document. Fragments get wrapped so
+// "drop this snippet" still produces a servable page (the platform rejects
+// fragments that do not start with <!doctype/<html>).
+function looksLikeFullHtml(s) {
+  const head = s.replace(/^﻿/, "").trimStart().slice(0, 256).toLowerCase();
+  return head.startsWith("<!doctype html") || head.startsWith("<html");
+}
+
+// The anonymous drop. Unlike every other tool here, this does NOT use the CLI:
+// the anonymous path has no identity to manage, so it posts straight to the
+// public endpoint. Returns the live shareable URL and the claim link.
+async function runDrop({ html, path: filePath, filename }) {
+  let bytes;
+  let name;
+  let type;
+
+  if (filePath) {
+    bytes = await readFile(filePath);
+    name = filename || basename(filePath);
+    type = "application/octet-stream"; // server sniffs magic bytes regardless
+  } else if (typeof html === "string" && html.length > 0) {
+    let content = html;
+    if (!looksLikeFullHtml(content)) {
+      content =
+        `<!doctype html>\n<html lang="en">\n<head><meta charset="utf-8">` +
+        `<title>Shared on CloudGrid</title></head>\n<body>\n${content}\n</body>\n</html>\n`;
+    }
+    bytes = Buffer.from(content, "utf8");
+    name = filename || "index.html";
+    type = "text/html";
+    if (bytes.byteLength > ANON_HTML_MAX_BYTES) {
+      throw new Error(
+        `This HTML is ${(bytes.byteLength / 1e6).toFixed(2)} MB. Anonymous drops are capped at 2 MB. ` +
+          `Trim it, or sign in to publish larger.`,
+      );
+    }
+  } else {
+    throw new Error("Provide either `html` (inline content) or `path` (a local file).");
+  }
+
+  const form = new FormData();
+  form.append("artifact", new Blob([bytes], { type }), name);
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE}/api/v2/drop/auto`, { method: "POST", body: form });
+  } catch (err) {
+    throw new Error(`Could not reach CloudGrid at ${API_BASE}: ${err.message}`);
+  }
+
+  const raw = await res.text();
+  let data = null;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    // leave data null; handled below
+  }
+
+  if (!res.ok) {
+    const msg = data?.error?.message || data?.message || raw || `HTTP ${res.status}`;
+    throw new Error(`Drop failed (HTTP ${res.status}): ${msg}`);
+  }
+
+  const lines = [`Live: ${data.url}`];
+  if (data.expires_at) {
+    lines.push(`Expires ${data.expires_at} — anonymous drops last 7 days.`);
+  }
+  if (data.claim_url) {
+    lines.push(`Sign in to claim it and keep it past 7 days: ${data.claim_url}`);
+  }
+  return lines.join("\n");
 }
 
 const server = new McpServer({ name: "cloudgrid-mcp", version: "0.1.0" });
@@ -171,6 +253,32 @@ server.tool(
     if (org) args.push("--org", org);
     return args;
   }),
+);
+
+server.tool(
+  "cloudgrid_drop",
+  "Share an artifact instantly with no login: publish an HTML page (or a file) to CloudGrid and get a public shareable URL. Use when the user wants to share, publish, send, or 'deploy' something and is not signed in, or just wants a link to send a friend. Anonymous: inspirations only, 7-day expiry, claimable later. Calls the API directly; does not use the CLI.",
+  {
+    html: z
+      .string()
+      .optional()
+      .describe("Inline HTML to publish. A fragment is wrapped into a full document."),
+    path: z
+      .string()
+      .optional()
+      .describe("Path to a local file to upload instead of inline HTML."),
+    filename: z
+      .string()
+      .optional()
+      .describe("Filename to present. Defaults to index.html for inline HTML."),
+  },
+  async (input) => {
+    try {
+      return ok(await runDrop(input || {}));
+    } catch (err) {
+      return fail(err.message);
+    }
+  },
 );
 
 const transport = new StdioServerTransport();
