@@ -52,14 +52,22 @@ Then point your agent at the cloned directory.
 
 ## MCP server
 
-The MCP server is in progress. When published, install it with:
+The MCP server lives in `mcp-server/`. Run it from a clone today:
+
+```
+cd mcp-server
+npm install
+npm start
+```
+
+The published package lands at launch. After that:
 
 ```
 npx -y @cloudgrid-io/mcp
 ```
 
-It wraps the same `cloudgrid` CLI and reads the same credentials, so no extra
-login is needed.
+It wraps the same `cloudgrid` CLI and uses the same credentials, so no extra login
+is needed. See [mcp-server/README.md](mcp-server/README.md).
 
 ## For agents
 

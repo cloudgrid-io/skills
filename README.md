@@ -56,8 +56,10 @@ walks through it end to end.
 
 ## MCP server
 
-An MCP server exposes the same six actions as MCP tools, for agents that speak the
-Model Context Protocol. It is in progress; see [INSTALL.md](INSTALL.md) for status.
+`mcp-server/` exposes the same six actions as MCP tools, for agents that speak the
+Model Context Protocol. It wraps the same `cloudgrid` CLI. You can run it from a
+clone today; the published `@cloudgrid-io/mcp` package lands at launch. See
+[mcp-server/README.md](mcp-server/README.md).
 
 ## License
 

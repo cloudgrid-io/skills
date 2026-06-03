@@ -1,0 +1,30 @@
+{
+  "name": "@cloudgrid-io/mcp",
+  "version": "0.1.0",
+  "description": "MCP server for CloudGrid. Exposes init, plug, logs, share, feedback, and brain as MCP tools by wrapping the cloudgrid CLI.",
+  "type": "module",
+  "bin": {
+    "cloudgrid-mcp": "src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "smoke": "node test/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cloudgrid-io/skills/tree/main/mcp-server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cloudgrid-io/skills.git",
+    "directory": "mcp-server"
+  }
+}
