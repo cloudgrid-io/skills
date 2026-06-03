@@ -77,12 +77,18 @@ Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
 
 1. Bootstraps: install `@cloudgrid-io/cli` if missing, prompt `cloudgrid login`
    if not authenticated.
-2. Wraps only the `cloudgrid` CLI. No direct API calls — with one sanctioned
-   exception: the **anonymous drop** (`cloudgrid-drop` skill, `cloudgrid_drop` MCP
-   tool) calls `POST /api/v2/drop/auto` directly. The anonymous path has no identity
-   to manage, so the CLI adds nothing; calling it directly is what lets the drop work
-   with nothing installed and nobody signed in. Do not "fix" it to use the CLI.
-   Everything authenticated still wraps the CLI.
+2. Wraps only the `cloudgrid` CLI. No direct API calls — with two sanctioned
+   exceptions, both about working without the CLI:
+   - the **anonymous drop** (`cloudgrid-drop`, `cloudgrid_drop`) calls
+     `POST /api/v2/drop/auto` — the anonymous path has no identity to manage, so the
+     CLI adds nothing.
+   - the **CLI-free login** (`cloudgrid-login`, `cloudgrid_login` +
+     `cloudgrid_login_status`) drives `GET /auth/login` + `/auth/status` — it exists
+     precisely to get an identity without the CLI, and writes the same
+     `~/.cloudgrid/credentials` the CLI uses, so the two share one identity.
+
+   Do not "fix" either to use the CLI. Everything else (authenticated ops) still
+   wraps the CLI.
 3. Detects the user's language from their first message and replies in it.
    Technical flags stay in English.
 4. Prints results concisely — URLs and short summaries, never raw JSON or IDs.

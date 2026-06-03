@@ -1,7 +1,7 @@
 {
   "name": "@cloudgrid-io/mcp",
-  "version": "0.1.1",
-  "description": "MCP server for CloudGrid. Exposes init, plug, logs, share, feedback, brain, and an anonymous drop as MCP tools.",
+  "version": "0.1.2",
+  "description": "MCP server for CloudGrid. Exposes drop, init, plug, logs, share, feedback, brain, and CLI-free login as MCP tools.",
   "type": "module",
   "bin": {
     "cloudgrid-mcp": "src/index.js"
@@ -15,7 +15,9 @@
   "scripts": {
     "start": "node src/index.js",
     "smoke": "node test/smoke.mjs",
-    "smoke:drop": "node test/smoke-drop.mjs"
+    "smoke:drop": "node test/smoke-drop.mjs",
+    "smoke:login": "node test/smoke-login.mjs",
+    "test:auth": "node test/auth.test.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

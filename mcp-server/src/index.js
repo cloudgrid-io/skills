@@ -12,6 +12,30 @@ import { basename } from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import {
+  newLoginCode,
+  buildLoginUrl,
+  pollStatusOnce,
+  writeCredentials,
+  credentialsPath,
+} from "./auth.js";
+
+// The in-progress sign-in code, held between cloudgrid_login and
+// cloudgrid_login_status calls. The server process lives for the session.
+let pendingLoginCode = null;
+
+// Best-effort: open the user's browser at the sign-in URL. Never throws; the URL
+// is always returned to the user regardless. Suppressed by CLOUDGRID_NO_BROWSER.
+function tryOpenBrowser(url) {
+  if (process.env.CLOUDGRID_NO_BROWSER === "1") return;
+  const cmd =
+    process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+  try {
+    execFile(cmd, [url], () => {});
+  } catch {
+    // ignore — the URL is returned to the user anyway
+  }
+}
 
 const execFileAsync = promisify(execFile);
 
@@ -278,6 +302,65 @@ server.tool(
     } catch (err) {
       return fail(err.message);
     }
+  },
+);
+
+server.tool(
+  "cloudgrid_login",
+  "Start a CLI-free CloudGrid sign-in. Use when the user wants to log in, sign in, or authenticate without installing the CLI, or to claim an anonymous drop. Returns a URL to open in the browser; then call cloudgrid_login_status to finish. Uses CloudGrid's existing OAuth; writes the token to the shared CLI credentials.",
+  {},
+  async () => {
+    const code = newLoginCode();
+    pendingLoginCode = code;
+    const url = buildLoginUrl(code);
+    tryOpenBrowser(url);
+    return ok(
+      `To sign in, open this URL in your browser and finish with Google:\n${url}\n\n` +
+        `After you complete it, run cloudgrid_login_status to finish signing in.`,
+    );
+  },
+);
+
+server.tool(
+  "cloudgrid_login_status",
+  "Finish a sign-in started by cloudgrid_login. Polls once: if you have completed the browser sign-in, it saves your credentials; otherwise it tells you to finish and try again.",
+  {
+    code: z
+      .string()
+      .optional()
+      .describe("The sign-in code. Defaults to the most recent cloudgrid_login."),
+  },
+  async (input) => {
+    const code = input?.code || pendingLoginCode;
+    if (!code) {
+      return fail("No sign-in is in progress. Run cloudgrid_login first.");
+    }
+    let status;
+    try {
+      status = await pollStatusOnce(code);
+    } catch (err) {
+      return fail(err.message);
+    }
+    if (status.status === "authenticated" && status.jwt) {
+      let creds;
+      try {
+        creds = await writeCredentials(status.jwt);
+      } catch (err) {
+        return fail(`Signed in, but could not save credentials: ${err.message}`);
+      }
+      pendingLoginCode = null;
+      return ok(
+        `Signed in${creds.email ? ` as ${creds.email}` : ""}. ` +
+          `Credentials saved to ${credentialsPath()}.`,
+      );
+    }
+    if (status.status === "pending" || status.status === "not_started") {
+      return ok(
+        "Still waiting for you to finish signing in. Open the URL from cloudgrid_login " +
+          "in your browser, complete it with Google, then run cloudgrid_login_status again.",
+      );
+    }
+    return fail("The sign-in window expired (5 minutes). Run cloudgrid_login to start again.");
   },
 );
 
