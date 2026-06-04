@@ -14,7 +14,15 @@ import { mkdir, writeFile, chmod, readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
+// Base for server-to-API calls. On a hosted deployment this is the in-cluster
+// service address (CLOUDGRID_API_URL), which is fast but NOT reachable by a browser.
 const API_BASE = (process.env.CLOUDGRID_API_URL || "https://api.cloudgrid.io").replace(/\/+$/, "");
+
+// Base for URLs handed to the user's browser (the sign-in link). Must be public,
+// regardless of the internal API address. Defaults to the public host.
+const PUBLIC_API_BASE = (
+  process.env.CLOUDGRID_PUBLIC_API_URL || "https://api.cloudgrid.io"
+).replace(/\/+$/, "");
 
 export function cloudgridHome() {
   return process.env.CLOUDGRID_HOME || join(homedir(), ".cloudgrid");
@@ -28,8 +36,9 @@ export function newLoginCode() {
   return randomUUID();
 }
 
+// The sign-in URL the user opens in a browser — always the public host.
 export function buildLoginUrl(code) {
-  return `${API_BASE}/auth/login?code=${encodeURIComponent(code)}`;
+  return `${PUBLIC_API_BASE}/auth/login?code=${encodeURIComponent(code)}`;
 }
 
 // One poll. Returns { status: 'not_started' | 'pending' | 'authenticated' | 'expired', jwt? }.

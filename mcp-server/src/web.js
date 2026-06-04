@@ -80,7 +80,7 @@ app.post("/mcp", async (req, res) => {
     transport.onclose = () => {
       if (transport.sessionId) delete transports[transport.sessionId];
     };
-    const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.1" });
+    const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.2" });
     registerTools(server, makeWebContext(newSessionId));
     await server.connect(transport);
   }
