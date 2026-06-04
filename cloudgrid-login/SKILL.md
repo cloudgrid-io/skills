@@ -1,5 +1,5 @@
 ---
-version: 0.1.8
+version: 0.2.0
 name: cloudgrid-login
 description: |
   Sign in to CloudGrid, with or without the CLI. Use when the user wants to log in,

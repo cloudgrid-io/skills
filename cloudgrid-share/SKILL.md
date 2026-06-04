@@ -1,5 +1,5 @@
 ---
-version: 0.1.4
+version: 0.2.0
 name: cloudgrid-share
 description: |
   Make a CloudGrid entity shareable and print its URL. Use when the user wants to

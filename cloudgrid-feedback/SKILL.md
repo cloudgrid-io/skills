@@ -1,5 +1,5 @@
 ---
-version: 0.1.5
+version: 0.2.0
 name: cloudgrid-feedback
 description: |
   Read the CloudGrid feedback feed. Use when the user wants to see feedback, check

@@ -1,5 +1,5 @@
 ---
-version: 0.1.6
+version: 0.2.0
 name: cloudgrid-brain
 description: |
   Refresh a CloudGrid entity's Grid Brain metadata. Use when the user wants to
