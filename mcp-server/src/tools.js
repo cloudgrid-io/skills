@@ -120,6 +120,15 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org }) 
     }
   }
 
+  // Anonymous path on a hosted server: present the trusted-server credential so the
+  // platform keys the anon-drop cap on the per-user id instead of the shared cluster
+  // egress IP. A missing/bad secret silently falls back to the IP cap server-side, so
+  // this is safe to send whenever configured. Only the web edition sets ctx.trustedServer.
+  if (!headers["Authorization"] && ctx.trustedServer?.secret && ctx.trustedServer?.endUserId) {
+    headers["X-CloudGrid-Trusted-Server-Auth"] = ctx.trustedServer.secret;
+    headers["X-CloudGrid-Trusted-Server-End-User"] = ctx.trustedServer.endUserId;
+  }
+
   const form = new FormData();
   form.append("artifact", new Blob([bytes], { type }), name);
   if (orgSlug) form.append("org_slug", orgSlug);

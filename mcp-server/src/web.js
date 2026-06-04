@@ -17,8 +17,15 @@ import { registerTools, decodeJwt } from "./tools.js";
 
 const PORT = Number(process.env.PORT || 8080);
 
-// A web session: identity lives in memory for the session's lifetime only.
-function makeWebContext() {
+// The trusted-server credential, if this host is provisioned as one. Sent on
+// anonymous drops so the platform keys the anon-drop cap on the per-user id rather
+// than the shared cluster egress IP. Missing/bad secret falls back to the IP cap
+// server-side, so it is safe to leave unset.
+const TRUSTED_SERVER_SECRET = process.env.MCP_TRUSTED_SERVER_SECRET || null;
+
+// A web session: identity lives in memory for the session's lifetime only. The
+// session id doubles as the stable, opaque end-user id for the trusted-server cap.
+function makeWebContext(sessionId) {
   let sessionToken = null;
   return {
     edition: "web",
@@ -33,6 +40,9 @@ function makeWebContext() {
       return decodeJwt(jwt);
     },
     savedLocationNote: () => "You are signed in for this session.",
+    trustedServer: TRUSTED_SERVER_SECRET
+      ? { secret: TRUSTED_SERVER_SECRET, endUserId: sessionId }
+      : null,
   };
 }
 
@@ -57,9 +67,12 @@ app.post("/mcp", async (req, res) => {
       });
       return;
     }
-    // New session: fresh server + per-session identity context.
+    // New session: fresh server + per-session identity context. Generate the session
+    // id up front so it is also the trusted-server end-user id. (Distinct name from the
+    // incoming `sessionId` header above.)
+    const newSessionId = randomUUID();
     transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: () => randomUUID(),
+      sessionIdGenerator: () => newSessionId,
       onsessioninitialized: (sid) => {
         transports[sid] = transport;
       },
@@ -67,8 +80,8 @@ app.post("/mcp", async (req, res) => {
     transport.onclose = () => {
       if (transport.sessionId) delete transports[transport.sessionId];
     };
-    const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.0" });
-    registerTools(server, makeWebContext());
+    const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.1" });
+    registerTools(server, makeWebContext(newSessionId));
     await server.connect(transport);
   }
 

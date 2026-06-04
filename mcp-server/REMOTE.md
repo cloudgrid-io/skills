@@ -59,12 +59,20 @@ through the server:
 
 Anonymous drop needs no sign-in and works immediately.
 
-## Launch follow-ups
+## Trusted-server credential (anonymous-drop cap)
 
-- **Anonymous-drop cap.** Anonymous drops are capped per IP. A shared host sends
-  them from one IP, so the cap is hit quickly across users. This needs a platform
-  affordance (a trusted-server key that relaxes the cap with its own controls) —
-  see the platform backlog.
+Anonymous drops are capped per IP. A shared host sends them all from one cluster
+egress IP, so the cap is hit quickly. Provision this host as a trusted server and
+the platform keys the cap on the per-user id instead:
+
+- Set `MCP_TRUSTED_SERVER_SECRET` in the deployment env (the same cluster Secret the
+  API validates against). When set, the web edition sends, on anonymous drops:
+  - `X-CloudGrid-Trusted-Server-Auth: <MCP_TRUSTED_SERVER_SECRET>`
+  - `X-CloudGrid-Trusted-Server-End-User: <MCP session id>` (stable, opaque per session)
+- A missing or wrong secret falls back to the per-IP cap server-side (never an error),
+  so it is safe to deploy before the Secret is provisioned.
+
+## Launch follow-ups
 - **Transport-level OAuth.** For a native "Connect" experience in claude.ai, the
   server can implement the MCP OAuth flow rather than the in-tool login. Follow-up.
 - **CORS / DNS-rebinding / allowed hosts.** Configure at deploy time for the public
