@@ -35,7 +35,9 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
    The skills then auto-trigger from what you say ("drop this HTML to CloudGrid"),
    or you can call one directly, for example `/cloudgrid:drop`.
 
-   See [INSTALL.md](INSTALL.md) for Codex, Cursor, and other methods.
+   Using a different client — Claude Desktop, Cursor, claude.ai, ChatGPT — or want
+   every install/invoke path in one place? See [USAGE.md](USAGE.md).
+   See [INSTALL.md](INSTALL.md) for the short install reference.
 
 ## Share something in one step, no login
 
