@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-share
+name: share
 description: |
   Make a CloudGrid entity shareable and print its URL. Use when the user wants to
   share a link, make something public, send an app to someone, or get a shareable

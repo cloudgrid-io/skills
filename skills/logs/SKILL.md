@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-logs
+name: logs
 description: |
   Tail logs for a CloudGrid entity. Use when the user wants to see logs, watch
   output, follow a running app, debug a deploy, or check why something is failing.
