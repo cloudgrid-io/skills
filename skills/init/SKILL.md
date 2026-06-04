@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-init
+name: init
 description: |
   Scaffold a new CloudGrid app or agent. Use when the user wants to start a new
   project, create a new entity, set up a new app or agent, or seed a web service
@@ -12,7 +12,7 @@ allowed-tools: Bash
 # CloudGrid Init
 
 Register a new app or agent in the active org and, optionally, seed a web service
-to deploy. Wraps `cloudgrid init`. After this, `cloudgrid-plug` deploys it.
+to deploy. Wraps `cloudgrid init`. After this, `/cloudgrid:plug` deploys it.
 
 ## Step 0 — Bootstrap
 
@@ -65,7 +65,7 @@ cloudgrid init app my-thing
 ## After init
 
 Tell the user the entity is registered and what is next: `cd` into the directory
-(if seeded) and run `cloudgrid plug` to deploy. Hand off to `cloudgrid-plug`.
+(if seeded) and run `cloudgrid plug` to deploy. Hand off to `/cloudgrid:plug`.
 
 ## References
 

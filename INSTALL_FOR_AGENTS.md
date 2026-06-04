@@ -31,12 +31,15 @@ Do not attempt to log in for them. Do not invent an auth flow.
 The skills live in this repo, one directory per skill, each with a `SKILL.md`.
 Load the `SKILL.md` for the action the user wants:
 
-- `cloudgrid-init/SKILL.md` — scaffold a new app or agent
-- `cloudgrid-plug/SKILL.md` — deploy a directory or URL
-- `cloudgrid-logs/SKILL.md` — tail logs
-- `cloudgrid-share/SKILL.md` — make an entity shareable
-- `cloudgrid-feedback/SKILL.md` — read the feedback feed
-- `cloudgrid-brain/SKILL.md` — refresh Grid Brain metadata
+- `skills/drop/SKILL.md` — share an artifact, get a URL (no login needed)
+- `skills/login/SKILL.md` — sign in, with or without the CLI
+- `skills/claim/SKILL.md` — claim an anonymous drop into the account
+- `skills/init/SKILL.md` — scaffold a new app or agent
+- `skills/plug/SKILL.md` — deploy a directory or URL
+- `skills/logs/SKILL.md` — tail logs
+- `skills/share/SKILL.md` — make an entity shareable
+- `skills/feedback/SKILL.md` — read the feedback feed
+- `skills/brain/SKILL.md` — refresh Grid Brain metadata
 
 ## 4. Follow the skill
 

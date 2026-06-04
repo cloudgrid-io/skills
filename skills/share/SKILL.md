@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-share
+name: share
 description: |
   Make a CloudGrid entity shareable and print its URL. Use when the user wants to
   share a link, make something public, send an app to someone, or get a shareable
@@ -51,5 +51,5 @@ using a wider mode than they asked for.
 
 ## After share
 
-Print the outlet URL on its own line so it is easy to copy. Then, if it fits,
-offer `cloudgrid-feedback` to see what people say about it.
+Print the outlet URL on its own line, by itself, so it can be copied in one go.
+Then, if it fits, offer the `feedback` skill to see what people say about it.

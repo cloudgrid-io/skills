@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-claim
+name: claim
 description: |
   Claim an anonymous CloudGrid drop into the user's account. Use when the user
   dropped something anonymously and now wants to keep it, own it, or stop it from
@@ -18,7 +18,7 @@ already shared keeps working.
 
 ## Step 0 — sign in first
 
-Claiming needs an identity. If the user is not signed in, run the `cloudgrid-login`
+Claiming needs an identity. If the user is not signed in, run the `/cloudgrid:login`
 skill (or `cloudgrid login` with the CLI) first.
 
 ## What you need

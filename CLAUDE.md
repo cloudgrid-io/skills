@@ -57,9 +57,10 @@ Example:
 .claude-plugin/      marketplace.json + plugin.json (Claude Code shape)
 .codex-plugin/       plugin.json (Codex shape)
 .cursor-plugin/      plugin.json (Cursor shape)
-<skill-name>/        one directory per skill
-  SKILL.md           YAML frontmatter + markdown body
-  references/         optional supporting docs
+skills/              all skills live here (required by Claude Code plugins)
+  <skill-name>/      one directory per skill (short name, e.g. drop)
+    SKILL.md         YAML frontmatter + markdown body
+    references/      optional supporting docs
 mcp-server/          Node ESM MCP server, published as @cloudgrid-io/mcp
 .github/             CI: license check + SKILL.md frontmatter linter
 INSTALL.md           human install
@@ -93,7 +94,9 @@ Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
    Technical flags stay in English.
 4. Prints results concisely — URLs and short summaries, never raw JSON or IDs.
 
-Skill names start with `cloudgrid-`.
+Skills live under `skills/<name>/` with a short directory name (e.g. `drop`). The
+plugin is named `cloudgrid`, so a skill is invoked as `/cloudgrid:<name>` (for
+example `/cloudgrid:drop`) and also auto-triggers from its `description`.
 
 ## Versioning
 

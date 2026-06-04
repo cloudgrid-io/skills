@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-plug
+name: plug
 description: |
   Deploy a directory or URL to CloudGrid. Use when the user wants to ship, deploy,
   publish, or go live with the current project, or turn a URL into a hosted entity.
@@ -49,8 +49,8 @@ Pass `--org <slug>` to skip that prompt.
 
 ## After plug
 
-Print the live URL plainly. Then offer the next steps: `cloudgrid-logs` to watch
-it, or `cloudgrid-share` to make it reachable by others.
+Print the live URL plainly. Then offer the next steps: `/cloudgrid:logs` to watch
+it, or `/cloudgrid:share` to make it reachable by others.
 
 ## References
 

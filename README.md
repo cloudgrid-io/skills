@@ -25,14 +25,17 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
    cloudgrid login
    ```
 
-3. Add the skills to your agent:
+3. Add the skills to your agent. In Claude Code:
 
    ```
-   npx skills add cloudgrid-io/skills
+   /plugin marketplace add cloudgrid-io/skills
+   /plugin install cloudgrid
    ```
 
-   Claude Code users can also run `/plugin marketplace add cloudgrid-io/skills`.
-   See [INSTALL.md](INSTALL.md) for Codex, Cursor, and manual methods.
+   The skills then auto-trigger from what you say ("drop this HTML to CloudGrid"),
+   or you can call one directly, for example `/cloudgrid:drop`.
+
+   See [INSTALL.md](INSTALL.md) for Codex, Cursor, and other methods.
 
 ## Share something in one step, no login
 

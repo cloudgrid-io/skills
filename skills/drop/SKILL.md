@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-drop
+name: drop
 description: |
   Share an artifact and get a public URL. Use when the user wants to share,
   publish, send, or deploy an HTML page or file, or wants a link for a friend.
@@ -18,15 +18,15 @@ the fastest path from "I made a thing" to "here is a link."
 It calls the CloudGrid API directly. It does **not** use the `cloudgrid` CLI and it
 does **not** require login. That is the point: anyone can drop.
 
-## When to use this vs cloudgrid-plug
+## When to use this vs /cloudgrid:plug
 
 - **Drop (this skill):** the user is not signed in, or just wants a quick public
   link for an HTML page or file. Anonymous. Inspirations only.
-- **Plug (`cloudgrid-plug`):** the user is signed in and wants a full app deploy in
+- **Plug (`/cloudgrid:plug`):** the user is signed in and wants a full app deploy in
   their own org. Uses the CLI.
 
 If the user is signed in and asks to "share" a static artifact, this skill still
-works and is faster; offer `cloudgrid-plug` only when they want an app.
+works and is faster; offer `/cloudgrid:plug` only when they want an app.
 
 ## UX rules
 
@@ -81,7 +81,7 @@ a signed-in drop is already owned. Do not bury the URL in prose.
 ## Limits and errors
 
 - Anonymous drops are **inspirations only**. A full app needs sign-in — if the
-  artifact is an app, the API returns 401; switch to `cloudgrid-plug`.
+  artifact is an app, the API returns 401; switch to `/cloudgrid:plug`.
 - HTML over 2 MB is rejected. Trim it or suggest signing in.
 - There is a per-IP and per-device daily cap. If you hit 429, tell the user to try
   again later.

@@ -1,7 +1,7 @@
 {
-  "name": "cloudgrid-skills",
-  "version": "0.1.0",
-  "description": "Multi-agent skills for CloudGrid: init, plug, logs, share, feedback, brain.",
+  "name": "cloudgrid",
+  "version": "0.2.1",
+  "description": "Multi-agent skills for CloudGrid: drop, login, claim, init, plug, logs, share, feedback, brain.",
   "author": { "name": "CloudGrid" },
   "homepage": "https://github.com/cloudgrid-io/skills",
   "license": "Apache-2.0"

@@ -13,11 +13,20 @@ const REQUIRED_KEYS = ["version", "name", "description", "allowed-tools"];
 const VOICE_FIELDS = ["name", "description"];
 const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}️]/u;
 
+// Skills live under skills/ (the layout Claude Code plugins require). Each skill
+// is a directory there with a SKILL.md.
 function findSkillFiles(root) {
   const out = [];
-  for (const entry of readdirSync(root)) {
+  const skillsDir = join(root, "skills");
+  let entries;
+  try {
+    entries = readdirSync(skillsDir);
+  } catch {
+    return out; // no skills/ dir yet
+  }
+  for (const entry of entries) {
     if (entry.startsWith(".")) continue;
-    const dir = join(root, entry);
+    const dir = join(skillsDir, entry);
     if (!statSync(dir).isDirectory()) continue;
     const skill = join(dir, "SKILL.md");
     try {
@@ -75,10 +84,6 @@ function lintFile(path) {
 
   for (const key of REQUIRED_KEYS) {
     if (!(key in fields)) errors.push(`missing required key: ${key}`);
-  }
-
-  if (fields.name && !fields.name.startsWith("cloudgrid-")) {
-    errors.push(`name must start with "cloudgrid-" (got "${fields.name}")`);
   }
 
   for (const key of VOICE_FIELDS) {

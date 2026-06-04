@@ -1,6 +1,6 @@
 {
   "name": "@cloudgrid-io/skills",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Multi-agent skills for CloudGrid: drop, login, claim, init, plug, logs, share, feedback, brain. Install in Claude Code, Codex, or Cursor.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/cloudgrid-io/skills",
@@ -18,15 +18,7 @@
     "cursor"
   ],
   "files": [
-    "cloudgrid-drop",
-    "cloudgrid-login",
-    "cloudgrid-claim",
-    "cloudgrid-init",
-    "cloudgrid-plug",
-    "cloudgrid-logs",
-    "cloudgrid-share",
-    "cloudgrid-feedback",
-    "cloudgrid-brain",
+    "skills",
     ".claude-plugin",
     ".codex-plugin",
     ".cursor-plugin",
