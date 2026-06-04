@@ -25,44 +25,45 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
    cloudgrid login
    ```
 
-3. Add the skills. Simplest route (works across supported agents):
+3. Add the skills. In Claude Code (recommended):
 
    ```
-   npx skills add cloudgrid-io/skills
+   /plugin marketplace add cloudgrid-io/skills
+   /plugin install cloudgrid
    ```
 
-   In Claude Code they show under `/skills` and run as `/cloudgrid-drop`,
-   `/cloudgrid-login`, etc. — or just say what you want ("drop this HTML to
-   CloudGrid") and the right one triggers.
+   They show under `/plugin` and `/skills` as `cloudgrid:drop`, `cloudgrid:login`,
+   … — or just say what you want ("drop this HTML to CloudGrid") and the right one
+   triggers.
 
-   Prefer a Claude Code plugin instead? `/plugin marketplace add cloudgrid-io/skills`
-   then `/plugin install cloudgrid` (invoked as `/cloudgrid:cloudgrid-drop`).
+   Other agents (Cursor, Cline, Gemini CLI): `npx skills add cloudgrid-io/skills`.
+   They install as `drop`, `plug`, … — the CloudGrid brand comes from the plugin
+   namespace, which those agents don't have.
 
-   Other clients — Claude Desktop, Cursor, claude.ai, ChatGPT — and every
-   install/invoke path in one place: [USAGE.md](USAGE.md).
+   Claude Desktop, claude.ai, ChatGPT, and every route in one place: [USAGE.md](USAGE.md).
 
 ## Share something in one step, no login
 
 ```
-/cloudgrid-drop index.html
+/cloudgrid:drop index.html
 ```
 
-`cloudgrid-drop` publishes an HTML page or file and hands back a public URL. No
+`cloudgrid:drop` publishes an HTML page or file and hands back a public URL. No
 account, no CLI. The link lasts 7 days, and you can sign in later to keep it.
 
 ## Skills
 
 | Skill | Invoke | What it does |
 |---|---|---|
-| `cloudgrid-drop` | `/cloudgrid-drop` | Share an HTML page or file, get a public URL. Login optional. |
-| `cloudgrid-login` | `/cloudgrid-login` | Sign in to CloudGrid, with or without the CLI. |
-| `cloudgrid-claim` | `/cloudgrid-claim` | Claim an anonymous drop into your account after signing in. |
-| `cloudgrid-init` | `/cloudgrid-init` | Scaffold a new app or agent. |
-| `cloudgrid-plug` | `/cloudgrid-plug` | Deploy a directory or URL. Live in about 30 seconds. |
-| `cloudgrid-logs` | `/cloudgrid-logs` | Tail logs for an entity. |
-| `cloudgrid-share` | `/cloudgrid-share` | Make an entity shareable and print its URL. |
-| `cloudgrid-feedback` | `/cloudgrid-feedback` | Read the feedback feed. |
-| `cloudgrid-brain` | `/cloudgrid-brain` | Refresh an entity's Grid Brain metadata. |
+| `drop` | `/cloudgrid:drop` | Share an HTML page or file, get a public URL. Login optional. |
+| `login` | `/cloudgrid:login` | Sign in to CloudGrid, with or without the CLI. |
+| `claim` | `/cloudgrid:claim` | Claim an anonymous drop into your account after signing in. |
+| `init` | `/cloudgrid:init` | Scaffold a new app or agent. |
+| `plug` | `/cloudgrid:plug` | Deploy a directory or URL. Live in about 30 seconds. |
+| `logs` | `/cloudgrid:logs` | Tail logs for an entity. |
+| `share` | `/cloudgrid:share` | Make an entity shareable and print its URL. |
+| `feedback` | `/cloudgrid:feedback` | Read the feedback feed. |
+| `brain` | `/cloudgrid:brain` | Refresh an entity's Grid Brain metadata. |
 
 ## The canonical chain
 

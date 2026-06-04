@@ -1,6 +1,6 @@
 ---
 version: 0.2.0
-name: cloudgrid-brain
+name: brain
 description: |
   Refresh a CloudGrid entity's Grid Brain metadata. Use when the user wants to
   re-classify an entity, regenerate its description, tags, or diagram, or update

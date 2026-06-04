@@ -30,7 +30,7 @@ npx skills add cloudgrid-io/skills
 ```
 - Installs into `~/.claude/skills/` (personal). Auto-loads, no restart.
 - **Find them under `/skills`** (labeled Personal). **Not** under `/plugin`.
-- Invoke as **`/cloudgrid-drop`**, `/cloudgrid-login`, …, or just describe the task.
+- Invoke as **`/drop`**, `/login`, … (bare — the personal route has no namespace), or describe the task.
 
 ### Route 2 — skills as a plugin
 ```
@@ -38,7 +38,7 @@ npx skills add cloudgrid-io/skills
 /plugin install cloudgrid
 ```
 - **Find it under `/plugin`**; the skills also show under `/skills` (labeled Plugin).
-- Invoke as **`/cloudgrid:cloudgrid-drop`** (plugin name + skill name), or describe the task.
+- Invoke as **`/cloudgrid:drop`** (plugin namespace + short skill name, like `superpowers:brainstorming`), or describe the task.
 
 ### Route 3 — the MCP server
 ```
