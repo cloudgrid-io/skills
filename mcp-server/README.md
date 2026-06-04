@@ -1,9 +1,17 @@
 # @cloudgrid-io/mcp
 
-An MCP server for CloudGrid. It exposes six tools — `init`, `plug`, `logs`,
-`share`, `feedback`, `brain` — by wrapping the `cloudgrid` CLI. The CLI handles
-auth, org context, and error formatting; this server does not re-implement any of
-that.
+An MCP server for CloudGrid. It exposes the CloudGrid actions as MCP tools.
+
+It ships in two editions from one codebase:
+
+- **Local (stdio)** — runs on your machine, full toolset including the CLI-wrapping
+  tools. This README covers it. For Claude Code, Cursor, Claude Desktop.
+- **Web (hosted HTTP)** — a light, CLI-free toolset (drop, claim, login) for
+  web clients like claude.ai. See [REMOTE.md](REMOTE.md).
+
+The local edition wraps the `cloudgrid` CLI for authenticated operations (the CLI
+handles auth, org context, and error formatting) and calls the API directly for the
+drop, claim, and login tools.
 
 ## Prerequisite
 

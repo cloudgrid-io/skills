@@ -1,7 +1,7 @@
 {
   "name": "@cloudgrid-io/mcp",
-  "version": "0.1.3",
-  "description": "MCP server for CloudGrid. Exposes drop, claim, init, plug, logs, share, feedback, brain, and CLI-free login as MCP tools.",
+  "version": "0.2.0",
+  "description": "MCP server for CloudGrid. Two editions: a local stdio server (full toolset) and a hosted web server (light, CLI-free toolset) over MCP Streamable HTTP.",
   "type": "module",
   "bin": {
     "cloudgrid-mcp": "src/index.js"
@@ -14,14 +14,17 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "start:web": "node src/web.js",
     "smoke": "node test/smoke.mjs",
     "smoke:drop": "node test/smoke-drop.mjs",
     "smoke:login": "node test/smoke-login.mjs",
     "smoke:claim": "node test/smoke-claim.mjs",
+    "smoke:web": "node test/smoke-web.mjs",
     "test:auth": "node test/auth.test.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
+    "express": "^4.22.2",
     "zod": "^3.23.0"
   },
   "license": "Apache-2.0",
