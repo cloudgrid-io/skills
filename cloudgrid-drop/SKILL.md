@@ -1,5 +1,5 @@
 ---
-version: 0.1.9
+version: 0.2.0
 name: cloudgrid-drop
 description: |
   Share an artifact and get a public URL. Use when the user wants to share,

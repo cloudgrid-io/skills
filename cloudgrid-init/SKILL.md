@@ -1,5 +1,5 @@
 ---
-version: 0.1.1
+version: 0.2.0
 name: cloudgrid-init
 description: |
   Scaffold a new CloudGrid app or agent. Use when the user wants to start a new

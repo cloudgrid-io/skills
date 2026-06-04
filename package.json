@@ -1,0 +1,38 @@
+{
+  "name": "@cloudgrid-io/skills",
+  "version": "0.2.0",
+  "description": "Multi-agent skills for CloudGrid: drop, login, claim, init, plug, logs, share, feedback, brain. Install in Claude Code, Codex, or Cursor.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cloudgrid-io/skills",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cloudgrid-io/skills.git"
+  },
+  "keywords": [
+    "cloudgrid",
+    "skills",
+    "mcp",
+    "claude",
+    "agent",
+    "codex",
+    "cursor"
+  ],
+  "files": [
+    "cloudgrid-drop",
+    "cloudgrid-login",
+    "cloudgrid-claim",
+    "cloudgrid-init",
+    "cloudgrid-plug",
+    "cloudgrid-logs",
+    "cloudgrid-share",
+    "cloudgrid-feedback",
+    "cloudgrid-brain",
+    ".claude-plugin",
+    ".codex-plugin",
+    ".cursor-plugin",
+    "INSTALL.md",
+    "INSTALL_FOR_AGENTS.md",
+    "COOKBOOK.md",
+    "VERSION"
+  ]
+}

@@ -1,5 +1,5 @@
 ---
-version: 0.1.2
+version: 0.2.0
 name: cloudgrid-plug
 description: |
   Deploy a directory or URL to CloudGrid. Use when the user wants to ship, deploy,
