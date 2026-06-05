@@ -1,5 +1,6 @@
 # Cloud Build — release the hosted MCP in one shot: image to Artifact Registry + the
-# npm package, so the two never drift again.
+# npm package + auto-PR the digest bump into atomicfuse/cloudgrid, so the three never
+# drift again.
 #
 # ── What the platform side must set up (NOT in this repo) ──────────────────────────
 #   1. A Cloud Build GitHub connection to github.com/cloudgrid-io/skills (2nd-gen repo
@@ -12,6 +13,11 @@
 #      the @cloudgrid-io scope; grant the Cloud Build SA roles/secretmanager.secretAccessor.
 #   4. Cloud Build SA needs roles/artifactregistry.writer on the community-ai repo
 #      (the api/inspiration triggers already have this — likely the same SA).
+#   5. Backlog 425 — Secret Manager secret `github-app-private-key` = PEM private key for
+#      the existing CloudGrid GitHub App (App ID 3256677, installation 120992087, with
+#      contents:write + pull_requests:write on atomicfuse/cloudgrid). The auto-pin step
+#      below exchanges this for an installation token at runtime and opens the
+#      digest-bump PR. Grant the Cloud Build SA secretAccessor on this secret too.
 #
 # ── Release flow ──────────────────────────────────────────────────────────────────
 #   bump mcp-server/package.json "version" to X.Y.Z, merge, then:
@@ -20,9 +26,15 @@
 #   must match package.json "version".
 #
 # ── After the build ────────────────────────────────────────────────────────────────
-#   Pin the printed digest into the MCP Deployment manifest in atomicfuse/cloudgrid and
-#   roll out. Manual today; an auto-PR to bump the digest is a future enhancement
-#   (see backlog 421).
+#   The auto-pin step opens a PR in atomicfuse/cloudgrid with the digest bump in
+#   platform/cloudgrid-system/mcp-server-deployment.yaml (backlog 425, closes the
+#   manual step after backlog 421). The platform brain reviews + merges + runs
+#   `kubectl --context=gke_dev-atomic_europe-west3-a_community-ai apply -f
+#   platform/cloudgrid-system/mcp-server-deployment.yaml` to roll the new digest live.
+#
+#   If the auto-pin step fails (token mint fails, GitHub API unreachable, etc.), the
+#   build STAYS GREEN — the npm publish + image push were the contract; the PR is
+#   downstream convenience. The brain falls back to a manual one-line PR.
 
 substitutions:
   _IMAGE: europe-west3-docker.pkg.dev/dev-atomic/community-ai/mcp-server
@@ -63,10 +75,145 @@ steps:
           npm publish --access public
         fi
 
+  # Auto-PR the digest pin into atomicfuse/cloudgrid (backlog 425). SOFT-FAIL: any
+  # error logs but does NOT fail the build — the npm publish + image push were the
+  # contract; the PR is downstream convenience.
+  - id: auto-pin-pr
+    name: node:20-bookworm-slim
+    entrypoint: bash
+    secretEnv: ["GITHUB_APP_PRIVATE_KEY"]
+    args:
+      - -c
+      - |
+        set +e  # SOFT-FAIL: never break the build on auto-PR issues.
+        set -u
+
+        # Install tools we need (node:20-bookworm-slim has openssl + bash; add the rest).
+        apt-get update -qq && apt-get install -qq -y --no-install-recommends \
+          jq curl git ca-certificates >/dev/null 2>&1
+
+        VERSION="$$(node -p "require('./mcp-server/package.json').version")"
+        DIGEST="$$(sed 's|.*@||' /workspace/pinned.txt)"
+        if [ -z "$$DIGEST" ] || [ "$${DIGEST#sha256:}" = "$$DIGEST" ]; then
+          echo "auto-pin: WARN /workspace/pinned.txt does not look like a digest — skipping. CI stays GREEN."
+          exit 0
+        fi
+
+        APP_ID="3256677"
+        INSTALLATION_ID="120992087"
+
+        # Mint a JWT for the App (10-min expiry is the max GitHub allows).
+        NOW=$$(date +%s)
+        EXP=$$((NOW + 540))
+        HEADER=$$(printf '{"alg":"RS256","typ":"JWT"}' | openssl base64 -A | tr '+/' '-_' | tr -d '=')
+        PAYLOAD=$$(printf '{"iat":%s,"exp":%s,"iss":"%s"}' "$$NOW" "$$EXP" "$$APP_ID" | openssl base64 -A | tr '+/' '-_' | tr -d '=')
+        SIG=$$(printf '%s.%s' "$$HEADER" "$$PAYLOAD" \
+          | openssl dgst -sha256 -sign <(printf '%s' "$$GITHUB_APP_PRIVATE_KEY") -binary \
+          | openssl base64 -A | tr '+/' '-_' | tr -d '=')
+        JWT="$$HEADER.$$PAYLOAD.$$SIG"
+
+        # Exchange the JWT for an installation token.
+        TOKEN=$$(curl -sS -X POST \
+          -H "Authorization: Bearer $$JWT" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/app/installations/$$INSTALLATION_ID/access_tokens" \
+          | jq -r .token 2>/dev/null)
+        if [ -z "$$TOKEN" ] || [ "$$TOKEN" = "null" ]; then
+          echo "auto-pin: WARN failed to mint installation token — skipping. CI stays GREEN."
+          exit 0
+        fi
+
+        BRANCH="chore/mcp-v$$VERSION-pin"
+
+        # Idempotency: skip if a PR for this version is already open.
+        EXISTING=$$(curl -sS \
+          -H "Authorization: token $$TOKEN" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/atomicfuse/cloudgrid/pulls?state=open&head=atomicfuse:$$BRANCH" \
+          | jq -r '.[0].number // empty')
+        if [ -n "$$EXISTING" ]; then
+          echo "auto-pin: PR #$$EXISTING already open for mcp-v$$VERSION — skipping."
+          exit 0
+        fi
+
+        # Clone, edit, push, open PR.
+        mkdir -p /workspace/autopin && cd /workspace/autopin
+        git clone --depth=1 "https://x-access-token:$$TOKEN@github.com/atomicfuse/cloudgrid.git" repo >/dev/null 2>&1
+        cd repo
+        git config user.email "cloudgrid-autopin[bot]@users.noreply.github.com"
+        git config user.name "cloudgrid-autopin[bot]"
+
+        # If the branch already exists on origin (from a prior failed run), reuse it.
+        if git ls-remote --exit-code --heads origin "$$BRANCH" >/dev/null 2>&1; then
+          git fetch origin "$$BRANCH:$$BRANCH" >/dev/null 2>&1
+          git checkout "$$BRANCH"
+        else
+          git checkout -b "$$BRANCH"
+        fi
+
+        MANIFEST="platform/cloudgrid-system/mcp-server-deployment.yaml"
+        if [ ! -f "$$MANIFEST" ]; then
+          echo "auto-pin: WARN $$MANIFEST not found on main — skipping. CI stays GREEN."
+          exit 0
+        fi
+
+        # Swap the digest. The image line carries exactly one sha256:* token.
+        sed -i "s|mcp-server@sha256:[a-f0-9]\{64\}|mcp-server@$$DIGEST|g" "$$MANIFEST"
+        # Best-effort version-comment update (preserves the v-prefix; harmless on miss).
+        sed -i "s|@cloudgrid-io/mcp v[0-9][0-9.]*|@cloudgrid-io/mcp v$$VERSION|g" "$$MANIFEST"
+
+        if git diff --quiet; then
+          echo "auto-pin: digest unchanged (already on $$DIGEST?) — nothing to PR. CI stays GREEN."
+          exit 0
+        fi
+
+        BUILD_URL="https://console.cloud.google.com/cloud-build/builds;region=europe-west3/$$BUILD_ID?project=255379604665"
+        git add "$$MANIFEST"
+        git commit -m "chore(mcp): pin hosted MCP to v$$VERSION (auto, backlog 425)" \
+                   -m "Published by Cloud Build $$BUILD_ID from cloudgrid-io/skills @ $$SHORT_SHA." \
+                   -m "Brain reviews + kubectl applies." >/dev/null
+
+        git push -u origin "$$BRANCH" >/dev/null 2>&1 || {
+          echo "auto-pin: WARN git push failed — skipping. CI stays GREEN."
+          exit 0
+        }
+
+        PR_BODY="Auto-PR from \`mcp-server-publish\` build [$$BUILD_ID]($$BUILD_URL) at cloudgrid-io/skills @ \`$$SHORT_SHA\`.
+
+Bumps \`platform/cloudgrid-system/mcp-server-deployment.yaml\` digest to **v$$VERSION** (\`$$DIGEST\`).
+
+Brain reviews + \`kubectl --context=gke_dev-atomic_europe-west3-a_community-ai apply -f platform/cloudgrid-system/mcp-server-deployment.yaml\` post-merge.
+
+(backlog 425 — closes the manual step after backlog 421.)"
+
+        PR_PAYLOAD=$$(jq -n \
+          --arg title "chore(mcp): pin hosted MCP to v$$VERSION" \
+          --arg head "$$BRANCH" \
+          --arg base "main" \
+          --arg body "$$PR_BODY" \
+          '{title:$title, head:$head, base:$base, body:$body}')
+
+        RESP=$$(curl -sS -X POST \
+          -H "Authorization: token $$TOKEN" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/atomicfuse/cloudgrid/pulls" \
+          -d "$$PR_PAYLOAD")
+        PR_NUM=$$(echo "$$RESP" | jq -r '.number // empty')
+        PR_URL=$$(echo "$$RESP" | jq -r '.html_url // empty')
+        if [ -n "$$PR_NUM" ]; then
+          echo "auto-pin: opened PR #$$PR_NUM: $$PR_URL"
+        else
+          echo "auto-pin: WARN PR creation response did not include a number. Raw: $$RESP"
+          echo "auto-pin: CI stays GREEN; brain can open the PR manually."
+        fi
+        exit 0
+
 availableSecrets:
   secretManager:
     - versionName: projects/dev-atomic/secrets/NPM_TOKEN/versions/latest
       env: NPM_TOKEN
+    - versionName: projects/dev-atomic/secrets/github-app-private-key/versions/latest
+      env: GITHUB_APP_PRIVATE_KEY
 
 options:
   logging: CLOUD_LOGGING_ONLY
