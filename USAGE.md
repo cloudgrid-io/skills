@@ -91,15 +91,17 @@ cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
 
 ## claude.ai web and the ChatGPT app
 
-These connect to **remote** MCP servers (by URL), not local ones. (Codex and Cursor accept the same remote URL — see above.) They need the
-hosted **web edition** of the MCP, which is not deployed yet. Once it is live at
-`mcp.cloudgrid.io`, you add that URL as a custom MCP connector:
+These connect to **remote** MCP servers (by URL), not local ones. The hosted web
+edition is live — add it as a custom connector:
 
-- **claude.ai web** — add it as a connector.
+```
+https://mcp.cloudgrid.io/mcp
+```
+
+- **claude.ai web** — Settings → Connectors → add custom connector.
 - **ChatGPT** — add it as a custom connector (Developer Mode; availability depends
   on plan / rollout).
-
-Until then, use Claude Code or Claude Desktop above.
+- **Codex and Cursor** accept the same URL — see the section above.
 
 ---
 
