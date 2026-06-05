@@ -94,9 +94,16 @@ cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
 These connect to **remote** MCP servers (by URL), not local ones. The hosted web
 edition is live — add it as a custom connector:
 
+Two endpoints, two postures:
+
 ```
-https://mcp.cloudgrid.io/mcp
+https://mcp.cloudgrid.io/mcp             anonymous-first: drop with no sign-in
+https://mcp-connected.cloudgrid.io/mcp   connected: native sign-in when you add it
 ```
+
+The connected endpoint runs the client's own OAuth connect at add-time (sign in
+with CloudGrid right in the flow); every drop is owned from the first one. The
+anonymous endpoint needs no account; sign in later from inside the conversation.
 
 - **claude.ai web** — Settings → Connectors → add custom connector.
 - **ChatGPT** — add it as a custom connector (Developer Mode; availability depends
