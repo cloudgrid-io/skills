@@ -34,13 +34,41 @@ The marketplace manifest lives in `.claude-plugin/`.
 
 ### Codex
 
-The Codex plugin manifest lives in `.codex-plugin/plugin.json`. Follow the Codex
-plugin install steps and point them at this repo. Exact command pending Codex docs.
+Three routes:
+
+```
+codex plugin marketplace add cloudgrid-io/skills      # plugin (manifest: .codex-plugin/)
+npx skills add cloudgrid-io/skills -a codex           # skills only (-> ~/.agents/skills)
+```
+
+Or the MCP server, in `~/.codex/config.toml` — local or the hosted URL:
+
+```toml
+[mcp_servers.cloudgrid]
+command = "npx"
+args = ["-y", "@cloudgrid-io/mcp"]
+
+# or remote, nothing installed:
+# [mcp_servers.cloudgrid]
+# url = "https://mcp.cloudgrid.io/mcp"
+```
 
 ### Cursor
 
-The Cursor plugin manifest lives in `.cursor-plugin/plugin.json`. Follow the Cursor
-plugin install steps and point them at this repo. Exact command pending Cursor docs.
+Cursor reads Agent Skills natively (v2.4+):
+
+```
+npx skills add cloudgrid-io/skills -a cursor          # -> ~/.cursor/skills + ~/.agents/skills
+```
+
+Or install the plugin from Cursor's in-app marketplace (manifest: `.cursor-plugin/`).
+Or the MCP server, in `~/.cursor/mcp.json`:
+
+```json
+{ "mcpServers": { "cloudgrid": { "command": "npx", "args": ["-y", "@cloudgrid-io/mcp"] } } }
+```
+
+Remote variant, nothing installed: `{ "mcpServers": { "cloudgrid": { "url": "https://mcp.cloudgrid.io/mcp" } } }`
 
 ### Manual
 

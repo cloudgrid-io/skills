@@ -74,20 +74,24 @@ tools icon. Invoke by describing the task: "drop this HTML to CloudGrid."
 
 ---
 
-## Cursor, Cline, Gemini CLI, and other coding agents
+## Codex, Cursor, Cline, Gemini CLI, and other coding agents
 
 ```
 npx skills add cloudgrid-io/skills
 ```
-Installs into the universal `.agents/skills/` location that these agents read.
-Invoke per that agent (natural language, or its skill mechanism). Agents that
-support MCP can instead add `npx -y @cloudgrid-io/mcp` to their MCP config.
+Installs into the universal `.agents/skills/` location these agents read (Cursor
+also reads `~/.cursor/skills`; target one agent with `-a codex` / `-a cursor`).
+Codex and Cursor also take the plugin route (`codex plugin marketplace add
+cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
+(`npx -y @cloudgrid-io/mcp` in their MCP config) or remote with nothing installed
+(`https://mcp.cloudgrid.io/mcp` as a `url` entry in `~/.codex/config.toml` or
+`~/.cursor/mcp.json`). See INSTALL.md for exact snippets.
 
 ---
 
 ## claude.ai web and the ChatGPT app
 
-These connect to **remote** MCP servers (by URL), not local ones. They need the
+These connect to **remote** MCP servers (by URL), not local ones. (Codex and Cursor accept the same remote URL — see above.) They need the
 hosted **web edition** of the MCP, which is not deployed yet. Once it is live at
 `mcp.cloudgrid.io`, you add that URL as a custom MCP connector:
 
