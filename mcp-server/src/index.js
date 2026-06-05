@@ -17,7 +17,7 @@ import {
 
 const ctx = {
   edition: "local",
-  state: { pendingLoginCode: null, lastAnonClaim: null },
+  state: { pendingLoginCode: null, lastAnonClaim: null, lastDrop: null, anonCookie: null },
   canOpenBrowser: true,
   getToken: async () => (await readCredentials())?.jwt ?? null,
   getActiveOrg: async () => await readActiveOrgSlug(),

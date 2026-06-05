@@ -29,7 +29,7 @@ function makeWebContext(sessionId) {
   let sessionToken = null;
   return {
     edition: "web",
-    state: { pendingLoginCode: null, lastAnonClaim: null },
+    state: { pendingLoginCode: null, lastAnonClaim: null, lastDrop: null, anonCookie: null },
     canOpenBrowser: false,
     getToken: async () => sessionToken,
     // No local config on a shared host. The user passes `org`, or the API returns
@@ -80,7 +80,7 @@ app.post("/mcp", async (req, res) => {
     transport.onclose = () => {
       if (transport.sessionId) delete transports[transport.sessionId];
     };
-    const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.2" });
+    const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.4" });
     registerTools(server, makeWebContext(newSessionId));
     await server.connect(transport);
   }
