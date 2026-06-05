@@ -72,8 +72,25 @@ the platform keys the cap on the per-user id instead:
 - A missing or wrong secret falls back to the per-IP cap server-side (never an error),
   so it is safe to deploy before the Secret is provisioned.
 
+## Transport-level OAuth (native Connect)
+
+The web edition implements the MCP authorization spec — metadata discovery,
+dynamic client registration, and the PKCE authorization-code flow — as a bridge
+over CloudGrid's existing sign-in. A client that completes the connect sends a
+Bearer on its MCP requests, and that token becomes the session's identity (drops
+publish into the user's org; claims work). The in-tool `cloudgrid_login` remains
+as the fallback.
+
+- `MCP_PUBLIC_URL` — this server's public origin (default `https://mcp.cloudgrid.io`),
+  used in the OAuth metadata.
+- `MCP_REQUIRE_AUTH=1` — make the connect mandatory: unauthenticated `/mcp` requests
+  get a 401 challenge, which is what triggers a client's native connect flow.
+  Default off: anonymous-first, auth honored when presented.
+
+Endpoints: `/.well-known/oauth-protected-resource`, `/.well-known/oauth-authorization-server`,
+`/oauth/register`, `/oauth/authorize` (the sign-in interstitial), `/oauth/token`.
+State is in-memory, single replica — same posture as MCP sessions.
+
 ## Launch follow-ups
-- **Transport-level OAuth.** For a native "Connect" experience in claude.ai, the
-  server can implement the MCP OAuth flow rather than the in-tool login. Follow-up.
 - **CORS / DNS-rebinding / allowed hosts.** Configure at deploy time for the public
   host.
