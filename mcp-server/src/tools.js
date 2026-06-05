@@ -139,10 +139,12 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org, fr
 
   const form = new FormData();
   // Redrop (anon-redrop spec §6): a re-drop in the same session updates the previous
-  // drop in place — same URL, new version. `fresh: true` forces a new drop. The
-  // platform validates ownership and silently falls back to create, so this never
-  // hard-fails. Field appended before the artifact so streaming parsers see it.
-  if (isAnonymousCall && fresh !== true && ctx.state.lastDrop?.entity_id) {
+  // drop in place — same URL, new version. `fresh: true` forces a new drop. Sent for
+  // BOTH anonymous and authed callers: the platform validates ownership and silently
+  // falls back to create, so this never hard-fails (authed in-place lands when the
+  // platform extends the gate; until then the fallback equals today's behavior).
+  // Field appended before the artifact so streaming parsers see it.
+  if (fresh !== true && ctx.state.lastDrop?.entity_id) {
     form.append("previous_id", ctx.state.lastDrop.entity_id);
   }
   form.append("artifact", new Blob([bytes], { type }), name);
@@ -177,14 +179,7 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org, fr
     .find((c) => c.startsWith("cg_anon_session="));
   if (anonCookie) ctx.state.anonCookie = anonCookie;
 
-  if (data.owned_by === "authenticated") {
-    ctx.state.lastAnonClaim = null;
-    const lines = [`Published to your org: ${data.url}`, "Owned by you."];
-    if (data.expires_at) lines.push(`Expires ${data.expires_at}.`);
-    return lines.join("\n");
-  }
-
-  // Anonymous: remember the drop for redrop continuity (any 2xx outcome).
+  // Remember the drop for redrop continuity — any caller class, any 2xx outcome.
   if (data.entity_id || data.url) {
     ctx.state.lastDrop = {
       entity_id: data.entity_id ?? ctx.state.lastDrop?.entity_id ?? null,
@@ -200,7 +195,16 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org, fr
   if (res.status === 200) {
     // Updated in place: same URL, new version, views/reactions intact.
     const lines = [`Updated in place — same link: ${data.url ?? ctx.state.lastDrop?.url ?? ""}`.trim()];
+    if (data.owned_by === "authenticated") lines.push("Owned by you.");
     if (data.expires_at) lines.push(`Expires ${data.expires_at}.`);
+    return lines.join("\n");
+  }
+
+  if (data.owned_by === "authenticated") {
+    ctx.state.lastAnonClaim = null;
+    const lines = [`Published to your org: ${data.url}`, "Owned by you."];
+    if (data.expires_at) lines.push(`Expires ${data.expires_at}.`);
+    lines.push("Drop again in this session to update it in place (same link); pass fresh to start a new one.");
     return lines.join("\n");
   }
 
