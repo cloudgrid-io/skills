@@ -72,6 +72,30 @@ member of several orgs and `X-CloudGrid-Org` is missing, the API replies with th
 list of orgs to choose from. The MCP `cloudgrid_drop` tool does this automatically
 when credentials are present.
 
+## Re-dropping (update in place)
+
+A re-drop of the same artifact updates it in place — same URL, new version, views
+and reactions intact. The platform matches ownership through the anon-session
+cookie, so keep a cookie jar across drops:
+
+```
+curl -sS -c jar.txt -X POST https://api.cloudgrid.io/api/v2/drop/auto \
+  -F "artifact=@index.html;type=text/html"                      # first drop
+curl -sS -b jar.txt -X POST https://api.cloudgrid.io/api/v2/drop/auto \
+  -F "previous_id=<entity_id from the first response>" \
+  -F "artifact=@index.html;type=text/html"                      # re-drop
+```
+
+Send `previous_id` before the artifact part. Read the status:
+
+- `200` — updated in place; the same `url` now serves the new bytes.
+- `202` — no change; this exact content is already live.
+- `201` — created new: no `previous_id`, or the previous drop was claimed, expired,
+  or not yours — the server falls back to create and never hard-fails.
+
+Omit `previous_id` to start a separate new drop. The MCP `cloudgrid_drop` tool does
+all of this for you (re-drops update in place; `fresh: true` forces a new one).
+
 ## After the drop
 
 Print the `url` on its own line, by itself, so it can be copied in one go. Then add

@@ -80,7 +80,7 @@ function looksLikeFullHtml(s) {
   return head.startsWith("<!doctype html") || head.startsWith("<html");
 }
 
-async function runDrop(ctx, { html, path: filePath, filename, anonymous, org }) {
+async function runDrop(ctx, { html, path: filePath, filename, anonymous, org, fresh }) {
   let bytes;
   let name;
   let type;
@@ -129,7 +129,22 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org }) 
     headers["X-CloudGrid-Trusted-Server-End-User"] = ctx.trustedServer.endUserId;
   }
 
+  const isAnonymousCall = !headers["Authorization"];
+
+  // Ownership continuity: replay the platform's anon-session cookie across drops in
+  // this session, so cookie-class callers can redrop (and claim) what they dropped.
+  if (isAnonymousCall && ctx.state.anonCookie) {
+    headers["Cookie"] = ctx.state.anonCookie;
+  }
+
   const form = new FormData();
+  // Redrop (anon-redrop spec §6): a re-drop in the same session updates the previous
+  // drop in place — same URL, new version. `fresh: true` forces a new drop. The
+  // platform validates ownership and silently falls back to create, so this never
+  // hard-fails. Field appended before the artifact so streaming parsers see it.
+  if (isAnonymousCall && fresh !== true && ctx.state.lastDrop?.entity_id) {
+    form.append("previous_id", ctx.state.lastDrop.entity_id);
+  }
   form.append("artifact", new Blob([bytes], { type }), name);
   if (orgSlug) form.append("org_slug", orgSlug);
 
@@ -153,6 +168,15 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org }) 
     throw new Error(`Drop failed (HTTP ${res.status}): ${msg}${hint ? ` ${hint}` : ""}`);
   }
 
+  // Persist the platform's anon-session cookie for ownership continuity.
+  const setCookies = res.headers.getSetCookie
+    ? res.headers.getSetCookie()
+    : [res.headers.get("set-cookie")].filter(Boolean);
+  const anonCookie = (setCookies || [])
+    .map((c) => (c || "").split(";")[0])
+    .find((c) => c.startsWith("cg_anon_session="));
+  if (anonCookie) ctx.state.anonCookie = anonCookie;
+
   if (data.owned_by === "authenticated") {
     ctx.state.lastAnonClaim = null;
     const lines = [`Published to your org: ${data.url}`, "Owned by you."];
@@ -160,6 +184,27 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org }) 
     return lines.join("\n");
   }
 
+  // Anonymous: remember the drop for redrop continuity (any 2xx outcome).
+  if (data.entity_id || data.url) {
+    ctx.state.lastDrop = {
+      entity_id: data.entity_id ?? ctx.state.lastDrop?.entity_id ?? null,
+      url: data.url ?? ctx.state.lastDrop?.url ?? null,
+    };
+  }
+
+  if (res.status === 202) {
+    // Idempotent no-op — the bytes matched the live version exactly.
+    return `No change — this exact content is already live: ${data.url ?? ctx.state.lastDrop?.url ?? ""}`.trim();
+  }
+
+  if (res.status === 200) {
+    // Updated in place: same URL, new version, views/reactions intact.
+    const lines = [`Updated in place — same link: ${data.url ?? ctx.state.lastDrop?.url ?? ""}`.trim()];
+    if (data.expires_at) lines.push(`Expires ${data.expires_at}.`);
+    return lines.join("\n");
+  }
+
+  // 201 — created new (first drop, fresh: true, or the server fell back to create).
   if (data.claim_url) {
     try {
       ctx.state.lastAnonClaim = {
@@ -174,6 +219,7 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org }) 
   const lines = [`Live: ${data.url}`];
   if (data.expires_at) lines.push(`Expires ${data.expires_at} — anonymous drops last 7 days.`);
   if (data.claim_url) lines.push("Sign in, then run cloudgrid_claim to keep it past 7 days.");
+  lines.push("Drop again in this session to update it in place (same link); pass fresh to start a new one.");
   return lines.join("\n");
 }
 
@@ -234,13 +280,17 @@ export function registerTools(server, ctx) {
   // Drop — both editions.
   server.tool(
     "cloudgrid_drop",
-    "Publish an HTML page or file to CloudGrid and get a public shareable URL. Use when the user wants to share, publish, send, or 'deploy' an artifact, or wants a link to send a friend. If signed in, it publishes into the user's org as an owned inspiration (30-day expiry); if not, it drops anonymously (7-day expiry, claimable later). Calls the API directly.",
+    "Publish an HTML page or file to CloudGrid and get a public shareable URL. Use when the user wants to share, publish, send, or 'deploy' an artifact, or wants a link to send a friend. Re-drops in the same session update the existing drop in place — same link, new version; pass fresh: true to force a new one. If signed in, it publishes into the user's org as an owned inspiration (30-day expiry); if not, it drops anonymously (7-day expiry, claimable later). Calls the API directly.",
     {
       html: z.string().optional().describe("Inline HTML to publish. A fragment is wrapped into a full document."),
       path: z.string().optional().describe("Path to a local file to upload instead of inline HTML."),
       filename: z.string().optional().describe("Filename to present. Defaults to index.html for inline HTML."),
       anonymous: z.boolean().optional().describe("Force an anonymous drop even if the user is signed in."),
       org: z.string().optional().describe("Org slug to publish into when signed in. Defaults to the active org."),
+      fresh: z
+        .boolean()
+        .optional()
+        .describe("Force a new drop even if you already dropped in this session (default: update in place)."),
     },
     async (input) => {
       try {
