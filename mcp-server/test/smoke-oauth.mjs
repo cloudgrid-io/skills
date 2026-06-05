@@ -29,6 +29,7 @@ const FAKE_JWT = `${b64url(Buffer.from(JSON.stringify({ alg: "HS256" })))}.${b64
 // ── Mock upstream CloudGrid: /auth/status + /api/v2/drop/auto ──────────────────
 let statusCalls = 0;
 let dropAuthHeader = null;
+const dropBodies = [];
 const mock = createServer((req, res) => {
   if (req.url.startsWith("/auth/status")) {
     statusCalls++;
@@ -38,8 +39,10 @@ const mock = createServer((req, res) => {
   }
   if (req.url.startsWith("/api/v2/drop/auto")) {
     dropAuthHeader = req.headers.authorization ?? null;
-    req.resume();
+    let body = "";
+    req.on("data", (c) => (body += c.toString("utf8")));
     req.on("end", () => {
+      dropBodies.push(body);
       res.statusCode = 201;
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify({ url: "https://e2e-bot.cloudgrid.io/mock-1", entity_id: "e-1", owned_by: "authenticated", expires_at: "2026-07-01T00:00:00Z" }));
@@ -129,6 +132,10 @@ try {
   const drop = await client.callTool({ name: "cloudgrid_drop", arguments: { html: "<h1>authed</h1>" } });
   check("authed drop reports Published to your org", (drop.content?.[0]?.text ?? "").includes("Published to your org"));
   check("upstream drop received the OAuth Bearer", dropAuthHeader === `Bearer ${FAKE_JWT}`);
+
+  // Authed redrop continuity: the SECOND authed drop must carry previous_id.
+  await client.callTool({ name: "cloudgrid_drop", arguments: { html: "<h1>authed v2</h1>" } });
+  check("authed redrop sends previous_id", dropBodies.length >= 2 && dropBodies[1].includes('name="previous_id"') && dropBodies[1].includes("e-1"));
   await client.close();
 } finally {
   try {
