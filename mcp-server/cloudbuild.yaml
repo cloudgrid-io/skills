@@ -21,6 +21,8 @@
 #
 # ── Release flow ──────────────────────────────────────────────────────────────────
 #   bump mcp-server/package.json "version" to X.Y.Z, merge, then:
+#       npm run lint:cloudbuild     # this file must parse — a broken config fails the
+#                                   # build before any step runs (bit us on v0.2.7)
 #       git tag -a mcp-vX.Y.Z -m "MCP X.Y.Z" && git push origin mcp-vX.Y.Z
 #   The image tag mirrors the git tag minus the mcp- prefix (mcp-v0.2.3 -> v0.2.3) and
 #   must match package.json "version".
@@ -178,13 +180,14 @@ steps:
           exit 0
         }
 
-        PR_BODY="Auto-PR from \`mcp-server-publish\` build [$$BUILD_ID]($$BUILD_URL) at cloudgrid-io/skills @ \`$$SHORT_SHA\`.
-
-Bumps \`platform/cloudgrid-system/mcp-server-deployment.yaml\` digest to **v$$VERSION** (\`$$DIGEST\`).
-
-Brain reviews + \`kubectl --context=gke_dev-atomic_europe-west3-a_community-ai apply -f platform/cloudgrid-system/mcp-server-deployment.yaml\` post-merge.
-
-(backlog 425 — closes the manual step after backlog 421.)"
+        # printf keeps every line of this script indented inside the YAML block
+        # scalar — a flush-left continuation line would terminate the scalar and
+        # break the whole build config (it did, on the v0.2.7 maiden run).
+        PR_BODY=$$(printf '%s\n\n%s\n\n%s\n\n%s' \
+          "Auto-PR from \`mcp-server-publish\` build [$$BUILD_ID]($$BUILD_URL) at cloudgrid-io/skills @ \`$$SHORT_SHA\`." \
+          "Bumps \`platform/cloudgrid-system/mcp-server-deployment.yaml\` digest to **v$$VERSION** (\`$$DIGEST\`)." \
+          "Brain reviews + \`kubectl --context=gke_dev-atomic_europe-west3-a_community-ai apply -f platform/cloudgrid-system/mcp-server-deployment.yaml\` post-merge." \
+          "(backlog 425 — closes the manual step after backlog 421.)")
 
         PR_PAYLOAD=$$(jq -n \
           --arg title "chore(mcp): pin hosted MCP to v$$VERSION" \

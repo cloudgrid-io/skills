@@ -22,6 +22,7 @@
     "smoke:web": "node test/smoke-web.mjs",
     "smoke:redrop": "node test/smoke-redrop.mjs",
     "smoke:oauth": "node test/smoke-oauth.mjs",
+    "lint:cloudbuild": "npx -y yaml-lint cloudbuild.yaml",
     "test:auth": "node test/auth.test.mjs"
   },
   "dependencies": {
