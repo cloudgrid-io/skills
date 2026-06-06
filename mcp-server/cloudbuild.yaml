@@ -104,13 +104,30 @@ steps:
         APP_ID="3256677"
         INSTALLATION_ID="120992087"
 
+        # Materialize the App key in a step-local file (NOT /workspace — that is
+        # shared across steps). The secret is stored base64-wrapped (one line, no
+        # PEM markers); accept raw PEM too in case the stored format ever changes.
+        # v0.2.7 maiden run failed here: openssl got the base64 blob via process
+        # substitution and bailed with 'Could not read private key from /dev/fd/63'.
+        umask 077
+        KEYFILE=$$(mktemp /tmp/app-key.XXXXXX)
+        trap 'rm -f "$$KEYFILE"' EXIT
+        case "$$GITHUB_APP_PRIVATE_KEY" in
+          "-----BEGIN"*) printf '%s\n' "$$GITHUB_APP_PRIVATE_KEY" > "$$KEYFILE" ;;
+          *) printf '%s' "$$GITHUB_APP_PRIVATE_KEY" | base64 -d > "$$KEYFILE" 2>/dev/null ;;
+        esac
+        if ! grep -q "PRIVATE KEY" "$$KEYFILE"; then
+          echo "auto-pin: WARN secret does not look like a PEM key (raw or base64) — skipping. CI stays GREEN."
+          exit 0
+        fi
+
         # Mint a JWT for the App (10-min expiry is the max GitHub allows).
         NOW=$$(date +%s)
         EXP=$$((NOW + 540))
         HEADER=$$(printf '{"alg":"RS256","typ":"JWT"}' | openssl base64 -A | tr '+/' '-_' | tr -d '=')
         PAYLOAD=$$(printf '{"iat":%s,"exp":%s,"iss":"%s"}' "$$NOW" "$$EXP" "$$APP_ID" | openssl base64 -A | tr '+/' '-_' | tr -d '=')
         SIG=$$(printf '%s.%s' "$$HEADER" "$$PAYLOAD" \
-          | openssl dgst -sha256 -sign <(printf '%s' "$$GITHUB_APP_PRIVATE_KEY") -binary \
+          | openssl dgst -sha256 -sign "$$KEYFILE" -binary \
           | openssl base64 -A | tr '+/' '-_' | tr -d '=')
         JWT="$$HEADER.$$PAYLOAD.$$SIG"
 
