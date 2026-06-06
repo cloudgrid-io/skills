@@ -25,7 +25,7 @@ const ctx = {
   savedLocationNote: () => `Credentials saved to ${credentialsPath()}.`,
 };
 
-const server = new McpServer({ name: "cloudgrid-mcp", version: "0.2.2" });
+const server = new McpServer({ name: "cloudgrid-mcp", version: "0.2.7" });
 registerTools(server, ctx);
 
 const transport = new StdioServerTransport();

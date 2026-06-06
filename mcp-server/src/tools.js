@@ -277,6 +277,45 @@ async function runClaim(ctx, { claim_token, claim_url }) {
   return lines.join("\n");
 }
 
+
+// Change an inspiration's visibility. Authed, direct API — works on the hosted
+// edition where the CLI-wrapping share tool is unavailable. Defaults to the drop
+// made in this session, so "make it private" needs no ids.
+async function runVisibility(ctx, { target, visibility, org }) {
+  const token = await ctx.getToken();
+  if (!token) {
+    throw new Error("Changing visibility needs an owner. Run cloudgrid_login first.");
+  }
+  const id = target || ctx.state.lastDrop?.entity_id;
+  if (!id) {
+    throw new Error("No target. Pass the entity id, or drop something first in this session.");
+  }
+  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const orgSlug = org || (await ctx.getActiveOrg());
+  if (orgSlug) headers["X-CloudGrid-Org"] = orgSlug;
+  let res;
+  try {
+    res = await fetch(`${API_BASE}/api/v2/inspirations/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ visibility }),
+    });
+  } catch (err) {
+    throw new Error(`Could not reach CloudGrid at ${API_BASE}: ${err.message}`);
+  }
+  const raw = await res.text();
+  let data = null;
+  try { data = JSON.parse(raw); } catch { /* handled below */ }
+  if (!res.ok) {
+    const msg = data?.error?.message || raw || `HTTP ${res.status}`;
+    const hint = data?.error?.details?.[0]?.hint;
+    throw new Error(`Visibility change failed (HTTP ${res.status}): ${msg}${hint ? ` ${hint}` : ""}`);
+  }
+  const lines = [`Visibility is now ${visibility}.`];
+  if (data?.url) lines.push(data.url);
+  return lines.join("\n");
+}
+
 // ── Registration ───────────────────────────────────────────────────────────────
 // Registers the tools onto `server`. ctx.edition decides whether the CLI-wrapping
 // tools are included (they need a local machine).
@@ -373,6 +412,23 @@ export function registerTools(server, ctx) {
         );
       }
       return fail("The sign-in window expired (5 minutes). Run cloudgrid_login to start again.");
+    },
+  );
+
+  server.tool(
+    "cloudgrid_visibility",
+    "Change who can see a CloudGrid inspiration: private, space, authenticated, org, or link (anyone with the URL). Use when the user wants to make a drop private, restrict who sees it, or open it up. Defaults to the drop made in this session. Requires sign-in. Calls the API directly.",
+    {
+      visibility: z.enum(["private", "space", "authenticated", "org", "link"]).describe("The new scope."),
+      target: z.string().optional().describe("Entity id. Defaults to this session's last drop."),
+      org: z.string().optional().describe("Org of the entity. Defaults to the active org."),
+    },
+    async (input) => {
+      try {
+        return ok(await runVisibility(ctx, input || {}));
+      } catch (err) {
+        return fail(err.message);
+      }
     },
   );
 

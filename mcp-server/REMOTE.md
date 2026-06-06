@@ -8,7 +8,7 @@ The MCP server ships in two editions from one codebase. The tool logic lives in
 | Transport | stdio | MCP Streamable HTTP |
 | Runs | as a subprocess on the user's machine | hosted (e.g. GKE) |
 | Reaches | Claude Code, Cursor, Claude Desktop | claude.ai web, any HTTP MCP client |
-| Tools | full set, incl. CLI-wrapping | light set: drop, claim, login |
+| Tools | full set, incl. CLI-wrapping | light set: drop, claim, login, visibility |
 | Identity | `~/.cloudgrid/credentials` | per-session token in memory |
 
 The web edition omits the CLI-wrapping tools (init, plug, logs, share, feedback,

@@ -6,8 +6,8 @@ It ships in two editions from one codebase:
 
 - **Local (stdio)** — runs on your machine, full toolset including the CLI-wrapping
   tools. This README covers it. For Claude Code, Cursor, Claude Desktop.
-- **Web (hosted HTTP)** — a light, CLI-free toolset (drop, claim, login) for
-  web clients like claude.ai. See [REMOTE.md](REMOTE.md).
+- **Web (hosted HTTP)** — a light, CLI-free toolset (drop, claim, login,
+  visibility) for web clients like claude.ai. See [REMOTE.md](REMOTE.md).
 
 The local edition wraps the `cloudgrid` CLI for authenticated operations (the CLI
 handles auth, org context, and error formatting) and calls the API directly for the
@@ -49,6 +49,7 @@ It speaks MCP over stdio. Point any MCP client at the `cloudgrid-mcp` command.
 | `cloudgrid_claim` | `POST /api/v2/anon-claim` | Claim an anonymous drop into the signed-in account. Direct API. |
 | `cloudgrid_login` | `GET /auth/login` | Start a CLI-free sign-in; returns a URL to open. Calls the API directly. |
 | `cloudgrid_login_status` | `GET /auth/status` | Finish the sign-in; saves the token to the shared CLI credentials. |
+| `cloudgrid_visibility` | `PATCH /api/v2/inspirations/<id>` | Change who can see a drop (private, space, authenticated, org, link). Needs sign-in. Direct API; also in the web edition. |
 | `cloudgrid_init` | `cloudgrid init` | Register an app or agent; optionally seed a web service. |
 | `cloudgrid_plug` | `cloudgrid plug` | Deploy a directory or URL. |
 | `cloudgrid_logs` | `cloudgrid logs` | Snapshot of recent logs. Does not stream. |
@@ -56,11 +57,15 @@ It speaks MCP over stdio. Point any MCP client at the `cloudgrid-mcp` command.
 | `cloudgrid_feedback` | `cloudgrid feedback list` | Read the org feedback feed. |
 | `cloudgrid_brain` | `cloudgrid brain refresh` | Re-run the Grid Brain hooks. |
 
-`cloudgrid_drop` and the two `cloudgrid_login` tools are the ones that do not wrap
-the CLI — both are about working without it. The anonymous drop has no identity to
-manage; login exists to get an identity without the CLI. Both call the API directly.
-`cloudgrid_login` writes the same `~/.cloudgrid/credentials` the CLI uses, so the two
-share one identity.
+`cloudgrid_drop`, `cloudgrid_claim`, `cloudgrid_visibility`, and the two
+`cloudgrid_login` tools do not wrap the CLI — they call the API directly, so they
+also work in the web edition where no CLI exists. `cloudgrid_login` writes the same
+`~/.cloudgrid/credentials` the CLI uses, so the two share one identity.
+
+`cloudgrid_share` and `cloudgrid_visibility` overlap on purpose: `cloudgrid_share`
+wraps the CLI and defaults to `link`; `cloudgrid_visibility` is direct API, takes an
+explicit scope, and defaults its target to the session's last drop — it is the one
+the web edition gets.
 
 ## Test
 

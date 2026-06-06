@@ -12,6 +12,7 @@ const EXPECTED = [
   "cloudgrid_claim",
   "cloudgrid_login",
   "cloudgrid_login_status",
+  "cloudgrid_visibility",
   "cloudgrid_init",
   "cloudgrid_plug",
   "cloudgrid_logs",

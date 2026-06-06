@@ -128,7 +128,7 @@ app.post("/mcp", async (req, res) => {
       delete sessionAuth[transport.sessionId];
     }
   };
-  const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.6" });
+  const server = new McpServer({ name: "cloudgrid-mcp-web", version: "0.2.7" });
   registerTools(server, makeWebContext(newSessionId));
   await server.connect(transport);
   await transport.handleRequest(req, res, req.body);

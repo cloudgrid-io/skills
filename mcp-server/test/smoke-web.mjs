@@ -44,7 +44,7 @@ try {
 
   const names = (await client.listTools()).tools.map((t) => t.name).sort();
   console.log("web tools:", names.join(", "));
-  for (const t of ["cloudgrid_drop", "cloudgrid_claim", "cloudgrid_login", "cloudgrid_login_status"]) {
+  for (const t of ["cloudgrid_drop", "cloudgrid_claim", "cloudgrid_login", "cloudgrid_login_status", "cloudgrid_visibility"]) {
     check(`exposes ${t}`, names.includes(t));
   }
   check("does NOT expose CLI-only cloudgrid_init", !names.includes("cloudgrid_init"));
