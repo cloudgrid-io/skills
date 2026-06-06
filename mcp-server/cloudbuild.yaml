@@ -13,11 +13,15 @@
 #      the @cloudgrid-io scope; grant the Cloud Build SA roles/secretmanager.secretAccessor.
 #   4. Cloud Build SA needs roles/artifactregistry.writer on the community-ai repo
 #      (the api/inspiration triggers already have this — likely the same SA).
-#   5. Backlog 425 — Secret Manager secret `github-app-private-key` = PEM private key for
-#      the existing CloudGrid GitHub App (App ID 3256677, installation 120992087, with
-#      contents:write + pull_requests:write on atomicfuse/cloudgrid). The auto-pin step
-#      below exchanges this for an installation token at runtime and opens the
-#      digest-bump PR. Grant the Cloud Build SA secretAccessor on this secret too.
+#   5. Backlog 425 — Secret Manager secret `github-app-private-key` = base64-wrapped PEM
+#      private key for the existing CloudGrid GitHub App (App ID 3256677, installation
+#      120992087). The auto-pin step below exchanges this for an installation token at
+#      runtime and opens the digest-bump PR. Grant the Cloud Build SA secretAccessor on
+#      this secret too.
+#   6. Backlog 429 — the App installation must grant contents:write + pull_requests:write
+#      on atomicfuse/cloudgrid. As of 2026-06-06 it only grants contents:read /
+#      metadata:read / statuses:write, so the auto-pin step soft-skips with a WARN and
+#      the digest pin falls back to a manual PR.
 #
 # ── Release flow ──────────────────────────────────────────────────────────────────
 #   bump mcp-server/package.json "version" to X.Y.Z, merge, then:
@@ -144,12 +148,22 @@ steps:
 
         BRANCH="chore/mcp-v$$VERSION-pin"
 
-        # Idempotency: skip if a PR for this version is already open.
-        EXISTING=$$(curl -sS \
+        # Pre-flight: the token must be able to read PRs. The App needs
+        # pull_requests:write + contents:write on atomicfuse/cloudgrid for the
+        # push + PR below — as of 2026-06-06 the installation only grants
+        # contents:read/metadata:read/statuses:write (backlog 429 tracks the
+        # grant). Until then, skip loudly instead of failing mid-flow.
+        PULLS=$$(curl -sS \
           -H "Authorization: token $$TOKEN" \
           -H "Accept: application/vnd.github+json" \
-          "https://api.github.com/repos/atomicfuse/cloudgrid/pulls?state=open&head=atomicfuse:$$BRANCH" \
-          | jq -r '.[0].number // empty')
+          "https://api.github.com/repos/atomicfuse/cloudgrid/pulls?state=open&head=atomicfuse:$$BRANCH")
+        if [ "$$(echo "$$PULLS" | jq -r 'type')" != "array" ]; then
+          echo "auto-pin: WARN cannot read PRs (App permission missing? backlog 429): $$(echo "$$PULLS" | jq -r '.message // "unparseable"') — skipping. CI stays GREEN."
+          exit 0
+        fi
+
+        # Idempotency: skip if a PR for this version is already open.
+        EXISTING=$$(echo "$$PULLS" | jq -r '.[0].number // empty')
         if [ -n "$$EXISTING" ]; then
           echo "auto-pin: PR #$$EXISTING already open for mcp-v$$VERSION — skipping."
           exit 0
@@ -186,10 +200,10 @@ steps:
           exit 0
         fi
 
-        BUILD_URL="https://console.cloud.google.com/cloud-build/builds;region=europe-west3/$$BUILD_ID?project=255379604665"
+        BUILD_URL="https://console.cloud.google.com/cloud-build/builds;region=europe-west3/$BUILD_ID?project=255379604665"
         git add "$$MANIFEST"
         git commit -m "chore(mcp): pin hosted MCP to v$$VERSION (auto, backlog 425)" \
-                   -m "Published by Cloud Build $$BUILD_ID from cloudgrid-io/skills @ $$SHORT_SHA." \
+                   -m "Published by Cloud Build $BUILD_ID from cloudgrid-io/skills @ $SHORT_SHA." \
                    -m "Brain reviews + kubectl applies." >/dev/null
 
         git push -u origin "$$BRANCH" >/dev/null 2>&1 || {
@@ -201,7 +215,7 @@ steps:
         # scalar — a flush-left continuation line would terminate the scalar and
         # break the whole build config (it did, on the v0.2.7 maiden run).
         PR_BODY=$$(printf '%s\n\n%s\n\n%s\n\n%s' \
-          "Auto-PR from \`mcp-server-publish\` build [$$BUILD_ID]($$BUILD_URL) at cloudgrid-io/skills @ \`$$SHORT_SHA\`." \
+          "Auto-PR from \`mcp-server-publish\` build [$BUILD_ID]($$BUILD_URL) at cloudgrid-io/skills @ \`$SHORT_SHA\`." \
           "Bumps \`platform/cloudgrid-system/mcp-server-deployment.yaml\` digest to **v$$VERSION** (\`$$DIGEST\`)." \
           "Brain reviews + \`kubectl --context=gke_dev-atomic_europe-west3-a_community-ai apply -f platform/cloudgrid-system/mcp-server-deployment.yaml\` post-merge." \
           "(backlog 425 — closes the manual step after backlog 421.)")
