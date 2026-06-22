@@ -120,10 +120,8 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org, fr
     }
   }
 
-  // Anonymous path on a hosted server: present the trusted-server credential so the
-  // platform keys the anon-drop cap on the per-user id instead of the shared cluster
-  // egress IP. A missing/bad secret silently falls back to the IP cap server-side, so
-  // this is safe to send whenever configured. Only the web edition sets ctx.trustedServer.
+  // Hosted server: attach the trusted-server credential when available.
+  // Falls back gracefully server-side if absent. Only the web edition sets ctx.trustedServer.
   if (!headers["Authorization"] && ctx.trustedServer?.secret && ctx.trustedServer?.endUserId) {
     headers["X-CloudGrid-Trusted-Server-Auth"] = ctx.trustedServer.secret;
     headers["X-CloudGrid-Trusted-Server-End-User"] = ctx.trustedServer.endUserId;
@@ -138,11 +136,9 @@ async function runDrop(ctx, { html, path: filePath, filename, anonymous, org, fr
   }
 
   const form = new FormData();
-  // Redrop (anon-redrop spec §6): a re-drop in the same session updates the previous
-  // drop in place — same URL, new version. `fresh: true` forces a new drop. Sent for
-  // BOTH anonymous and authed callers: the platform validates ownership and silently
-  // falls back to create, so this never hard-fails (authed in-place lands when the
-  // platform extends the gate; until then the fallback equals today's behavior).
+  // Redrop: a re-drop in the same session updates the previous drop in place (same URL,
+  // new version). `fresh: true` forces a new drop. The platform validates ownership and
+  // falls back to create if the caller does not own the previous drop.
   // Field appended before the artifact so streaming parsers see it.
   if (fresh !== true && ctx.state.lastDrop?.entity_id) {
     form.append("previous_id", ctx.state.lastDrop.entity_id);
