@@ -13,8 +13,8 @@ docs use `cloudgrid-io` literally, which is now correct, not provisional.
 
 **Question:** `@cloudgrid-io/mcp` vs `@cloudgrid-io/mcp-server` vs `cloudgrid-mcp`?
 
-**Shipped default:** `@cloudgrid-io/mcp` — matches the npm scope, short. Not yet
-published, so it is cheap to change. Tied to question 1.
+**Resolved:** `@cloudgrid-io/mcp` — matches the npm scope, short. Published on
+npm and live at `https://mcp.cloudgrid.io/mcp`.
 
 ## 3. Watermark in skill output
 
