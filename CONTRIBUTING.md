@@ -13,7 +13,6 @@ VERSION                  canonical version; every SKILL.md version tracks it
 .claude-plugin/          marketplace manifest for Claude Code
 .codex-plugin/           marketplace manifest for Codex
 .cursor-plugin/          marketplace manifest for Cursor
-mcp-server/              MCP server (@cloudgrid-io/mcp)
 ```
 
 Each `SKILL.md` has YAML frontmatter and a markdown body:

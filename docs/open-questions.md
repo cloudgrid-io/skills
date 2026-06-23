@@ -14,7 +14,8 @@ docs use `cloudgrid-io` literally, which is now correct, not provisional.
 **Question:** `@cloudgrid-io/mcp` vs `@cloudgrid-io/mcp-server` vs `cloudgrid-mcp`?
 
 **Resolved:** `@cloudgrid-io/mcp` — matches the npm scope, short. Published on
-npm and live at `https://mcp.cloudgrid.io/mcp`.
+npm and live at `https://mcp.cloudgrid.io/mcp`. The MCP server now lives in its
+own repo at [github.com/cloudgrid-io/mcp](https://github.com/cloudgrid-io/mcp).
 
 ## 3. Watermark in skill output
 

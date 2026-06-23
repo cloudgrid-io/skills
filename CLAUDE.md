@@ -23,7 +23,7 @@ behalf. This phase is about adoption and identity. Everything is free.
 In this repo:
 
 - One directory per skill, each with a `SKILL.md`.
-- An MCP server (`mcp-server/`) that exposes the same actions as MCP tools.
+- An MCP server ([`@cloudgrid-io/mcp`](https://github.com/cloudgrid-io/mcp)) that exposes the same actions as MCP tools.
 - Marketplace manifests for Claude Code, Codex, and Cursor.
 - Install and cookbook docs aimed at builders and at agents.
 
@@ -61,7 +61,6 @@ skills/              all skills live here (required by Claude Code plugins)
   <skill-name>/      one directory per skill (short name, e.g. drop)
     SKILL.md         YAML frontmatter + markdown body
     references/      optional supporting docs
-mcp-server/          Node ESM MCP server, published as @cloudgrid-io/mcp
 .github/             CI: license check + SKILL.md frontmatter linter
 INSTALL.md           human install
 INSTALL_FOR_AGENTS.md  install steps written for an agent to execute
