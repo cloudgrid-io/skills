@@ -7,9 +7,3 @@ updates:
     commit-message:
       prefix: "ci"
 
-  - package-ecosystem: npm
-    directory: /mcp-server
-    schedule:
-      interval: weekly
-    commit-message:
-      prefix: "deps"
