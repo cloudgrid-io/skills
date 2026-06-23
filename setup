@@ -1,0 +1,297 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# setup — install CloudGrid skills into your agent (Claude Code, Cursor, Codex)
+#
+# Usage:
+#   ./setup
+#   ./setup --host claude
+#   ./setup --skip-cli --skip-auth
+#   ./setup --help
+# ---------------------------------------------------------------------------
+
+# --- colors (degrade gracefully for non-TTY) ------------------------------
+
+if [ -t 1 ] && [ -t 2 ]; then
+  BOLD="\033[1m"
+  DIM="\033[2m"
+  RESET="\033[0m"
+  GREEN="\033[32m"
+  YELLOW="\033[33m"
+  RED="\033[31m"
+  CYAN="\033[36m"
+else
+  BOLD="" DIM="" RESET="" GREEN="" YELLOW="" RED="" CYAN=""
+fi
+
+# --- utility functions ----------------------------------------------------
+
+ok()   { printf '%s[ok]%s  %s\n' "$GREEN" "$RESET" "$*"; }
+warn() { printf '%s[!!]%s  %s\n' "$YELLOW" "$RESET" "$*" >&2; }
+err()  { printf '%s[err]%s %s\n' "$RED" "$RESET" "$*" >&2; }
+info() { printf '%s[->]%s %s\n' "$CYAN" "$RESET" "$*"; }
+
+die() { err "$@"; exit 1; }
+
+# --- locate repo root -----------------------------------------------------
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$SCRIPT_DIR"
+
+[ -f "$REPO_ROOT/VERSION" ]   || die "VERSION file not found in $REPO_ROOT. Are you running this from the skills repo?"
+[ -d "$REPO_ROOT/skills" ]    || die "skills/ directory not found in $REPO_ROOT. Are you running this from the skills repo?"
+
+VERSION="$(tr -d '[:space:]' < "$REPO_ROOT/VERSION")"
+
+# --- parse flags ----------------------------------------------------------
+
+HOST=""
+SKIP_CLI=false
+SKIP_AUTH=false
+
+usage() {
+  cat <<USAGE
+${BOLD}setup${RESET} — install CloudGrid skills into your agent
+
+${BOLD}Usage:${RESET}
+  ./setup [options]
+
+${BOLD}Options:${RESET}
+  --host <claude|cursor|codex>   Override auto-detection of the host agent.
+  --skip-cli                     Skip the CLI install step.
+  --skip-auth                    Skip the authentication check.
+  --help                         Show this message.
+
+${BOLD}Reference:${RESET}
+  README.md    Overview and skill list.
+  COOKBOOK.md   Canonical skill chains.
+USAGE
+  exit 0
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --host)
+      [ -n "${2:-}" ] || die "--host requires a value: claude, cursor, or codex"
+      HOST="$2"
+      shift 2
+      ;;
+    --skip-cli)
+      SKIP_CLI=true
+      shift
+      ;;
+    --skip-auth)
+      SKIP_AUTH=true
+      shift
+      ;;
+    --help|-h)
+      usage
+      ;;
+    *)
+      die "Unknown flag: $1. Run ./setup --help for usage."
+      ;;
+  esac
+done
+
+# validate --host if provided
+if [ -n "$HOST" ]; then
+  case "$HOST" in
+    claude|cursor|codex) ;;
+    *) die "Unknown host: $HOST. Expected claude, cursor, or codex." ;;
+  esac
+fi
+
+# --- header ---------------------------------------------------------------
+
+printf '\n%sCloudGrid Skills%s %sv%s%s\n\n' "$BOLD" "$RESET" "$DIM" "$VERSION" "$RESET"
+
+# --- step 1: CLI ----------------------------------------------------------
+
+if [ "$SKIP_CLI" = true ]; then
+  info "Skipping CLI install (--skip-cli)."
+else
+  info "Step 1/4: CloudGrid CLI"
+
+  if command -v cloudgrid >/dev/null 2>&1; then
+    cli_version="$(cloudgrid --version 2>/dev/null || echo "unknown")"
+    ok "cloudgrid CLI already installed ($cli_version)."
+  else
+    info "Installing @cloudgrid-io/cli via npm..."
+    if ! command -v npm >/dev/null 2>&1; then
+      die "npm is not on \$PATH. Install Node.js (https://nodejs.org) and try again."
+    fi
+    npm install -g @cloudgrid-io/cli
+    if command -v cloudgrid >/dev/null 2>&1; then
+      cli_version="$(cloudgrid --version 2>/dev/null || echo "unknown")"
+      ok "cloudgrid CLI installed ($cli_version)."
+    else
+      die "npm install succeeded but 'cloudgrid' is not on \$PATH. Check your npm global bin directory."
+    fi
+  fi
+fi
+
+# --- step 2: auth ---------------------------------------------------------
+
+if [ "$SKIP_AUTH" = true ]; then
+  info "Skipping auth check (--skip-auth)."
+else
+  info "Step 2/4: Authentication"
+
+  if ! command -v cloudgrid >/dev/null 2>&1; then
+    die "cloudgrid CLI not found. Run without --skip-cli or install it manually."
+  fi
+
+  if cloudgrid whoami >/dev/null 2>&1; then
+    identity="$(cloudgrid whoami 2>/dev/null || echo "")"
+    ok "Authenticated. $identity"
+  else
+    err "Not authenticated."
+    info "Run 'cloudgrid login' and then re-run this script."
+    exit 1
+  fi
+fi
+
+# --- step 3: detect host agent and install skills -------------------------
+
+info "Step 3/4: Install skills"
+
+detect_host() {
+  # If the user specified --host, use that.
+  if [ -n "$HOST" ]; then
+    echo "$HOST"
+    return
+  fi
+
+  # Auto-detect by checking which agent directories exist.
+  if [ -d "$HOME/.claude" ]; then
+    echo "claude"
+    return
+  fi
+  if [ -d "$HOME/.cursor" ]; then
+    echo "cursor"
+    return
+  fi
+  if [ -d "$HOME/.codex" ]; then
+    echo "codex"
+    return
+  fi
+
+  echo ""
+}
+
+DETECTED_HOST="$(detect_host)"
+
+if [ -z "$DETECTED_HOST" ]; then
+  die "Could not detect a host agent. No ~/.claude, ~/.cursor, or ~/.codex directory found. Use --host to specify one."
+fi
+
+info "Host agent: $DETECTED_HOST"
+
+# Resolve the target skills directory for the detected host.
+resolve_target_dir() {
+  case "$1" in
+    claude)
+      echo "$HOME/.claude/skills"
+      ;;
+    cursor)
+      # Cursor supports both ~/.cursor/skills and ~/.cursor/plugins.
+      # Prefer skills/ if it exists; otherwise use skills/.
+      if [ -d "$HOME/.cursor/skills" ]; then
+        echo "$HOME/.cursor/skills"
+      elif [ -d "$HOME/.cursor/plugins" ]; then
+        echo "$HOME/.cursor/plugins"
+      else
+        echo "$HOME/.cursor/skills"
+      fi
+      ;;
+    codex)
+      echo "$HOME/.codex/plugins"
+      ;;
+  esac
+}
+
+TARGET_DIR="$(resolve_target_dir "$DETECTED_HOST")"
+
+# Create the target directory if it does not exist.
+if [ ! -d "$TARGET_DIR" ]; then
+  mkdir -p "$TARGET_DIR"
+  info "Created $TARGET_DIR"
+fi
+
+# Symlink each skill directory.
+installed=0
+skipped=0
+warned=0
+
+for skill_dir in "$REPO_ROOT/skills"/*/; do
+  [ -d "$skill_dir" ] || continue
+  skill_name="$(basename "$skill_dir")"
+  source_path="$REPO_ROOT/skills/$skill_name"
+  target_path="$TARGET_DIR/$skill_name"
+
+  if [ -L "$target_path" ]; then
+    # It is a symlink. Check if it points to the right place.
+    existing_target="$(readlink "$target_path")"
+    if [ "$existing_target" = "$source_path" ]; then
+      skipped=$((skipped + 1))
+      continue
+    else
+      warn "$target_path is a symlink to $existing_target (expected $source_path). Leaving it alone."
+      warned=$((warned + 1))
+      continue
+    fi
+  elif [ -e "$target_path" ]; then
+    # Exists but is not a symlink.
+    warn "$target_path exists but is not a symlink. Leaving it alone."
+    warned=$((warned + 1))
+    continue
+  fi
+
+  ln -s "$source_path" "$target_path"
+  installed=$((installed + 1))
+done
+
+if [ "$installed" -gt 0 ]; then
+  ok "Linked $installed skill(s) into $TARGET_DIR."
+fi
+if [ "$skipped" -gt 0 ]; then
+  ok "$skipped skill(s) already linked correctly."
+fi
+if [ "$warned" -gt 0 ]; then
+  warn "$warned skill(s) skipped due to existing non-matching targets."
+fi
+
+# --- step 4: verify -------------------------------------------------------
+
+info "Step 4/4: Verify"
+
+errors=0
+for skill_dir in "$REPO_ROOT/skills"/*/; do
+  [ -d "$skill_dir" ] || continue
+  skill_name="$(basename "$skill_dir")"
+  target_path="$TARGET_DIR/$skill_name"
+
+  if [ -f "$target_path/SKILL.md" ]; then
+    ok "$skill_name"
+  else
+    err "$skill_name — SKILL.md not found at $target_path/SKILL.md"
+    errors=$((errors + 1))
+  fi
+done
+
+if [ "$errors" -gt 0 ]; then
+  die "$errors skill(s) failed verification."
+fi
+
+# --- done -----------------------------------------------------------------
+
+printf '\n%sDone.%s Skills are installed for %s.\n\n' "$BOLD" "$RESET" "$DETECTED_HOST"
+printf 'Try these in your agent:\n'
+printf '  %s"deploy my project to CloudGrid"%s     — triggers the plug skill\n' "$DIM" "$RESET"
+printf '  %s"drop this HTML to CloudGrid"%s        — triggers the drop skill\n' "$DIM" "$RESET"
+printf '  %s"tail the logs for my-thing"%s         — triggers the logs skill\n' "$DIM" "$RESET"
+printf '  %s"scaffold a new static app"%s          — triggers the init skill\n' "$DIM" "$RESET"
+printf '\nReference:\n'
+printf '  README.md    — overview and skill list\n'
+printf '  COOKBOOK.md   — canonical skill chains\n\n'

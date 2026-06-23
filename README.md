@@ -36,6 +36,12 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
    … — or just say what you want ("drop this HTML to CloudGrid") and the right one
    triggers.
 
+   Or install with the `gh skill` extension:
+
+   ```
+   gh skill install cloudgrid-io/skills
+   ```
+
    Other agents (Cursor, Cline, Gemini CLI): `npx skills add cloudgrid-io/skills`.
    They install as `drop`, `plug`, … — the CloudGrid brand comes from the plugin
    namespace, which those agents don't have.
@@ -76,10 +82,10 @@ walks through it end to end.
 
 ## MCP server
 
-`mcp-server/` exposes the same six actions as MCP tools, for agents that speak the
-Model Context Protocol. It wraps the same `cloudgrid` CLI. You can run it from a
-clone today; the published `@cloudgrid-io/mcp` package lands at launch. See
-[mcp-server/README.md](mcp-server/README.md).
+The `@cloudgrid-io/mcp` package exposes the same nine actions as MCP tools, for
+agents that speak the Model Context Protocol. It wraps the same `cloudgrid` CLI.
+Install it with `npx -y @cloudgrid-io/mcp`, or point a remote-capable client at
+`https://mcp.cloudgrid.io/mcp`. See [USAGE.md](USAGE.md) for per-client setup.
 
 ## License
 
