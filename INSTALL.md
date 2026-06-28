@@ -96,6 +96,20 @@ It wraps the same `cloudgrid` CLI and uses the same credentials, so no extra log
 is needed. Remote-capable clients can point at `https://mcp.cloudgrid.io/mcp`
 instead. See [USAGE.md](USAGE.md) for per-client snippets.
 
+### Claude Desktop — one-click install
+
+Claude Desktop users can install the MCP as a Desktop Extension with no terminal,
+no Node, and no JSON editing. Download the bundle and double-click it (or in Claude
+Desktop: Settings, Extensions, Install from file):
+
+```
+https://github.com/cloudgrid-io/mcp/releases/latest/download/cloudgrid.mcpb
+```
+
+The bundle carries the full local toolset (including the `cloudgrid` CLI), so deploy
+and secrets tools work without a separate install. Sign in from chat with the
+`cloudgrid_login` tool on first use.
+
 ## For agents
 
 If you are an agent reading this to install the skills yourself, read
