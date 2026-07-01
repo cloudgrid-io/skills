@@ -52,7 +52,8 @@ The response is JSON (HTTP 201 for an anonymous drop). Read these fields:
 
 - `slug` — the entity's public slug. An anonymous inspiration's live link is
   `https://guest.cloudgrid.io/<slug>`. The response has no ready-made `url`;
-  compose it from the slug.
+  compose it from the slug. (Apps/agents would be `https://<slug>.<grid>.cloudgrid.io`,
+  but anonymous drops are always inspirations.)
 - `claim_url` — the link to sign in and keep it past the 7-day expiry.
 - `claim_message` — a ready-to-show nudge to sign in and claim.
 
@@ -90,10 +91,10 @@ but it is now a no-op — each drop is already a fresh create.
 
 ## After the drop
 
-Print the live link on its own line, by itself, so it can be copied in one go
-(compose it from `slug` as described above). Then add one line of context: an
-anonymous drop lasts 7 days and can be claimed to keep it; a signed-in drop is
-already owned. Do not bury the URL in prose.
+Print the composed `url` (e.g. `https://guest.cloudgrid.io/<slug>`) on its own line,
+by itself, so it can be copied in one go. Then add one line of context: an anonymous
+drop lasts 7 days and can be claimed to keep it; a signed-in drop is already owned.
+Do not bury the URL in prose.
 
 ## Limits and errors
 

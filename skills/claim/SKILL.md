@@ -4,8 +4,8 @@ name: claim
 description: |
   Claim an anonymous CloudGrid drop into the user's account. Use when the user
   dropped something anonymously and now wants to keep it, own it, or stop it from
-  expiring after signing in. Claiming re-homes it into the user's grid, so the
-  public URL changes — share the new one.
+  expiring after signing in. Ownership transfers to the user and the drop re-homes
+  into their grid, so its public URL changes.
 argument-hint: "[claim-url-or-token]"
 allowed-tools: Bash
 ---
@@ -13,10 +13,10 @@ allowed-tools: Bash
 # CloudGrid Claim
 
 Turn an anonymous drop into an owned one. After an anonymous drop, the user has a
-`claim_url` (or token). Once they sign in, claiming transfers ownership to them and
-extends the expiry from 7 days to 30. Claiming re-homes the inspiration into the
-user's grid, so the public URL changes from `guest.cloudgrid.io/<slug>` to
-`<grid>.cloudgrid.io/<slug>` — share the new link after claiming.
+`claim_url` (or token) plus the drop's `entity_id`. Once they sign in, claiming
+transfers ownership to them and extends the expiry from 7 days to 30. Claiming
+re-homes the drop into the user's grid, so its public URL changes from
+`guest.cloudgrid.io/<slug>` to `<grid>.cloudgrid.io/<slug>` — share the new link.
 
 ## Step 0 — sign in first
 
@@ -25,9 +25,11 @@ skill (or `cloudgrid login` with the CLI) first.
 
 ## What you need
 
-The claim token from the anonymous drop. It is the `token` query parameter inside
-the `claim_url` the drop returned, for example
-`https://console.cloudgrid.io/claim?token=<TOKEN>`.
+Two things: the **entity id** of the anonymous drop (the `entity_id` field the drop
+returned), and the **claim token** — the `token` query parameter inside the
+`claim_url` the drop returned, e.g. `https://console.cloudgrid.io/claim?token=<TOKEN>`.
+A browser that still holds the `cg_anon_session` cookie from the drop can claim
+without a token instead.
 
 ## How to run it
 
@@ -61,5 +63,5 @@ new_expires_at, role_granted: "owner", ... }`.
 ## Notes
 
 - One pickup claims one entity. To claim several, repeat with each entity id + token.
-- The MCP `cloudgrid_claim` tool does this for you, and remembers the token from the
-  last anonymous drop so you can claim with no arguments.
+- The MCP `cloudgrid_claim` tool does this for you, and remembers the entity id +
+  token from the last anonymous drop so you can claim with no arguments.
