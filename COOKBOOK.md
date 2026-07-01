@@ -71,7 +71,7 @@ curl -sS -X POST https://api.cloudgrid.io/api/v2/plug \
   -F "artifact=@./index.html;type=text/html"
 ```
 
-The response includes `slug` (compose the live link `https://guest.cloudgrid.io/<slug>`)
+The response includes `slug` (the live link is `https://guest.cloudgrid.io/<slug>`)
 and `claim_url` (sign in within 7 days to keep it). This is what the `cloudgrid-drop`
 skill and the `cloudgrid_drop` MCP tool do for you. It is anonymous and serves
 inspirations only; a full app needs the signed-in `plug` flow above.
