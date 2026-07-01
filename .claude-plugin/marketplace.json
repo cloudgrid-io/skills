@@ -1,6 +1,9 @@
 {
   "name": "cloudgrid-skills",
   "owner": { "name": "CloudGrid", "url": "https://github.com/cloudgrid-io" },
+  "metadata": {
+    "description": "The CloudGrid agent-core: skills, a SessionStart orientation hook, and the CloudGrid MCP server, bundled into one installable plugin."
+  },
   "plugins": [
     {
       "name": "cloudgrid",
