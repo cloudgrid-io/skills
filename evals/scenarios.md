@@ -226,7 +226,7 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 **Expected behavior:**
 
 - Uses the `drop` skill. Drop is still valid for quick sharing even when signed in.
-- Calls the API with the user's JWT and org headers (signed-in drop, owned, 30-day).
+- Calls the API with the user's JWT and org headers (signed-in drop, owned).
 - Or offers `plug` as an alternative if the user wants a full app deploy.
 - Does not force the heavier `init -> plug` flow for a single file.
 - Prints the URL.
