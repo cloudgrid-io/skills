@@ -27,7 +27,8 @@ options apply only in that mode:
 - `--space <slug>` — required when `--scope space`.
 - `--visibility <visibility>` — `private`, `space`, `org`, or `link`.
 - `--name <slug>` — override the auto-derived slug.
-- `--expires <days|never>` — default 30 days.
+- `--expires <days|never>` — default: the org's configured expiry window (7 days
+  unless changed in the cockpit).
 - `--pin-reason <text>` — required if `--expires never`.
 
 ## Notes
