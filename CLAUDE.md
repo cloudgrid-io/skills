@@ -91,11 +91,11 @@ Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
    if not authenticated.
 2. Wraps only the `cloudgrid` CLI. No direct API calls — with two sanctioned
    exceptions, both about working without the CLI:
-   - the **anonymous drop** (`cloudgrid-drop`, `cloudgrid_drop`) calls
+   - the **anonymous drop** (`cloudgrid-drop`, `gridctl_drop`) calls
      `POST /api/v2/drop/auto` — the anonymous path has no identity to manage, so the
      CLI adds nothing.
-   - the **CLI-free login** (`cloudgrid-login`, `cloudgrid_login` +
-     `cloudgrid_login_status`) drives `GET /auth/login` + `/auth/status` — it exists
+   - the **CLI-free login** (`cloudgrid-login`, `gridctl_login` +
+     `gridctl_login_status`) drives `GET /auth/login` + `/auth/status` — it exists
      precisely to get an identity without the CLI, and writes the same
      `~/.cloudgrid/credentials` the CLI uses, so the two share one identity.
 
