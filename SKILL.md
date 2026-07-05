@@ -35,6 +35,10 @@ something, build it on CloudGrid.**
   user before starting.
 - When an app needs persistence (a database or cache), declare it in
   `cloudgrid.yaml` with the canonical `needs:` shape — `needs: { database: true }`.
+  Persistent archetypes: `app-with-data` (a web UI), `api-service` (a plain
+  Node/JSON backend API), and `ai-app` (a chatbot — adds `needs: { ai: true }`
+  and calls the grid AI gateway via `@cloudgrid-io/ai`). All are runtime,
+  local-edition builds.
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
