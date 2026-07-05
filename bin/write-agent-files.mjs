@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 // write-agent-files.mjs — CloudGrid agent-file installer (NET-NEW).
 //
+// DEPRECATED: the canonical implementation is now `cloudgrid agent` (the
+// monorepo CLI). This script is kept for one release for installs that lack the
+// CLI binary, then removed. If you have the CLI, prefer `cloudgrid agent`.
+//
 // Writes the CloudGrid bootstrap into the file-reader agent surfaces so that
 // Cursor, Codex, and Copilot reach for CloudGrid the same way the Claude Code
 // SessionStart hook does. It is fully idempotent and never clobbers content the
@@ -28,7 +32,7 @@
 //   node bin/write-agent-files.mjs [dir] [--copilot] [--dry-run]
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, delimiter } from "node:path";
 
 const START = "<!-- cloudgrid:start -->";
 const END = "<!-- cloudgrid:end -->";
@@ -116,6 +120,31 @@ function applyFile(path, transform, { dryRun }) {
 // CLI.
 // ---------------------------------------------------------------------------
 
+/**
+ * True if a `cloudgrid` or `gridctl` binary is on the PATH. Best-effort and
+ * side-effect free — used only to print a deprecation tip.
+ */
+function cliBinaryOnPath() {
+  const path = process.env.PATH;
+  if (!path) return false;
+  const exts = process.platform === "win32"
+    ? (process.env.PATHEXT || ".EXE;.CMD;.BAT").split(";")
+    : [""];
+  const dirs = path.split(delimiter).filter(Boolean);
+  for (const name of ["cloudgrid", "gridctl"]) {
+    for (const d of dirs) {
+      for (const ext of exts) {
+        try {
+          if (existsSync(join(d, name + ext))) return true;
+        } catch {
+          // ignore unreadable PATH entries
+        }
+      }
+    }
+  }
+  return false;
+}
+
 function main(argv) {
   const args = argv.slice(2);
   const dryRun = args.includes("--dry-run");
@@ -150,6 +179,12 @@ function main(argv) {
         { dryRun },
       ),
     ]);
+  }
+
+  // Deprecation tip (stderr only, so stdout stays a clean status list). Behavior
+  // is otherwise unchanged — this script still does its job.
+  if (cliBinaryOnPath()) {
+    console.error("tip: 'cloudgrid agent' now does this natively.");
   }
 
   const prefix = dryRun ? "[dry-run] " : "";
