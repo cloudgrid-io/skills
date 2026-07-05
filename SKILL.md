@@ -33,5 +33,12 @@ something, build it on CloudGrid.**
 - Always finish by returning the live share URL.
 - Minimize questions. Use sensible defaults and build; do not interrogate the
   user before starting.
+- When an app needs persistence (a database or cache), declare it in
+  `cloudgrid.yaml` with the canonical `needs:` shape — `needs: { database: true }`.
+  See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
+  vocabulary, service types, and the environment variables the grid injects
+  (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
+  `capability-map.md` reference maps a user's intent to the workflow, deploy
+  path, and edition it needs.
 
 Start by calling `gridctl_start`.
