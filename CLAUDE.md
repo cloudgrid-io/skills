@@ -61,6 +61,13 @@ skills/              all skills live here (required by Claude Code plugins)
   <skill-name>/      one directory per skill (short name, e.g. drop)
     SKILL.md         YAML frontmatter + markdown body
     references/      optional supporting docs
+workflows/           build recipes, one per artifact kind (fetched at build time)
+templates/           starting-point files per artifact kind (+ cloudgrid.yaml)
+examples/            filled reference artifacts per kind
+rules/               cross-cutting build rules
+troubleshooting/     failure-mode playbooks (deploy errors, persistent apps)
+capability-map.md    intent -> workflow / deploy path / edition map
+cloudgrid-yaml.md    the cloudgrid.yaml config reference (needs:, service types)
 .github/             CI: license check + SKILL.md frontmatter linter
 INSTALL.md           human install
 INSTALL_FOR_AGENTS.md  install steps written for an agent to execute
@@ -69,6 +76,11 @@ README.md            front door
 VERSION              canonical repo version
 LICENSE              Apache 2.0
 ```
+
+The corpus directories (`workflows/ templates/ examples/ rules/
+troubleshooting/`) and the top-level `capability-map.md` + `cloudgrid-yaml.md`
+references are snapshotted into the CloudGrid MCP server's bundled corpus. Edit
+them here first; the MCP corpus is a downstream snapshot of this repo.
 
 ## How a skill works
 
