@@ -63,6 +63,11 @@ search / indexing degrade to a clear "not indexed / missing secret" state.
 ```bash
 grid init semantic-search   # creates the entity + .cloudgrid/link.json
 grid secrets set EMBEDDINGS_API_KEY=sk-...   # + source secrets + MANAGER_PASSWORD_HASH
+
+# Build the static frontend BEFORE plug — CloudGrid validates that a
+# type:static service with a build: block already has services/web/dist/index.html.
+(cd services/web && npm install && npm run build)
+
 grid plug                    # async build + deploy; poll to a live URL
 ```
 

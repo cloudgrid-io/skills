@@ -181,8 +181,12 @@ container.
    to the active fields (web static+build, backend python, `needs:{database:true}`).
 3. `grid secrets set …` for embeddings + source + `MANAGER_PASSWORD_HASH` (§6).
 4. (Optional) `grid dev` to run locally against injected dev Mongo.
-5. `grid plug` — a runtime deploy is **ASYNC**: the first response is
+5. **Build the frontend first:** `(cd services/web && npm install && npm run build)`.
+   CloudGrid validates that a `type: static` service carrying a `build:` block
+   already has `services/web/dist/index.html` on disk at plug time — plug fails
+   validation otherwise.
+6. `grid plug` — a runtime deploy is **ASYNC**: the first response is
    `status: building`, not a live URL. Poll `grid status` (surface a liveness
    signal, never a bare wait) until Ready.
-6. Sign in as manager, hit "Refresh now" to index the source, then search.
+7. Sign in as manager, hit "Refresh now" to index the source, then search.
    Re-plug the same entity to update the same URL.
