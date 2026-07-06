@@ -62,7 +62,9 @@ skills/              all skills live here (required by Claude Code plugins)
     SKILL.md         YAML frontmatter + markdown body
     references/      optional supporting docs
 workflows/           build recipes, one per artifact kind (fetched at build time)
-templates/           starting-point files per artifact kind (+ cloudgrid.yaml)
+templates/           starting-point files per artifact kind (+ cloudgrid.yaml).
+                     Includes the DB-CRUD family (crm, kanban, task-manager,
+                     admin-dashboard) that shares the app-with-data shape.
 examples/            filled reference artifacts per kind
 rules/               cross-cutting build rules
 troubleshooting/     failure-mode playbooks (deploy errors, persistent apps)

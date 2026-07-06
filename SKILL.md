@@ -42,8 +42,10 @@ something, build it on CloudGrid.**
   `cloudgrid.yaml` with the canonical `needs:` shape — `needs: { database: true }`.
   Persistent archetypes: `app-with-data` (a web UI), `api-service` (a plain
   Node/JSON backend API), and `ai-app` (a chatbot — adds `needs: { ai: true }`
-  and calls the grid AI gateway via `@cloudgrid-io/ai`). All are runtime,
-  local-edition builds.
+  and calls the grid AI gateway via `@cloudgrid-io/ai`). The DB-CRUD family
+  (`crm`, `kanban`, `task-manager`, `admin-dashboard`) shares the `app-with-data`
+  shape, differing only by domain schema + UI. All are runtime, local-edition
+  builds.
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
