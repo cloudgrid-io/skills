@@ -13,7 +13,7 @@ cloudgrid.yaml schema (every field, the `needs:` injection table, the
 requires-vs-needs caveat, validation rules), fetch the companion reference:
 `gridctl_fetch("doc", "cloudgrid-yaml")`.
 
-## The 19 templates
+## The 23 templates
 
 | Intent (match on `when:`) | Template | `needs:` | Deploy | Edition |
 |---|---|---|---|---|
@@ -34,6 +34,10 @@ requires-vs-needs caveat, validation rules), fetch the companion reference:
 | kanban board, task board, trello-style board, workflow columns | `kanban` | `database: true` | runtime (async, poll) | local |
 | task manager, to-do app (richer than the app-with-data starter), task list with due dates/priorities | `task-manager` | `database: true` | runtime (async, poll) | local |
 | admin dashboard, admin panel, back-office, CRUD admin, manage records | `admin-dashboard` | `database: true` | runtime (async, poll) | local |
+| invoice system, invoicing, billing invoices, send invoices, invoice tracker | `invoice` | `database: true` | runtime (async, poll) | local |
+| inventory management, stock tracker, warehouse, product stock, SKU manager | `inventory` | `database: true` | runtime (async, poll) | local |
+| job board, careers page, job listings, hiring board, open roles | `job-board` | `database: true` | runtime (async, poll) | local |
+| ticket system, support tickets, helpdesk, issue tracker, support queue | `ticket-system` | `database: true` | runtime (async, poll) | local |
 | REST API, backend for X, API endpoint(s), CRUD API, JSON API, webhook receiver — a backend/service that stores data and isn't a full web UI | `api-service` | `database: true` | runtime (async, poll) | local |
 | chatbot, AI assistant, Q&A bot, conversational app, support bot, ask-me-anything, an app that talks to an LLM / generates text with AI | `ai-app` | `ai: true, database: true` | runtime (async, poll) | local |
 
@@ -43,13 +47,14 @@ edition. Pick by shape: a full web UI → `app-with-data`; a plain backend/JSON 
 (no UI) → `api-service`; an app that talks to an LLM → `ai-app` (adds `ai:`).
 Otherwise a static template deploys instantly anywhere.
 
-**The DB-CRUD family.** `crm`, `kanban`, `task-manager`, and `admin-dashboard`
-all share the exact `app-with-data` shape (nextjs + `needs: { database: true }`,
-app under `services/web/`, lazy Mongo getter, force-dynamic App-Router routes) —
-they differ only by domain schema + UI. Match the request to the closest one by
-its `when:`; if it is a bare to-do or generic "save this data" with no specific
+**The DB-CRUD family.** `crm`, `kanban`, `task-manager`, `admin-dashboard`,
+`invoice`, `inventory`, `job-board`, and `ticket-system` all share the exact
+`app-with-data` shape (nextjs + `needs: { database: true }`, app under
+`services/web/`, lazy Mongo getter, force-dynamic App-Router routes) — they
+differ only by domain schema + UI. Match the request to the closest one by its
+`when:`; if it is a bare to-do or generic "save this data" with no specific
 domain, use `app-with-data` (the minimal reference). Deploy path is identical for
-all five.
+all of them.
 
 ## Held / pending platform (not yet buildable)
 
