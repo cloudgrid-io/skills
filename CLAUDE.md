@@ -68,7 +68,25 @@ templates/           starting-point files per artifact kind (+ cloudgrid.yaml,
                      uncommented — see templates/_cloudgrid.yaml.reference).
                      Includes the DB-CRUD family (crm, kanban, task-manager,
                      admin-dashboard, invoice, inventory, job-board,
-                     ticket-system) that shares the app-with-data shape.
+                     ticket-system) that shares the app-with-data shape, plus
+                     wider families: static pages (product-launch,
+                     company-website), dashboards (analytics/monitoring/
+                     financial/revenue/api-dashboard), business/CRUD (blog-cms,
+                     product-catalog, expense-tracker, time-tracking, directory,
+                     project-management, property-listings), community
+                     (event-board, feature-request-board, forum), education
+                     (quiz-platform, course-platform, lms), and finance
+                     (membership-site, subscription-management, billing-dashboard).
+                     Heavier archetypes ship as BLUEPRINTS (kind: blueprint):
+                     structure + cloudgrid.yaml + an AGENTS.md guide instead of
+                     fill-in-the-blanks app code — the agent reads AGENTS.md and
+                     builds the app under services/web/. Blueprints include
+                     e-commerce (online-store, marketplace), operations
+                     (internal-tools-portal, approval-workflow, hr-portal, erp),
+                     booking (booking-system, calendar-scheduler,
+                     appointment-booking, restaurant-reservations, travel-booking;
+                     reminder cron pending #1543), and a RAG ai-knowledge-base
+                     (ideal vector: pgvector pending #1545).
 examples/            filled reference artifacts per kind
 rules/               cross-cutting build rules
 troubleshooting/     failure-mode playbooks (deploy errors, persistent apps)
