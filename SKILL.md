@@ -46,6 +46,29 @@ something, build it on CloudGrid.**
   (`crm`, `kanban`, `task-manager`, `admin-dashboard`, `invoice`, `inventory`,
   `job-board`, `ticket-system`) shares the `app-with-data` shape, differing only
   by domain schema + UI. All are runtime, local-edition builds.
+- The library spans several template families. Static (inspiration): a
+  `product-launch` and `company-website` page alongside the other static
+  archetypes. Runtime DB apps (`needs: { database: true }`, local edition):
+  dashboards (`analytics-dashboard`, `monitoring-dashboard`, `financial-dashboard`,
+  `revenue-dashboard`, `api-dashboard`), business/CRUD (`blog-cms`,
+  `product-catalog`, `expense-tracker`, `time-tracking`, `directory`,
+  `project-management`, `property-listings`), community (`event-board`,
+  `feature-request-board`), education (`quiz-platform`). Match by the workflow
+  `when:` in `capability-map.md`.
+- **Blueprints** are heavier archetypes (`kind: blueprint`) that ship structure
+  plus a correct `cloudgrid.yaml` plus an `AGENTS.md` guide, not fill-in-the-blanks
+  app code. Fetch the template, read its `AGENTS.md` for the file tree,
+  collections, and CloudGrid wiring (DB injection, a `vault:` block for auth /
+  Stripe secrets, deploy), then build the app under `services/web/`. Blueprints
+  cover e-commerce (`online-store`, `marketplace`), operations
+  (`internal-tools-portal`, `approval-workflow`, `hr-portal`, `erp`), community
+  (`forum`), education (`course-platform`, `lms`), finance (`membership-site`,
+  `subscription-management`, `billing-dashboard`), booking (`booking-system`,
+  `calendar-scheduler`, `appointment-booking`, `restaurant-reservations`,
+  `travel-booking`), and a RAG `ai-knowledge-base`. All are runtime, local-edition
+  builds. The booking family's reminder cron is pending platform #1543; the
+  knowledge base's ideal `vector: pgvector` is pending #1545 (store embeddings in
+  Mongo until it lands).
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
