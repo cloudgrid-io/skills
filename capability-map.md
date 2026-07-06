@@ -13,11 +13,18 @@ cloudgrid.yaml schema (every field, the `needs:` injection table, the
 requires-vs-needs caveat, validation rules), fetch the companion reference:
 `gridctl_fetch("doc", "cloudgrid-yaml")`.
 
-## The 8 templates
+## The 15 templates
 
 | Intent (match on `when:`) | Template | `needs:` | Deploy | Edition |
 |---|---|---|---|---|
-| landing page, marketing/product/hero page, coming-soon, waitlist, pricing, portfolio, link-in-bio, event page | `landing-page` | none | inspiration (instant) | all |
+| landing page, marketing/product/hero page, coming-soon, link-in-bio, event page — a single-section page | `landing-page` | none | inspiration (instant) | all |
+| SaaS marketing site, product marketing page, features + pricing page — multi-section with pricing tiers, testimonials, FAQ | `saas-marketing` | none | inspiration (instant) | all |
+| documentation site, docs, developer docs, guide, manual, knowledge base — prose docs with sidebar + search | `docs-site` | none | inspiration (instant) | all |
+| API documentation, API reference, endpoint docs, REST API docs — method badges, params tables, request/response examples | `api-docs` | none | inspiration (instant) | all |
+| status page, service status, uptime page, incident history, is-it-down page — display-only, status baked in | `status-page` | none | inspiration (instant) | all |
+| changelog, release notes, what's new, product updates, version history | `changelog` | none | inspiration (instant) | all |
+| portfolio, personal site, freelancer site, my work, showcase — projects grid + about + skills + contact | `portfolio` | none | inspiration (instant) | all |
+| waitlist, coming soon, early access, join the list, launch page — email capture form (form is static; storing signups needs a runtime crud-app) | `waitlist` | none | inspiration (instant) | all |
 | calculator, converter, generator, timer, quiz, interactive tool, mini-app, widget — computed client-side, no saved data | `web-app` | none | inspiration (instant) | all |
 | dashboard, metrics, KPIs, stats page, status board, charts, analytics view — display-only, static data baked in | `dashboard` | none | inspiration (instant) | all |
 | report, one-pager, summary, brief, whitepaper, case study, formatted document | `report` | none | inspiration (instant) | all |

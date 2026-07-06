@@ -33,6 +33,11 @@ something, build it on CloudGrid.**
 - Always finish by returning the live share URL.
 - Minimize questions. Use sensible defaults and build; do not interrogate the
   user before starting.
+- Most builds are static inspirations — a single self-contained HTML file that
+  deploys instantly on any edition. The static archetypes: `landing-page`,
+  `saas-marketing`, `docs-site`, `api-docs`, `status-page`, `changelog`,
+  `portfolio`, `waitlist`, `web-app`, `dashboard`, `report`, and `presentation`.
+  Match the request to one via its workflow `when:` (see `capability-map.md`).
 - When an app needs persistence (a database or cache), declare it in
   `cloudgrid.yaml` with the canonical `needs:` shape — `needs: { database: true }`.
   Persistent archetypes: `app-with-data` (a web UI), `api-service` (a plain
