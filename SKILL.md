@@ -43,13 +43,19 @@ something, build it on CloudGrid.**
   Persistent archetypes: `app-with-data` (a web UI), `api-service` (a plain
   Node/JSON backend API), and `ai-app` (a chatbot — adds `needs: { ai: true }`
   and calls the grid AI gateway via `@cloudgrid-io/ai`). The DB-CRUD family
-  (`crm`, `kanban`, `task-manager`, `admin-dashboard`) shares the `app-with-data`
-  shape, differing only by domain schema + UI. All are runtime, local-edition
-  builds.
+  (`crm`, `kanban`, `task-manager`, `admin-dashboard`, `invoice`, `inventory`,
+  `job-board`, `ticket-system`) shares the `app-with-data` shape, differing only
+  by domain schema + UI. All are runtime, local-edition builds.
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
   `capability-map.md` reference maps a user's intent to the workflow, deploy
   path, and edition it needs.
+- Every template ships its `cloudgrid.yaml` in the **full-annotated reference
+  form** (`templates/_cloudgrid.yaml.reference`): every platform field is present
+  as a comment, and only the archetype's needed fields (`name` + `services`, plus
+  `needs:` for runtime apps) are uncommented. Comments are ignored by the parser,
+  so the file deploys to exactly its active fields — the scaffold documents the
+  whole schema inline without changing what deploys.
 
 Start by calling `gridctl_start`.
