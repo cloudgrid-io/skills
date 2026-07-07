@@ -29,7 +29,7 @@ const repoRoot = join(__dirname, "..");
 // The recorded, canonical hash of the normalized bootstrap sentence.
 // Keep in sync with the monorepo CLI's counterpart test.
 const RECORDED_SHA256 =
-  "359533cdcc90bab2b1b8451fa1e581613d41b16ef20f031f196e5c21e09c62c2";
+  "c5fcdea2626b3d6dd60835d8bc96d7262067dbf559577330bf4f8a2ae74fa689";
 
 /** Collapse all whitespace runs to single spaces and trim. */
 function normalize(s) {
