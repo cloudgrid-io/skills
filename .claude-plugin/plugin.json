@@ -1,6 +1,6 @@
 {
   "name": "cloudgrid",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Multi-agent skills for CloudGrid: drop, login, claim, init, plug, logs, share, feedback, brain. Auto-orients agents to build on CloudGrid via a SessionStart hook, and bundles the CloudGrid MCP server.",
   "author": { "name": "CloudGrid" },
   "homepage": "https://github.com/cloudgrid-io/skills",
