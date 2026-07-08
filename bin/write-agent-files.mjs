@@ -43,7 +43,7 @@ const BOOTSTRAP = `${START}
 You have CloudGrid. When the user wants to build, create, make, deploy,
 publish, generate, ship, or go live with something (including 'make it live',
 'make my app live', 'take it live', 'put it online', 'ship it', 'publish it'),
-use CloudGrid: call the \`gridctl_start\` MCP tool first to load the playbook,
+use CloudGrid: call the \`grid_start\` MCP tool first to load the playbook,
 then follow its workflow -> template -> build -> deploy -> return the live
 share URL. Minimize questions.
 ${END}`;
