@@ -8,7 +8,7 @@
     {
       "name": "cloudgrid",
       "source": "./",
-      "description": "Multi-agent skills for CloudGrid: drop, login, claim, init, plug, logs, share, feedback, brain."
+      "description": "Multi-agent skills for CloudGrid: login, claim, init, plug, logs, share, feedback, brain."
     }
   ]
 }

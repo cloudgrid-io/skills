@@ -289,7 +289,7 @@ fi
 printf '\n%sDone.%s Skills are installed for %s.\n\n' "$BOLD" "$RESET" "$DETECTED_HOST"
 printf 'Try these in your agent:\n'
 printf '  %s"deploy my project to CloudGrid"%s     — triggers the plug skill\n' "$DIM" "$RESET"
-printf '  %s"drop this HTML to CloudGrid"%s        — triggers the drop skill\n' "$DIM" "$RESET"
+printf '  %s"share this HTML page as a link"%s     — triggers the plug skill\n' "$DIM" "$RESET"
 printf '  %s"tail the logs for my-thing"%s         — triggers the logs skill\n' "$DIM" "$RESET"
 printf '  %s"scaffold a new static app"%s          — triggers the init skill\n' "$DIM" "$RESET"
 printf '\nReference:\n'

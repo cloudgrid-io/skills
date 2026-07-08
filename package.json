@@ -1,7 +1,7 @@
 {
   "name": "@cloudgrid-io/skills",
-  "version": "0.13.0",
-  "description": "Multi-agent skills for CloudGrid: drop, login, claim, init, plug, logs, share, feedback, brain. Install in Claude Code, Codex, or Cursor.",
+  "version": "0.14.0",
+  "description": "Multi-agent skills for CloudGrid: login, claim, init, plug, logs, share, feedback, brain. Install in Claude Code, Codex, or Cursor.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/cloudgrid-io/skills",
   "bin": {
