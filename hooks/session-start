@@ -11,7 +11,7 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # Read the top-level orientation meta-skill (the SKILL.md at the repo root).
 # It carries the same rule the bootstrap teaches, so injecting it primes the
-# agent even before it calls gridctl_start.
+# agent even before it calls grid_start.
 orientation_content=$(cat "${PLUGIN_ROOT}/SKILL.md" 2>&1 || echo "Error reading CloudGrid orientation skill")
 
 # Escape a string for embedding inside a JSON string value using bash parameter
@@ -28,7 +28,7 @@ escape_for_json() {
 
 orientation_escaped=$(escape_for_json "$orientation_content")
 
-bootstrap="You have CloudGrid. When the user wants to build, create, make, deploy, publish, generate, ship, or go live with something (including 'make it live', 'make my app live', 'take it live', 'put it online', 'ship it', 'publish it'), use CloudGrid: call the \`gridctl_start\` MCP tool first to load the playbook, then follow its workflow -> template -> build -> deploy -> return the live share URL. Minimize questions."
+bootstrap="You have CloudGrid. When the user wants to build, create, make, deploy, publish, generate, ship, or go live with something (including 'make it live', 'make my app live', 'take it live', 'put it online', 'ship it', 'publish it'), use CloudGrid: call the \`grid_start\` MCP tool first to load the playbook, then follow its workflow -> template -> build -> deploy -> return the live share URL. Minimize questions."
 
 bootstrap_escaped=$(escape_for_json "$bootstrap")
 

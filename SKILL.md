@@ -21,18 +21,18 @@ live**, **make my `<thing>` live**, **go live**, **take it live**, **ship it**,
 
 ## The golden path
 
-1. **Orient.** Call the `gridctl_start` MCP tool first. It returns the playbook
+1. **Orient.** Call the `grid_start` MCP tool first. It returns the playbook
    (the rules and golden path) plus an index of available workflows and any live
    context (such as the active grid and sign-in state).
 2. **Match intent.** Map what the user asked for to a workflow in that index
    (for example, "build me a presentation" -> the `presentation` workflow).
-3. **Load.** Call `gridctl_fetch(kind, name)` to pull the specific workflow,
+3. **Load.** Call `grid_fetch(kind, name)` to pull the specific workflow,
    template, or example live from the corpus. Fetch the workflow first, then the
    template it names, then optionally the closest example.
 4. **Build.** Fill the template with the user's content. This is pure model
    work.
 5. **Deploy.** Deploy the artifact. On a hosted MCP edition use the drop tool; on
-   a local MCP or CLI edition use `gridctl plug`.
+   a local MCP or CLI edition use `grid plug`.
 6. **Share.** Return the **live share URL** to the user.
 
 ## Rules
@@ -98,4 +98,4 @@ live**, **make my `<thing>` live**, **go live**, **take it live**, **ship it**,
   so the file deploys to exactly its active fields — the scaffold documents the
   whole schema inline without changing what deploys.
 
-Start by calling `gridctl_start`.
+Start by calling `grid_start`.

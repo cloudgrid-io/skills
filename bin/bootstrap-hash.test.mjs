@@ -29,7 +29,7 @@ const repoRoot = join(__dirname, "..");
 // The recorded, canonical hash of the normalized bootstrap sentence.
 // Keep in sync with the monorepo CLI's counterpart test.
 const RECORDED_SHA256 =
-  "c5fcdea2626b3d6dd60835d8bc96d7262067dbf559577330bf4f8a2ae74fa689";
+  "1fc864282384ce3839dc188ee390775f55b6a9c42895ca75f260eb2125536108";
 
 /** Collapse all whitespace runs to single spaces and trim. */
 function normalize(s) {
@@ -41,7 +41,7 @@ function bootstrapFromHook() {
   const hook = readFileSync(join(repoRoot, "hooks", "session-start"), "utf8");
   const m = hook.match(/bootstrap="((?:[^"\\]|\\.)*)"/);
   assert.ok(m, "hooks/session-start: could not find bootstrap=\"...\" assignment");
-  // In the bash double-quoted string the backticks around gridctl_start are
+  // In the bash double-quoted string the backticks around grid_start are
   // escaped as \`; unescape them so the sentence matches the markdown form.
   return m[1].replace(/\\`/g, "`");
 }
@@ -61,7 +61,7 @@ function bootstrapFromBin() {
       .replace(/\$\{END\}/g, "")
       // Strip the markdown heading — it's presentation, not the sentence.
       .replace(/##\s*CloudGrid/, "")
-      // Unescape the backticks around gridctl_start.
+      // Unescape the backticks around grid_start.
       .replace(/\\`/g, "`")
   );
 }
