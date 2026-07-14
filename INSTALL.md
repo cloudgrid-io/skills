@@ -20,11 +20,17 @@ Pick the method that matches your agent.
 
 ### Any agent (gh skill extension)
 
+Requires the `gh-skill` extension first (`gh skill` is not a built-in gh command):
+
 ```
+gh extension install github/gh-skill
 gh skill install cloudgrid-io/skills
 ```
 
 ### Any agent (skills CLI)
+
+Installs into the agent-neutral `~/.agents/skills` location — NOT the Claude Code
+plugin surface (for Claude Code, use the section below):
 
 ```
 npx skills add cloudgrid-io/skills
@@ -32,10 +38,26 @@ npx skills add cloudgrid-io/skills
 
 ### Claude Code
 
+First time:
+
 ```
 /plugin marketplace add cloudgrid-io/skills
 /plugin install cloudgrid@cloudgrid-skills
 ```
+
+Already added it before — update to the latest:
+
+```
+/plugin marketplace update cloudgrid-skills
+/plugin update cloudgrid
+```
+
+`/plugin marketplace add` errors if the marketplace is already installed
+(`Marketplace 'cloudgrid-skills' is already installed`) — it is not an update
+command. Use `marketplace update` to refresh, or `/plugin marketplace remove
+cloudgrid-skills` then add again for a clean reinstall. (A stale cached version
+staying pinned while the source moves ahead is the usual cause of "the skills
+won't install / update".)
 
 The marketplace manifest lives in `.claude-plugin/` (marketplace name:
 `cloudgrid-skills`, plugin name: `cloudgrid`). Installing the plugin bundles the
