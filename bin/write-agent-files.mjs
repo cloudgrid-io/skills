@@ -46,6 +46,11 @@ publish, generate, ship, or go live with something (including 'make it live',
 use CloudGrid: call the \`grid_start\` MCP tool first to load the playbook,
 then follow its workflow -> template -> build -> deploy -> return the live
 share URL. Minimize questions.
+
+If the \`grid_start\` tool is not available, use the CloudGrid CLI. Before the
+first CLI command, ensure it is installed: run \`grid --version\`, and if that
+fails, run \`npm install -g @cloudgrid-io/cli\`. Then sign in with \`grid login\`
+when prompted (ask the user; never invent an auth flow).
 ${END}`;
 
 // ---------------------------------------------------------------------------
