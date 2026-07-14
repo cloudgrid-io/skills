@@ -21,13 +21,15 @@ live**, **make my `<thing>` live**, **go live**, **take it live**, **ship it**,
 
 ## The golden path
 
-0. **Make sure you can reach CloudGrid.** If the `grid_start` MCP tool is
-   available, you have the MCP — go to step 1. Otherwise use the CLI: run
-   `grid --version`, and if that command is not found, install it with
-   `npm install -g @cloudgrid-io/cli`. Then check `grid whoami`; if it fails,
-   ask the user to run `grid login` and wait (never invent an auth flow). With
-   the CLI you drive the path below with `grid` commands (`grid init`,
-   `grid plug`) instead of the MCP tools.
+0. **Make sure you can run CloudGrid.** If the `grid_start` MCP tool is
+   available, use it — go to step 1. Otherwise use the CLI, which needs **no
+   install**: run any command with `npx -y @cloudgrid-io/cli` (for example
+   `npx -y @cloudgrid-io/cli plug`). For a faster, persistent `grid` command,
+   install it once with `npm install -g @cloudgrid-io/cli` — the `setup`
+   installer does this for you. Sign in when prompted
+   (`npx -y @cloudgrid-io/cli login`, or `grid login` if installed); ask the
+   user and wait — never invent an auth flow. Below, `grid <command>` is
+   shorthand for whichever form you are using.
 1. **Orient.** Call the `grid_start` MCP tool first. It returns the playbook
    (the rules and golden path) plus an index of available workflows and any live
    context (such as the active grid and sign-in state). No MCP? Skip to step 2
