@@ -21,9 +21,17 @@ live**, **make my `<thing>` live**, **go live**, **take it live**, **ship it**,
 
 ## The golden path
 
+0. **Make sure you can reach CloudGrid.** If the `grid_start` MCP tool is
+   available, you have the MCP — go to step 1. Otherwise use the CLI: run
+   `grid --version`, and if that command is not found, install it with
+   `npm install -g @cloudgrid-io/cli`. Then check `grid whoami`; if it fails,
+   ask the user to run `grid login` and wait (never invent an auth flow). With
+   the CLI you drive the path below with `grid` commands (`grid init`,
+   `grid plug`) instead of the MCP tools.
 1. **Orient.** Call the `grid_start` MCP tool first. It returns the playbook
    (the rules and golden path) plus an index of available workflows and any live
-   context (such as the active grid and sign-in state).
+   context (such as the active grid and sign-in state). No MCP? Skip to step 2
+   and build directly with the CLI.
 2. **Match intent.** Map what the user asked for to a workflow in that index
    (for example, "build me a presentation" -> the `presentation` workflow).
 3. **Load.** Call `grid_fetch(kind, name)` to pull the specific workflow,
@@ -84,8 +92,8 @@ live**, **make my `<thing>` live**, **go live**, **take it live**, **ship it**,
   `travel-booking`), and a RAG `ai-knowledge-base`. All are runtime, local-edition
   builds. Scheduled `type: cron` services (Python and Node) work on CLI 0.14.0 —
   the booking family's reminder cron and the semantic-search refresh cron are
-  supported. The knowledge base's ideal `vector: pgvector` is still pending #1545
-  (store embeddings in Mongo until it lands).
+  supported. The knowledge base's ideal `vector: pgvector` is not yet generally
+  available (store embeddings in Mongo for now).
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
