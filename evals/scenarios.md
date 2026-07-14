@@ -40,9 +40,9 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 
 **Expected behavior:**
 
-- Runs `cloudgrid init app my-thing` (with or without `--type`, depending on context).
-- Then runs `cloudgrid plug` from the project directory.
-- Then runs `cloudgrid visibility set my-thing link`.
+- Runs `grid init app my-thing` (with or without `--type`, depending on context).
+- Then runs `grid plug` from the project directory.
+- Then runs `grid visibility set my-thing link`.
 - Does not skip steps. Does not jump straight to `plug` without `init`.
 - Prints the live URL after `plug`. Prints the shareable URL after `share`.
 - Offers `logs` or `feedback` as a next step.
@@ -66,14 +66,14 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 **Expected behavior:**
 
 - Uses the `plug` skill.
-- Runs `cloudgrid plug` (no arguments needed; uses the linked entity).
+- Runs `grid plug` (no arguments needed; uses the linked entity).
 - Does not re-run `init` when `.cloudgrid` already exists.
 - Waits for the build to finish. Does not interrupt the stream.
 - Prints the live URL when done.
 
 **Score:**
 
-- Pass: `cloudgrid plug` run, URL printed, no unnecessary `init`.
+- Pass: `grid plug` run, URL printed, no unnecessary `init`.
 - Partial: correct deploy but re-ran `init` or asked about the entity name.
 - Fail: used `drop` instead of `plug`, or failed to print the URL.
 
@@ -88,7 +88,7 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 **Expected behavior:**
 
 - Uses the `logs` skill.
-- Runs `cloudgrid logs my-thing` (with `--tail` or `--since` for a one-time check).
+- Runs `grid logs my-thing` (with `--tail` or `--since` for a one-time check).
 - Does not use `--follow` unless the user says "watch" or "stream."
 - Summarizes the output: healthy, errors, key lines.
 - Does not paste pages of raw log output into chat.
@@ -158,7 +158,7 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 **Expected behavior:**
 
 - Uses the `brain` skill.
-- Runs `cloudgrid brain refresh my-thing --wait`.
+- Runs `grid brain refresh my-thing --wait`.
 - Waits for the refresh to finish (up to about 60 seconds).
 - Summarizes what changed: new tags, updated description, diagram regenerated.
 - Does not print the full hook trace or raw CLI output.
@@ -180,7 +180,7 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 **Expected behavior:**
 
 - Uses the `feedback` skill.
-- Runs `cloudgrid feedback list` (optionally with `--since` if the user implied a time window).
+- Runs `grid feedback list` (optionally with `--since` if the user implied a time window).
 - Summarizes the feed: groups by theme, surfaces bugs or blockers first.
 - Does not paste every event verbatim.
 - Does not confuse reading feedback with sending feedback.
@@ -202,7 +202,7 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 **Expected behavior:**
 
 - Uses the `share` skill.
-- Runs `cloudgrid visibility set my-thing link`.
+- Runs `grid visibility set my-thing link`.
 - Defaults to `link` mode (anyone with the URL can open it).
 - Does not use a wider mode (`authenticated`, `org`, `space`) unless the user asked for it.
 - Prints the outlet URL on its own line.
@@ -250,8 +250,8 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 - Uses the `init` skill.
 - Infers `--type python` from the user's request.
 - Asks for a name if not provided (a slug, 3-40 lowercase characters).
-- Runs `cloudgrid init app <name> --type python` once the name is confirmed.
-- Reports that the entity is registered and suggests `cloudgrid plug` as the next step.
+- Runs `grid init app <name> --type python` once the name is confirmed.
+- Reports that the entity is registered and suggests `grid plug` as the next step.
 
 **Score:**
 

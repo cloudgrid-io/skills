@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // write-agent-files.mjs — CloudGrid agent-file installer (NET-NEW).
 //
-// DEPRECATED: the canonical implementation is now `cloudgrid agent` (the
+// DEPRECATED: the canonical implementation is now `grid agent` (the
 // monorepo CLI). This script is kept for one release for installs that lack the
-// CLI binary, then removed. If you have the CLI, prefer `cloudgrid agent`.
+// CLI binary, then removed. If you have the CLI, prefer `grid agent`.
 //
 // Writes the CloudGrid bootstrap into the file-reader agent surfaces so that
 // Cursor, Codex, and Copilot reach for CloudGrid the same way the Claude Code
@@ -186,7 +186,7 @@ function main(argv) {
   // Deprecation tip (stderr only, so stdout stays a clean status list). Behavior
   // is otherwise unchanged — this script still does its job.
   if (cliBinaryOnPath()) {
-    console.error("tip: 'cloudgrid agent' now does this natively.");
+    console.error("tip: 'grid agent' now does this natively.");
   }
 
   const prefix = dryRun ? "[dry-run] " : "";

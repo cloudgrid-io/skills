@@ -1,7 +1,7 @@
-# cloudgrid init — options
+# grid init — options
 
 ```
-cloudgrid init <kind> <name> [options]
+grid init <kind> <name> [options]
 ```
 
 ## Arguments
@@ -32,5 +32,5 @@ cloudgrid init <kind> <name> [options]
 ## Notes
 
 - `init` registers the entity and optionally writes a starter directory. It does
-  not deploy. Run `cloudgrid plug` to deploy.
+  not deploy. Run `grid plug` to deploy.
 - The slug must be unique within the org.

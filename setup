@@ -142,12 +142,12 @@ else
     die "cloudgrid CLI not found. Run without --skip-cli or install it manually."
   fi
 
-  if cloudgrid whoami >/dev/null 2>&1; then
-    identity="$(cloudgrid whoami 2>/dev/null || echo "")"
+  if grid whoami >/dev/null 2>&1; then
+    identity="$(grid whoami 2>/dev/null || echo "")"
     ok "Authenticated. $identity"
   else
     err "Not authenticated."
-    info "Run 'cloudgrid login' and then re-run this script."
+    info "Run 'grid login' and then re-run this script."
     exit 1
   fi
 fi
