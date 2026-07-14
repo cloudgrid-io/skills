@@ -1,7 +1,7 @@
-# cloudgrid plug — options
+# grid plug — options
 
 ```
-cloudgrid plug [target] [options]
+grid plug [target] [options]
 ```
 
 `[target]` is an optional path or URL. With no target, plug uses the entity linked
@@ -33,7 +33,7 @@ options apply only in that mode:
 
 ## Notes
 
-- A directory deploy needs a `cloudgrid.yaml`. `cloudgrid init` writes one, or plug
+- A directory deploy needs a `cloudgrid.yaml`. `grid init` writes one, or plug
   will help create one on first run.
 - The first plug in an org may prompt for the org. `--org` skips the prompt.
 - Output ends with the live URL. In `--json` mode the URL is a field, not chrome.

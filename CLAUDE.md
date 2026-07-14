@@ -6,7 +6,7 @@ Guidance for Claude Code (and other agents) working in this repo.
 
 `cloudgrid-io/skills` is CloudGrid's public extensibility surface: a set of
 multi-agent skills, plus an MCP server, that let an AI agent drive CloudGrid
-through the `cloudgrid` CLI. It installs into Claude Code, Codex, or Cursor.
+through the `grid` CLI. It installs into Claude Code, Codex, or Cursor.
 
 This repo is public and Apache 2.0. Everything here is read by builders and by
 other agents. Write accordingly.
@@ -32,7 +32,7 @@ Not in this repo:
 - The CLI source. The CLI ships separately as `@cloudgrid-io/cli`. Skills assume
   it is on `$PATH` and authenticated. Do not re-implement CLI behavior here.
 - Platform code (API, manifests, infra). That lives elsewhere and is private.
-- Any auth flow other than `cloudgrid login`.
+- Any auth flow other than `grid login`.
 
 ## Voice
 
@@ -49,7 +49,7 @@ printed output — follows these rules:
 Example:
 
 - No: "Effortlessly deploy your apps with our powerful CLI!"
-- Yes: "`cloudgrid plug` deploys a directory or URL. Live in about 30 seconds."
+- Yes: "`grid plug` deploys a directory or URL. Live in about 30 seconds."
 
 ## Repo structure
 
@@ -111,9 +111,9 @@ them here first; the MCP corpus is a downstream snapshot of this repo.
 Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
 `argument-hint`, `allowed-tools`) and a markdown body. The body always:
 
-1. Bootstraps: install `@cloudgrid-io/cli` if missing, prompt `cloudgrid login`
+1. Bootstraps: install `@cloudgrid-io/cli` if missing, prompt `grid login`
    if not authenticated.
-2. Wraps only the `cloudgrid` CLI. No direct API calls — with two sanctioned
+2. Wraps only the `grid` CLI. No direct API calls — with two sanctioned
    exceptions, both about working without the CLI:
    - the **anonymous single-page publish** (`cloudgrid:plug` with inline HTML, or
      the `grid_plug` MCP tool's `html` param) calls `POST /api/v2/plug` — the
@@ -149,7 +149,7 @@ version skills independently — it is over-engineering for now.
 ## Do not
 
 - Do not re-implement or fork the CLI. File an issue if it lacks something.
-- Do not invent an auth flow. Use `cloudgrid login`.
+- Do not invent an auth flow. Use `grid login`.
 - Do not add plan-gating, paywalls, or tier checks. Everything is free.
 - Do not put partnership claims or internal org names in public docs.
 - Do not skip the voice rules to save time.
