@@ -113,20 +113,20 @@ if [ "$SKIP_CLI" = true ]; then
 else
   info "Step 1/4: CloudGrid CLI"
 
-  if command -v cloudgrid >/dev/null 2>&1; then
-    cli_version="$(cloudgrid --version 2>/dev/null || echo "unknown")"
-    ok "cloudgrid CLI already installed ($cli_version)."
+  if command -v grid >/dev/null 2>&1; then
+    cli_version="$(grid --version 2>/dev/null || echo "unknown")"
+    ok "grid CLI already installed ($cli_version)."
   else
     info "Installing @cloudgrid-io/cli via npm..."
     if ! command -v npm >/dev/null 2>&1; then
       die "npm is not on \$PATH. Install Node.js (https://nodejs.org) and try again."
     fi
     npm install -g @cloudgrid-io/cli
-    if command -v cloudgrid >/dev/null 2>&1; then
-      cli_version="$(cloudgrid --version 2>/dev/null || echo "unknown")"
-      ok "cloudgrid CLI installed ($cli_version)."
+    if command -v grid >/dev/null 2>&1; then
+      cli_version="$(grid --version 2>/dev/null || echo "unknown")"
+      ok "grid CLI installed ($cli_version)."
     else
-      die "npm install succeeded but 'cloudgrid' is not on \$PATH. Check your npm global bin directory."
+      die "npm install succeeded but 'grid' is not on \$PATH. Check your npm global bin directory."
     fi
   fi
 fi
@@ -138,8 +138,8 @@ if [ "$SKIP_AUTH" = true ]; then
 else
   info "Step 2/4: Authentication"
 
-  if ! command -v cloudgrid >/dev/null 2>&1; then
-    die "cloudgrid CLI not found. Run without --skip-cli or install it manually."
+  if ! command -v grid >/dev/null 2>&1; then
+    die "grid CLI not found. Run without --skip-cli or install it manually."
   fi
 
   if grid whoami >/dev/null 2>&1; then

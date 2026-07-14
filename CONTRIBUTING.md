@@ -37,7 +37,7 @@ Required frontmatter fields: `version`, `name`, `description`, `allowed-tools`.
 3. The skill body must:
    - Bootstrap the CLI: install `@cloudgrid-io/cli` if missing, prompt
      `grid login` if not authenticated.
-   - Wrap the `cloudgrid` CLI. No direct API calls, with two sanctioned
+   - Wrap the `grid` CLI. No direct API calls, with two sanctioned
      exceptions: anonymous drop (`POST /api/v2/drop/auto`) and CLI-free login
      (`/auth/login` + `/auth/status`). See `CLAUDE.md` for details.
    - Detect the user's language from their first message and reply in it.
