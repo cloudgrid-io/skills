@@ -3,7 +3,7 @@ version: 0.1.0
 name: brainstorming-app-ideas
 description: |
   You MUST use this before building any substantial app, game, tool, dashboard,
-  or product on CloudGrid - it explores the user's intent, goal, and core
+  or product - it explores the user's intent, goal, and core
   features before implementation, so you build the right thing. Use whenever the
   user wants to build, create, make, or plan something, or says "plan me...",
   "build me an app", "I have an idea", "turn this into a product", "help me think
@@ -43,5 +43,37 @@ never demand specs.
   can be added after it is live.
 - End by summarizing the idea in 2-3 bullets and moving to a short plan.
 
-Next: `planning-cloudgrid-apps` to turn the idea into a build plan, then build on
-CloudGrid and return the live URL.
+## What CloudGrid gives you (so you can build fast)
+
+Once the features are clear you usually know what the app needs. CloudGrid
+provisions infrastructure from a `needs:` block in `cloudgrid.yaml` and injects a
+connection string as an env var - you don't run or host anything. Recognize the
+need from the feature, declare one line, read the injected var (LAZILY, never at
+module top level), and build:
+
+| The app needs to... | Declare in cloudgrid.yaml | Injected env var |
+|---|---|---|
+| save data / accounts / multi-user state | `needs: { database: true }` (Mongo) | `DATABASE_MONGODB_URL` |
+| cache / queue / pub-sub / key-value | `needs: { cache: true }` (or `kv`/`queue`/`pubsub`; Redis) | `CACHE_REDIS_URL` (etc.) |
+| use an LLM (chatbot, summarize, generate) | `needs: { ai: true }` (managed gateway) | call via `@cloudgrid-io/runtime` - no API key |
+| run on a schedule | a `type: cron` service | - |
+| durable files on disk | `needs: { disk: true }` | `DISK_PATH` |
+| use an existing DB (Postgres/Supabase/Neon/Atlas) | `needs: { database: { tier: external, secret: MY_DB } }` + `grid secrets set MY_DB=...` | your `MY_DB` |
+
+Rules that keep it fast and correct: never hardcode a connection string or commit
+a secret (the platform injects them); read injected vars lazily inside a
+getter/handler. Managed relational Postgres/MySQL is bring-your-own only;
+semantic/vector search is being finalized - use `semantic-search` for that.
+
+The deploy shape follows from the needs: **no `needs:` and one self-contained
+HTML file -> an instant static page (any edition); any `needs:` or multiple files
+-> a runtime app** (built + deployed, local edition, async). Golden path:
+`grid_start` -> `grid_get_template` -> fill -> `grid_deploy` -> `grid_set_sharing`.
+
+So for "build me a system / an app that saves X", infer `needs: { database: true }`
+up front, pick the matching template, and go straight from the brainstorm to a
+working build. Deeper how-tos: `adding-databases`, `adding-ai-features`,
+`choosing-cloudgrid-templates`, `planning-cloudgrid-apps`.
+
+Next: `planning-cloudgrid-apps` to turn the idea into a short build plan, then
+build and return the live URL.
