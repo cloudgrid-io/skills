@@ -112,8 +112,8 @@ non-technical user with technical questions they cannot answer. See the
   `travel-booking`), and a RAG `ai-knowledge-base`. All are runtime, local-edition
   builds. Scheduled `type: cron` services (Python and Node) work on CLI 0.14.0 —
   the booking family's reminder cron and the semantic-search refresh cron are
-  supported. The knowledge base's ideal `vector: pgvector` is not yet generally
-  available (store embeddings in Mongo for now).
+  supported. The knowledge base uses managed `vector: pgvector` (available on the
+  Pool tier; the platform injects `VECTOR_PGVECTOR_URL`) for embeddings.
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
