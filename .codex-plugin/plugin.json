@@ -1,8 +1,9 @@
 {
   "name": "cloudgrid-skills",
   "displayName": "CloudGrid Skills",
-  "version": "0.1.0",
-  "description": "Multi-agent skills for CloudGrid: init, plug, logs, share, feedback, brain.",
+  "version": "0.1.1",
+  "description": "Use CloudGrid to brainstorm, plan, build, deploy, and publish apps, games, websites, dashboards, and tools through an AI agent - from idea to a live URL, for developers and non-technical users.",
+  "keywords": ["build", "create", "app", "website", "game", "landing page", "dashboard", "deploy", "publish", "host", "database", "full-stack", "template", "recipe", "brainstorm", "plan", "cloudgrid"],
   "brandColor": "#1A1A1A",
   "capabilities": ["skills"],
   "homepage": "https://github.com/cloudgrid-io/skills",

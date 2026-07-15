@@ -1,7 +1,18 @@
 {
   "name": "cloudgrid",
-  "version": "0.14.0",
-  "description": "Multi-agent skills for CloudGrid: login, claim, init, plug, logs, share, feedback, brain. Auto-orients agents to build on CloudGrid via a SessionStart hook, and bundles the CloudGrid MCP server.",
+  "version": "0.14.1",
+  "description": "Use CloudGrid to brainstorm, plan, build, deploy, and publish apps, games, websites, dashboards, and tools through an AI agent. Guides the agent from idea to a live URL - templates, recipes, managed databases and AI, instant single-page publish, and full-app deploys - for developers and non-technical users. Bundles the CloudGrid MCP server.",
+  "keywords": [
+    "build", "create", "make", "app", "application", "website", "web app",
+    "landing page", "dashboard", "admin panel", "internal tool", "game",
+    "browser game", "tool", "calculator", "saas", "prototype", "mvp",
+    "deploy", "publish", "host", "hosting", "go live", "launch", "production",
+    "runtime", "database", "backend", "frontend", "full-stack", "api", "agent",
+    "template", "recipe", "scaffold", "starter", "brainstorm", "plan", "design",
+    "improve", "redesign", "debug", "logs", "share", "visibility",
+    "existing project", "import", "migrate", "custom domain", "ai app",
+    "chatbot", "cron", "auth", "semantic search", "deploy zip", "cloudgrid"
+  ],
   "author": { "name": "CloudGrid" },
   "homepage": "https://github.com/cloudgrid-io/skills",
   "license": "Apache-2.0",

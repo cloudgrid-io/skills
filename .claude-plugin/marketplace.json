@@ -2,13 +2,13 @@
   "name": "cloudgrid-skills",
   "owner": { "name": "CloudGrid", "url": "https://github.com/cloudgrid-io" },
   "metadata": {
-    "description": "The CloudGrid agent-core: skills, a SessionStart orientation hook, and the CloudGrid MCP server, bundled into one installable plugin."
+    "description": "Use CloudGrid to go from idea to live app. Skills + MCP for brainstorming, planning, building, and deploying apps, games, landing pages, dashboards, and full-stack projects - for technical and non-technical users."
   },
   "plugins": [
     {
       "name": "cloudgrid",
       "source": "./",
-      "description": "Multi-agent skills for CloudGrid: login, claim, init, plug, logs, share, feedback, brain."
+      "description": "Use CloudGrid to build and deploy real apps from a conversation: brainstorm, plan, build (games, landing pages, dashboards, full-stack), add databases and AI, and publish to a live URL. Bundles the CloudGrid MCP."
     }
   ]
 }
