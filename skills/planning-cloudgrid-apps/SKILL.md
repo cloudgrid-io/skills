@@ -37,8 +37,11 @@ okay in a glance. A plan is a few bullets, not a document.
   database"). Do not quiz the user.
 - Prefer a template/recipe over hand-rolling.
 - Keep the plan to a handful of bullets and confirm in one line before building.
-- Do not claim capabilities CloudGrid lacks (no object storage yet, managed
-  Postgres only via bring-your-own, native vector search pending - use Mongo).
+- Managed data available today: Mongo (`needs: { database: true }`), Redis
+  (`cache`/`kv`/`queue`/`pubsub`), and **pgvector for semantic/vector search**
+  (`needs: { vector: pgvector }`). Relational Postgres/MySQL is bring-your-own
+  (external secret). Do not claim capabilities CloudGrid lacks (e.g. object
+  storage is not available yet; no native mobile/desktop apps).
 
 Next: build it (`building-cloudgrid-apps` or an archetype skill like
 `building-games` / `creating-landing-pages`), then deploy and return the live URL.

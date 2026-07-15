@@ -23,20 +23,23 @@ runtime app backed by managed data (local edition, async deploy).
 2. **Start from the pattern** - fetch the `semantic-search` recipe/template:
    `grid_fetch({ kind: "workflow", name: "semantic-search" })` then its template.
    Prefer the recipe over hand-rolling embedding + storage glue.
-3. **Data + AI** - declare `needs: { database: true }` (managed Mongo, injected
-   as `DATABASE_MONGODB_URL`) and, for generating embeddings, `needs: { ai: true }`
-   (the CloudGrid AI gateway).
-4. **Store + query** - embed each document once, store the vector alongside the
-   text in Mongo, and rank by cosine similarity at query time.
+3. **Data + AI** - declare `needs: { vector: pgvector }` for the embeddings (managed
+   pgvector; the platform injects `VECTOR_PGVECTOR_URL`) and `needs: { ai: true }`
+   to generate them (the CloudGrid AI gateway). Add `needs: { database: true }`
+   (Mongo, `DATABASE_MONGODB_URL`) if you also store app data/metadata.
+4. **Store + query** - embed each document once, store the vector in pgvector, and
+   rank by vector similarity at query time (an ANN/`<->` search) - semantic search
+   out of the box.
 5. **Deploy** the folder, poll to live, return the URL, then ask visibility.
 
-## Honest limits
+## Notes
 
-- **Native vector search (`vector: pgvector`) is not generally available yet.**
-  Store embeddings in Mongo and rank by cosine similarity for now; do not promise
-  a managed vector database.
+- **Managed pgvector is available on the Pool tier** (the default) via
+  `needs: { vector: pgvector }`. Bring-your-own also works (Supabase / Neon /
+  Atlas) via an external secret. Dedicated-tier vector HA is still hardening, but
+  that does not block building on Pool.
 - Embedding dimensions must match between what you store and what you query with -
-  use one embedding model consistently.
+  use one embedding model consistently (declare `dim` if you want it enforced).
 - A daily refresh can run as a `type: cron` service if the corpus changes.
 
 See `adding-databases` and `adding-ai-features` for the data and AI wiring.
