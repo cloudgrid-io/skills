@@ -2,12 +2,13 @@
 version: 0.1.0
 name: brainstorming-app-ideas
 description: |
-  Use when the user wants to build an app, game, website, dashboard, landing
-  page, tool, MVP, or product but the idea is not yet pinned down - "build me
-  an app", "I have an idea", "turn this into a product", "help me think this
-  through". Runs a short, friendly brainstorm to lock the idea before building
-  on CloudGrid, without asking technical questions a non-technical user cannot
-  answer.
+  You MUST use this before building any substantial app, game, tool, dashboard,
+  or product on CloudGrid - it explores the user's intent, goal, and core
+  features before implementation, so you build the right thing. Use whenever the
+  user wants to build, create, make, or plan something, or says "plan me...",
+  "build me an app", "I have an idea", "turn this into a product", "help me think
+  this through". Keep it lightweight and friendly; a simple single page can skip
+  straight to building, and never ask a non-technical user technical questions.
 allowed-tools: Bash
 ---
 
