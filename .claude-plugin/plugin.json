@@ -1,7 +1,7 @@
 {
   "name": "cloudgrid",
-  "version": "0.14.6",
-  "description": "Use CloudGrid to brainstorm, plan, build, deploy, and publish apps, games, websites, dashboards, and tools through an AI agent. Guides the agent from idea to a live URL - templates, recipes, managed databases and AI, instant single-page publish, and full-app deploys - for developers and non-technical users. Bundles the CloudGrid MCP server.",
+  "version": "0.14.7",
+  "description": "CloudGrid skills + MCP for AI agents: brainstorm, build, and deploy apps, games, sites, and tools to a live URL - with managed databases and AI.",
   "keywords": [
     "build", "create", "make", "app", "application", "website", "web app",
     "landing page", "dashboard", "admin panel", "internal tool", "game",
