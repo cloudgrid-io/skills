@@ -8,7 +8,7 @@ Full authoring guidance lives in `CLAUDE.md`. This file covers the mechanics.
 ## Repo structure
 
 ```
-skills/<name>/SKILL.md   one directory per skill, short name (e.g. drop)
+skills/<name>/SKILL.md   one directory per skill, short name (e.g. build)
 VERSION                  canonical version; every SKILL.md version tracks it
 .claude-plugin/          marketplace manifest for Claude Code
 .codex-plugin/           marketplace manifest for Codex

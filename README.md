@@ -37,8 +37,8 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
    CLI-wrapping tools). The MCP auto-starts when the plugin is enabled — no
    separate `claude mcp add` needed.
 
-   The skills show under `/plugin` and `/skills` as `cloudgrid:plug`,
-   `cloudgrid:login`, … — or just say what you want ("share this HTML page as a
+   The skills show under `/plugin` and `/skills` as `cloudgrid:brainstorm` and
+   `cloudgrid:build` — or just say what you want ("share this HTML page as a
    link") and the right one triggers.
 
    Or install with the `gh skill` extension:
@@ -48,7 +48,7 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
    ```
 
    Other agents (Cursor, Cline, Gemini CLI): `npx skills add cloudgrid-io/skills`.
-   They install as `plug`, `login`, … — the CloudGrid brand comes from the plugin
+   They install as `build`, `brainstorm` — the CloudGrid brand comes from the plugin
    namespace, which those agents don't have.
 
    Claude Desktop, claude.ai, ChatGPT, and every route in one place: [USAGE.md](USAGE.md).
@@ -56,10 +56,10 @@ behalf: scaffold, deploy, tail logs, share, read feedback. Everything here is fr
 ## Share something in one step, no login
 
 ```
-/cloudgrid:plug index.html
+/cloudgrid:build index.html
 ```
 
-`cloudgrid:plug` publishes a single HTML page (or deploys a full app) and hands
+`cloudgrid:build` publishes a single HTML page (or deploys a full app) and hands
 back a public URL. For a single page: no account, no CLI — the link lasts 7 days,
 and you can sign in later to keep it.
 
@@ -67,19 +67,13 @@ and you can sign in later to keep it.
 
 | Skill | Invoke | What it does |
 |---|---|---|
-| `login` | `/cloudgrid:login` | Sign in to CloudGrid, with or without the CLI. |
-| `claim` | `/cloudgrid:claim` | Claim an anonymous drop into your account after signing in. |
-| `init` | `/cloudgrid:init` | Scaffold a new app or agent. |
-| `plug` | `/cloudgrid:plug` | Share a single HTML page (login optional) or deploy a directory/URL. Get a public URL. |
-| `logs` | `/cloudgrid:logs` | Tail logs for an entity. |
-| `share` | `/cloudgrid:share` | Make an entity shareable and print its URL. |
-| `feedback` | `/cloudgrid:feedback` | Read the feedback feed. |
-| `brain` | `/cloudgrid:brain` | Refresh an entity's Grid Brain metadata. |
+| `brainstorm` | `/cloudgrid:brainstorm` | Align on the idea, goal, and core features before building. |
+| `build` | `/cloudgrid:build` | Structure the project (cloudgrid.yaml, services, needs) and take it live with a public URL. |
 
 ## The canonical chain
 
 ```
-init  ->  plug  ->  logs  ->  share  ->  feedback
+brainstorm  ->  build
 ```
 
 That is the full "I built a thing and shipped it" loop. [COOKBOOK.md](COOKBOOK.md)

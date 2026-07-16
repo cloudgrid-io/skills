@@ -115,7 +115,7 @@ Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
    if not authenticated.
 2. Wraps only the `grid` CLI. No direct API calls — with two sanctioned
    exceptions, both about working without the CLI:
-   - the **anonymous single-page publish** (`cloudgrid:plug` with inline HTML, or
+   - the **anonymous single-page publish** (`cloudgrid:build` with inline HTML, or
      the `grid_plug` MCP tool's `html` param) calls `POST /api/v2/plug` — the
      anonymous path has no identity to manage, so the CLI adds nothing.
    - the **CLI-free login** (`cloudgrid-login`, `grid_login` +
@@ -129,9 +129,9 @@ Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
    Technical flags stay in English.
 4. Prints results concisely — URLs and short summaries, never raw JSON or IDs.
 
-Skills live under `skills/<name>/` with a short directory name (e.g. `plug`). The
+Skills live under `skills/<name>/` with a short directory name (e.g. `build`). The
 plugin is named `cloudgrid`, so a skill is invoked as `/cloudgrid:<name>` (for
-example `/cloudgrid:plug`) and also auto-triggers from its `description`.
+example `/cloudgrid:build`) and also auto-triggers from its `description`.
 
 ## Versioning
 

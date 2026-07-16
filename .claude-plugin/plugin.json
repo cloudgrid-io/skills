@@ -1,6 +1,6 @@
 {
   "name": "cloudgrid",
-  "version": "0.14.8",
+  "version": "0.14.9",
   "description": "App-building skills for Claude Code: brainstorming, planning, templates, managed databases and AI, and one-step deploys to a live URL",
   "keywords": [
     "build", "create", "make", "app", "application", "website", "web app",

@@ -1,22 +1,22 @@
 ---
 version: 0.1.0
-name: brainstorming-app-ideas
+name: brainstorm
 description: |
   You MUST use this before building any substantial app, game, tool, dashboard,
-  or product - it explores the user's intent, goal, and core
-  features before implementation, so you build the right thing. Use whenever the
-  user wants to build, create, make, or plan something, or says "plan me...",
-  "build me an app", "I have an idea", "turn this into a product", "help me think
-  this through". Keep it lightweight and friendly; a simple single page can skip
+  or product - it explores the user's intent, goal, and core features before
+  implementation, so you build the right thing. Use whenever the user wants to
+  build, create, make, or plan something, or says "plan me...", "build me an
+  app", "I have an idea", "turn this into a product", "help me think this
+  through". Keep it lightweight and friendly; a simple single page can skip
   straight to building, and never ask a non-technical user technical questions.
 allowed-tools: Bash
 ---
 
-# Brainstorming app ideas
+# Brainstorm
 
 The user wants to build something, but the idea is fuzzy. Do not jump to
 generating or deploying. Take one lightweight beat to align, then hand off to
-`planning-cloudgrid-apps` and build.
+the `build` skill.
 
 Keep it human and short. Two or three plain questions at most. Offer options,
 never demand specs.
@@ -38,10 +38,10 @@ never demand specs.
 - Never ask about databases, runtimes, frameworks, or hosting. Infer them and
   state the plan in plain words ("I'll set it up so entries are saved").
 - If the request is already clear and simple (a landing page, a poster, a quick
-  calculator), skip brainstorming and go straight to building.
+  calculator), skip brainstorming and go straight to the `build` skill.
 - Do not over-scope. Land the smallest version that delivers the core goal; more
   can be added after it is live.
-- End by summarizing the idea in 2-3 bullets and moving to a short plan.
+- End by summarizing the idea in 2-3 bullets and moving to build.
 
 ## What CloudGrid gives you (so you can build fast)
 
@@ -62,8 +62,9 @@ module top level), and build:
 
 Rules that keep it fast and correct: never hardcode a connection string or commit
 a secret (the platform injects them); read injected vars lazily inside a
-getter/handler. Managed relational Postgres/MySQL is bring-your-own only;
-semantic/vector search is being finalized - use `semantic-search` for that.
+getter/handler. Managed relational Postgres/MySQL is bring-your-own only.
+Semantic/vector search is gated for now - store embeddings in Mongo and
+cosine-rank in the app.
 
 The deploy shape follows from the needs: **no `needs:` and one self-contained
 HTML file -> an instant static page (any edition); any `needs:` or multiple files
@@ -71,9 +72,6 @@ HTML file -> an instant static page (any edition); any `needs:` or multiple file
 `grid_start` -> `grid_get_template` -> fill -> `grid_deploy` -> `grid_set_sharing`.
 
 So for "build me a system / an app that saves X", infer `needs: { database: true }`
-up front, pick the matching template, and go straight from the brainstorm to a
-working build. Deeper how-tos: `adding-databases`, `adding-ai-features`,
-`choosing-cloudgrid-templates`, `planning-cloudgrid-apps`.
+up front and go straight from the brainstorm to a working build.
 
-Next: `planning-cloudgrid-apps` to turn the idea into a short build plan, then
-build and return the live URL.
+Next: the `build` skill - structure the project, deploy, and return the live URL.
