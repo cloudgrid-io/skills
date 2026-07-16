@@ -59,9 +59,12 @@ non-technical user with technical questions they cannot answer. See the
    template it names, then optionally the closest example.
 4. **Build.** Fill the template with the user's content. This is pure model
    work.
-5. **Deploy.** Deploy the artifact. On a hosted MCP edition use the drop tool; on
+5. **Test locally (runtime apps, CLI available).** Run `grid dev` — it runs the
+   app against real grid resources. Confirm it works before deploying. A static
+   single-page inspiration skips this; a hosted MCP edition has no CLI, skip too.
+6. **Deploy.** Deploy the artifact. On a hosted MCP edition use the drop tool; on
    a local MCP or CLI edition use `grid plug`.
-6. **Share.** Return the **live share URL** to the user.
+7. **Share.** Return the **live share URL** to the user.
 
 ## Rules
 
