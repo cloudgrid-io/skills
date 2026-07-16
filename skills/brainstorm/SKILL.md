@@ -57,14 +57,13 @@ module top level), and build:
 | cache / queue / pub-sub / key-value | `needs: { cache: true }` (or `kv`/`queue`/`pubsub`; Redis) | `CACHE_REDIS_URL` (etc.) |
 | use an LLM (chatbot, summarize, generate) | `needs: { ai: true }` (managed gateway) | call via `@cloudgrid-io/runtime` - no API key |
 | run on a schedule | a `type: cron` service | - |
+| semantic search / embeddings (search my docs by meaning) | `needs: { vector: pgvector }` | `VECTOR_PGVECTOR_URL` |
 | durable files on disk | `needs: { disk: true }` | `DISK_PATH` |
 | use an existing DB (Postgres/Supabase/Neon/Atlas) | `needs: { database: { tier: external, secret: MY_DB } }` + `grid secrets set MY_DB=...` | your `MY_DB` |
 
 Rules that keep it fast and correct: never hardcode a connection string or commit
 a secret (the platform injects them); read injected vars lazily inside a
 getter/handler. Managed relational Postgres/MySQL is bring-your-own only.
-Semantic/vector search is gated for now - store embeddings in Mongo and
-cosine-rank in the app.
 
 The deploy shape follows from the needs: **no `needs:` and one self-contained
 HTML file -> an instant static page (any edition); any `needs:` or multiple files
