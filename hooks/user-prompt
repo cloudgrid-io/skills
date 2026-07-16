@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# UserPromptSubmit hook for the CloudGrid plugin. Two jobs:
+#
+#   1. Per-turn reinforcement (ALWAYS, sends nothing): on a build/create/plan
+#      prompt, re-inject a one-line reminder to orient with grid_start and use
+#      the CloudGrid build skills before generating files. Backs up the
+#      SessionStart bootstrap so the framing survives long/compacted sessions.
+#
+#   2. Anonymized intent telemetry (OPT-IN, off by default): only when
+#      CLOUDGRID_SHARE_INTENTS=1. Derives a coarse CATEGORY locally
+#      (kind + needs) and best-effort POSTs it so the team can see what people
+#      try to build. NEVER sends the raw prompt or any prompt text - only fixed
+#      category labels from the vocabulary below. Fire-and-forget; never blocks
+#      or fails the user's turn.
+set -euo pipefail
+
+payload="$(cat || true)"
+
+# Extract the prompt (jq preferred, python3 fallback, raw last). Used ONLY
+# locally to derive categories; never transmitted.
+if command -v jq >/dev/null 2>&1; then
+  prompt="$(printf '%s' "$payload" | jq -r '.prompt // .user_prompt // ""' 2>/dev/null || printf '')"
+elif command -v python3 >/dev/null 2>&1; then
+  prompt="$(printf '%s' "$payload" | python3 -c 'import sys,json;d=json.load(sys.stdin);print(d.get("prompt",d.get("user_prompt","")))' 2>/dev/null || printf '')"
+else
+  prompt="$payload"
+fi
+
+shopt -s nocasematch
+
+# Is this a build/create/plan intent at all? If not, do nothing.
+build_intent=0
+if [[ "$prompt" =~ (build|create|make|plan|brainstorm|prototype|scaffold|deploy|publish|launch|ship|website|web[[:space:]]?app|landing[[:space:]]?page|dashboard|admin[[:space:]]?panel|game|internal[[:space:]]?tool|api|backend|full[[:space:]-]?stack|mvp|saas|an[[:space:]]app|the[[:space:]]app)([[:space:]]|$) ]]; then
+  build_intent=1
+fi
+
+# ── 2. Opt-in anonymized intent telemetry (categories only, no prompt text) ──
+if [ "$build_intent" = "1" ] && [ "${CLOUDGRID_SHARE_INTENTS:-0}" = "1" ]; then
+  # kind: first matching archetype category, else "app".
+  kind="app"
+  if   [[ "$prompt" =~ (game|arcade|puzzle) ]]; then kind="game"
+  elif [[ "$prompt" =~ (landing|marketing|coming[[:space:]]?soon|hero[[:space:]]?page) ]]; then kind="landing-page"
+  elif [[ "$prompt" =~ (admin|back[[:space:]-]?office|crud) ]]; then kind="admin-panel"
+  elif [[ "$prompt" =~ (dashboard|metrics|kpi|analytics|stats) ]]; then kind="dashboard"
+  elif [[ "$prompt" =~ (shop|store|e-?commerce|checkout|cart) ]]; then kind="ecommerce"
+  elif [[ "$prompt" =~ (chatbot|ai[[:space:]]?app|assistant|llm|rag) ]]; then kind="ai-app"
+  elif [[ "$prompt" =~ (docs|documentation|knowledge[[:space:]]?base) ]]; then kind="docs"
+  elif [[ "$prompt" =~ (api|backend|webhook) ]]; then kind="api"
+  elif [[ "$prompt" =~ (presentation|deck|slides) ]]; then kind="presentation"
+  elif [[ "$prompt" =~ (portfolio|personal[[:space:]]?site) ]]; then kind="portfolio"
+  fi
+  # needs: coarse infra signals.
+  needs=""
+  [[ "$prompt" =~ (save|store|persist|account|sign[[:space:]-]?in|login|database|multi[[:space:]-]?user|records) ]] && needs="\"database\""
+  [[ "$prompt" =~ (llm|ai|chatbot|generate|summariz|embed) ]] && needs="${needs:+$needs,}\"ai\""
+  [[ "$prompt" =~ (schedule|cron|daily|hourly|recurring) ]] && needs="${needs:+$needs,}\"cron\""
+  ver="$(cat "${CLAUDE_PLUGIN_ROOT:-.}/VERSION" 2>/dev/null || echo unknown)"
+  json="{\"event\":\"build_intent\",\"kind\":\"${kind}\",\"needs\":[${needs}],\"source\":\"claude-code-hook\",\"plugin_version\":\"${ver}\"}"
+  url="${CLOUDGRID_TELEMETRY_URL:-https://api.cloudgrid.io}/api/v2/telemetry/intents"
+  # Fire-and-forget: detached, short timeout, output discarded, never fails the turn.
+  ( nohup curl -s -m 5 -X POST "$url" -H 'content-type: application/json' -d "$json" >/dev/null 2>&1 & ) 2>/dev/null || true
+fi
+
+# ── 1. Per-turn reinforcement (always, on build intent; sends nothing) ──
+if [ "$build_intent" = "1" ]; then
+  NUDGE="[cloudgrid] This looks like a build/create/plan request. Orient with the CloudGrid grid_start tool and use the CloudGrid build skills BEFORE writing files. Recognize what it needs (saves data -> needs: { database: true } (Mongo, DATABASE_MONGODB_URL); LLM -> needs: { ai: true }; scheduled -> a cron service), then deploy with grid_deploy and return the live URL. A single self-contained HTML page is an instant inspiration; anything with needs: or multiple files is a runtime app (local edition)."
+  esc="${NUDGE//\"/\\\"}"
+  printf '{ "additional_context": "%s", "hookSpecificOutput": { "hookEventName": "UserPromptSubmit", "additionalContext": "%s" } }\n' "$esc" "$esc"
+fi
+
+exit 0
