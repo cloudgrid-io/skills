@@ -86,7 +86,7 @@ templates/           starting-point files per artifact kind (+ cloudgrid.yaml,
                      booking (booking-system, calendar-scheduler,
                      appointment-booking, restaurant-reservations, travel-booking;
                      reminder cron pending #1543), and a RAG ai-knowledge-base
-                     (ideal vector: pgvector pending #1545).
+                     (ideal vector: pgvector available, #1545 shipped).
 examples/            filled reference artifacts per kind
 rules/               cross-cutting build rules
 troubleshooting/     failure-mode playbooks (deploy errors, persistent apps)

@@ -116,13 +116,12 @@ simplest form of any need is `true`.
 | `kv` | Redis, no eviction (flags, idempotency) | `KV_REDIS_URL` |
 | `queue` | Redis job queue (BullMQ) | `QUEUE_REDIS_URL` |
 | `pubsub` | Redis broadcast pub/sub | `PUBSUB_REDIS_URL` |
+| `vector` | pgvector on Postgres (embeddings, semantic search) | `VECTOR_PGVECTOR_URL` (+ `PGVECTOR_URL`) |
 | `disk` | persistent FS mount (pins to 1 replica) | `DISK_PATH` |
 | `ai` | AI Gateway via `@cloudgrid-io/runtime` | `AI_GATEWAY_URL` |
 
-Two more exist but are **gated — do not author them yet**:
+One more exists but is **gated — do not author it yet**:
 
-- `vector` (pgvector) — deploy stalls (platform #1545). Store embeddings in
-  Mongo and cosine-rank in the app for now.
 - `object_storage` (GCS) — rejected at plug-time (#1678). Use `disk` or a
   bring-your-own bucket via a secret.
 
