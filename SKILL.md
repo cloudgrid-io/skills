@@ -35,7 +35,7 @@ generating or deploying:
 Keep this to a line or two. A simple single-page request (a landing page, a
 poster, a quick tool) skips it and goes straight to build. Never interrogate a
 non-technical user with technical questions they cannot answer. See the
-`brainstorming-app-ideas` and `planning-cloudgrid-apps` skills for the full flow.
+`brainstorm` skill for the full flow, then the `build` skill to take it live.
 
 ## The golden path
 
@@ -86,7 +86,7 @@ non-technical user with technical questions they cannot answer. See the
   `needs:`/`services:`, and wire the secret — see `cloudgrid-yaml.md`.
   Persistent archetypes: `app-with-data` (a web UI), `api-service` (a plain
   Node/JSON backend API), and `ai-app` (a chatbot — adds `needs: { ai: true }`
-  and calls the grid AI gateway via `@cloudgrid-io/ai`). The DB-CRUD family
+  and calls the grid AI gateway via `@cloudgrid-io/runtime`). The DB-CRUD family
   (`crm`, `kanban`, `task-manager`, `admin-dashboard`, `invoice`, `inventory`,
   `job-board`, `ticket-system`) shares the `app-with-data` shape, differing only
   by domain schema + UI. All are runtime, local-edition builds.
@@ -112,8 +112,8 @@ non-technical user with technical questions they cannot answer. See the
   `travel-booking`), and a RAG `ai-knowledge-base`. All are runtime, local-edition
   builds. Scheduled `type: cron` services (Python and Node) work on CLI 0.14.0 —
   the booking family's reminder cron and the semantic-search refresh cron are
-  supported. The knowledge base uses managed `vector: pgvector` (available on the
-  Pool tier; the platform injects `VECTOR_PGVECTOR_URL`) for embeddings.
+  supported. The knowledge base's ideal `vector: pgvector` need is gated for now
+  (platform #1545) — store embeddings in Mongo and cosine-rank in the app.
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The

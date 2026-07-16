@@ -31,14 +31,8 @@ Do not attempt to log in for them. Do not invent an auth flow.
 The skills live in this repo, one directory per skill, each with a `SKILL.md`.
 Load the `SKILL.md` for the action the user wants:
 
-- `skills/login/SKILL.md` — sign in, with or without the CLI
-- `skills/claim/SKILL.md` — claim an anonymous drop into the account
-- `skills/init/SKILL.md` — scaffold a new app or agent
-- `skills/plug/SKILL.md` — share a single HTML page or deploy a directory/URL, get a URL
-- `skills/logs/SKILL.md` — tail logs
-- `skills/share/SKILL.md` — make an entity shareable
-- `skills/feedback/SKILL.md` — read the feedback feed
-- `skills/brain/SKILL.md` — refresh Grid Brain metadata
+- `skills/brainstorm/SKILL.md` — align on the idea, goal, and core features first
+- `skills/build/SKILL.md` — structure the project (cloudgrid.yaml, services, needs) and take it live
 
 ## 4. Follow the skill
 
@@ -56,7 +50,7 @@ Each `SKILL.md` carries its own steps. Follow them exactly. The common rules:
 For a full build-and-ship loop, run the skills in this order:
 
 ```
-init -> plug -> logs -> share -> feedback
+brainstorm -> build
 ```
 
 See `COOKBOOK.md` for the worked example.
