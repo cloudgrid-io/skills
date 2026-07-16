@@ -100,7 +100,10 @@ non-technical user with technical questions they cannot answer. See the
   `revenue-dashboard`, `api-dashboard`), business/CRUD (`blog-cms`,
   `product-catalog`, `expense-tracker`, `time-tracking`, `directory`,
   `project-management`, `property-listings`), community (`event-board`,
-  `feature-request-board`), education (`quiz-platform`). Match by the workflow
+  `feature-request-board`), education (`quiz-platform`), and vector search
+  (`simple-semantic-search` — one node service on `needs: { vector: pgvector,
+  ai: true }`, embeds a document and serves search-by-meaning; verified live).
+  Match by the workflow
   `when:` in `capability-map.md`.
 - **Blueprints** are heavier archetypes (`kind: blueprint`) that ship structure
   plus a correct `cloudgrid.yaml` plus an `AGENTS.md` guide, not fill-in-the-blanks
