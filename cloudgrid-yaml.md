@@ -169,7 +169,7 @@ callers:                            # Inbound caller policy.
 
 # ─── Vault ──────────────────────────────────────────────────────────
 vault:                              # Map of ENV_VAR: vault_item_key. Optional.
-  STRIPE_KEY: STRIPE_LIVE_KEY
+  STRIPE_KEY: stripe-live-key
   SENDGRID_API_KEY: sendgrid-key
 
 # ─── Connectors and hooks ──────────────────────────────────────────
