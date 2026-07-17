@@ -45,7 +45,7 @@ requires the **local edition** (Claude Desktop / Claude Code) or the CLI.
 
 ## 3. Fetch the blueprint + read AGENTS.md
 
-`grid_fetch("template", "erp")`. It returns `cloudgrid.yaml`, `AGENTS.md` (the
+`grid_get_template("template", "erp")`. It returns `cloudgrid.yaml`, `AGENTS.md` (the
 structure guide), and the README — **no app code**. Read `AGENTS.md` end to end
 before writing anything: it defines the `services/web/` file tree, the Mongo
 collections + fields per module, how CloudGrid injects the DB and the
@@ -56,7 +56,7 @@ all four at once.
 
 ## 4. Scaffold
 
-`grid_init` an app `<name>`. `init` creates the entity + `.cloudgrid/link.json`
+`grid_create_project` an app `<name>`. `init` creates the entity + `.cloudgrid/link.json`
 and writes a `cloudgrid.yaml` with an EMPTY `services: {}`. `plug` needs a linked
 directory, so run `init` FIRST. Then (a) build the app under **`services/web/`**
 following `AGENTS.md`, and (b) fill `cloudgrid.yaml` to the shape below.
@@ -97,8 +97,8 @@ following `AGENTS.md`, and (b) fill `cloudgrid.yaml` to the shape below.
 ## 6. Config
 
 - Create the vault items the `vault:` block references (the auth provider's
-  backend key and the Stripe secret key) — `grid_secrets` / vault UI. Never
-  commit them. Publishable/front-end auth keys → `grid_env`.
+  backend key and the Stripe secret key) — `grid_set_secret` / vault UI. Never
+  commit them. Publishable/front-end auth keys → `grid_set_env`.
 - Register the deployed `/api/finance/webhook` URL as the Stripe webhook endpoint
   once the app is live.
 - Do **NOT** set the DB connection vars yourself (`DATABASE_MONGODB_URL` or the
@@ -111,7 +111,7 @@ vault env vars before deploying. Don't require it.
 
 ## 8. Deploy (async)
 
-Deploy the folder with `grid_plug`. A **runtime deploy is ASYNC**: the first
+Deploy the folder with `grid_deploy`. A **runtime deploy is ASYNC**: the first
 response is `status: "building"`, NOT a live URL yet.
 - Poll `grid_status` (or the returned poll_url) until the entity is live.
 - Surface a liveness signal while it builds — never a bare silent wait.

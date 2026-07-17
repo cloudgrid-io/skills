@@ -4,19 +4,19 @@ This is the index an LLM uses to turn a user request into the right CloudGrid
 template, the way Superpowers matches a skill's `when:`. Match the request to a
 template by its `when:` triggers, adopt that template's `needs:`, then deploy:
 
-> **One deploy verb: `grid_plug`.** Classify the artifact to pick the shape —
+> **One deploy verb: `grid_deploy`.** Classify the artifact to pick the shape —
 > ONE self-contained HTML page (CSS+JS inline, images/fonts as data: URIs) →
 > **inspiration**; separate files/folders/assets or any `needs:` → **runtime app**.
 
 - **single self-contained HTML page → inspiration** (instant, any client / any
-  edition) via `grid_plug` with the inline `html` param.
+  edition) via `grid_deploy` with the inline `html` param.
 - **separate files/folders/assets, or anything needing `needs:` → runtime app**
-  (async build, **local edition** only) via `grid_plug` on a linked folder.
+  (async build, **local edition** only) via `grid_deploy` on a linked folder.
 
-Fetch this doc any time with `grid_fetch("doc", "capability-map")`. For the full
+Fetch this doc any time with `grid_get_template("doc", "capability-map")`. For the full
 cloudgrid.yaml schema (every field, the `needs:` injection table, the
 requires-vs-needs caveat, validation rules), fetch the companion reference:
-`grid_fetch("doc", "cloudgrid-yaml")`.
+`grid_get_template("doc", "cloudgrid-yaml")`.
 
 ## The 61 templates
 
@@ -147,7 +147,7 @@ Mongo and cosine-ranks in-app until it is updated to pgvector.
 `needs:` is a MAP declaring infrastructure capabilities. Values are `true` or an
 engine hint. Cron is NOT a need — it is a **service type** (`type: cron` with
 `schedule` + `timezone`). See the full cloudgrid.yaml reference §5–§6 via
-`grid_fetch("doc", "cloudgrid-yaml")`.
+`grid_get_template("doc", "cloudgrid-yaml")`.
 
 | `needs:` key | Provides | Injected env var(s) | Status |
 |---|---|---|---|
@@ -188,9 +188,9 @@ engine hint. Cron is NOT a need — it is a **service type** (`type: cron` with
    RAG's ideal `vector: pgvector` now works - #1545 shipped; the shipped
    templates still store embeddings in Mongo until they are updated.)
 3. One self-contained HTML page (`needs: none`, assets inlined) → publish as an
-   inspiration with `grid_plug` and the inline `html` param (instant, any
+   inspiration with `grid_deploy` and the inline `html` param (instant, any
    edition). Separate files/folders/assets, or anything with a `needs:` →
-   runtime, local edition, `grid_plug` a linked folder, then poll to a live URL.
+   runtime, local edition, `grid_deploy` a linked folder, then poll to a live URL.
 
 ## FAQ
 

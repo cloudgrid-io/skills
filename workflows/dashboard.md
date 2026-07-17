@@ -4,7 +4,7 @@ when: dashboard, metrics, KPIs, stats page, status board, charts, analytics view
 needs: none
 deploy: inspiration
 editions: all
-capabilities_note: static — no infrastructure, data is baked into the page. Publishes as an inspiration (instant, works on hosted) via grid_plug.
+capabilities_note: static — no infrastructure, data is baked into the page. Publishes as an inspiration (instant, works on hosted) via grid_deploy.
 summary: Fetch the dashboard template, fill it with the user's metrics and inline charts, deploy it, and return the live share URL.
 ---
 
@@ -13,9 +13,9 @@ summary: Fetch the dashboard template, fill it with the user's metrics and inlin
 Detect the intent ("build me a dashboard for X metrics / status") and follow
 this recipe. Do not ask setup questions first; use sensible defaults and build.
 
-1. **Fetch the template.** Call `grid_fetch("template", "dashboard")` to load
+1. **Fetch the template.** Call `grid_get_template("template", "dashboard")` to load
    the self-contained HTML dashboard template.
-2. **(Optional) Fetch the example.** Call `grid_fetch("example", "dashboard")`
+2. **(Optional) Fetch the example.** Call `grid_get_template("example", "dashboard")`
    to see a filled dashboard as a reference for structure and layout.
 3. **Fill the template.** Replace the placeholders with the user's content:
    - The dashboard title and (optional) status line.

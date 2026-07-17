@@ -3,12 +3,12 @@
 A single self-contained HTML launch waitlist / coming-soon page: a hero, an email capture form, and a social-proof counter.
 
 Static inspiration — a single self-contained `index.html` (inline CSS and JS,
-no external CDNs). It deploys instantly via `grid_plug` and works on every
+no external CDNs). It deploys instantly via `grid_deploy` and works on every
 CloudGrid edition, including hosted.
 
 ## Fill it in
 
-Fetch the template with `grid_fetch("template", "waitlist")`, then replace the
+Fetch the template with `grid_get_template("template", "waitlist")`, then replace the
 placeholders:
 
    - The product name, coming-soon headline, and subheadline.

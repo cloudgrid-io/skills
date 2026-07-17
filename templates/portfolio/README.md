@@ -3,12 +3,12 @@
 A single self-contained HTML personal / freelancer portfolio: a hero intro, an about section, a skills list, a projects grid, and a contact section.
 
 Static inspiration — a single self-contained `index.html` (inline CSS and JS,
-no external CDNs). It deploys instantly via `grid_plug` and works on every
+no external CDNs). It deploys instantly via `grid_deploy` and works on every
 CloudGrid edition, including hosted.
 
 ## Fill it in
 
-Fetch the template with `grid_fetch("template", "portfolio")`, then replace the
+Fetch the template with `grid_get_template("template", "portfolio")`, then replace the
 placeholders:
 
    - The person's name, role/title, and short intro.

@@ -5,9 +5,9 @@
 > of that reference — practically complete, not a verbatim dump. **Keep in sync**
 > with the upstream: when the platform reference changes, update this doc.
 >
-> Fetch this doc any time with `grid_fetch("doc", "cloudgrid-yaml")`.
+> Fetch this doc any time with `grid_get_template("doc", "cloudgrid-yaml")`.
 > For matching an intent to a template, see the companion
-> `grid_fetch("doc", "capability-map")`.
+> `grid_get_template("doc", "capability-map")`.
 
 `cloudgrid.yaml` is the manifest at the **root of your project** that defines your
 entity (an app or an agent). It declares the services your entity runs, the
@@ -28,7 +28,7 @@ These are the shapes verified against live deploys. Copy one and adapt it.
 ### Single HTML page → deploys as an inspiration (instant)
 
 One self-contained HTML page (CSS+JS inline, images/fonts as data: URIs). No
-`needs:`. Publishes instantly via `grid_plug` with the inline `html` param,
+`needs:`. Publishes instantly via `grid_deploy` with the inline `html` param,
 works on any edition (hosted or local).
 
 ```yaml
@@ -543,7 +543,7 @@ Bake these into any yaml you author:
   it**; use `needs:` instead.
 - **`needs:` and `requires:` together are HARD-REJECTED** by the validator ("use
   one or the other"). So author **`needs:`-only** — never set both.
-- **A single self-contained HTML page deploys as an inspiration** via `grid_plug`
+- **A single self-contained HTML page deploys as an inspiration** via `grid_deploy`
   with the inline `html` param — instant, synchronous, works on the hosted edition
   and any client.
 - **A `cloudgrid.yaml` with `services:` makes it a runtime** — async build,
@@ -569,5 +569,5 @@ needs:
 ---
 
 *This doc is the agent-facing distribution of the platform's canonical
-`cloudgrid-yaml-reference.md`. See also `grid_fetch("doc", "capability-map")`
+`cloudgrid-yaml-reference.md`. See also `grid_get_template("doc", "capability-map")`
 for matching a user intent to a template + the `needs:` injection status.*

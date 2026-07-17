@@ -4,7 +4,7 @@ when: calculator, converter, generator, timer, quiz, interactive tool, mini-app,
 needs: none
 deploy: inspiration
 editions: all
-capabilities_note: static — no infrastructure, state lives only in memory. Publishes as an inspiration (instant, works on hosted) via grid_plug.
+capabilities_note: static — no infrastructure, state lives only in memory. Publishes as an inspiration (instant, works on hosted) via grid_deploy.
 summary: Fetch the web-app template, adapt its markup and inline JS to the user's tool, deploy it, and return the live share URL.
 ---
 
@@ -14,9 +14,9 @@ Detect the intent ("build me a web app / tool / calculator that does X") and
 follow this recipe. Do not ask setup questions first; use sensible defaults and
 build.
 
-1. **Fetch the template.** Call `grid_fetch("template", "web-app")` to load
+1. **Fetch the template.** Call `grid_get_template("template", "web-app")` to load
    the self-contained interactive HTML app template.
-2. **(Optional) Fetch the example.** Call `grid_fetch("example", "web-app")`
+2. **(Optional) Fetch the example.** Call `grid_get_template("example", "web-app")`
    to see a real working tool as a reference for structure and inline logic.
 3. **Adapt the template.** Rework the markup and inline JavaScript into the tool
    the user asked for:

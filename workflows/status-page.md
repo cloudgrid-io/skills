@@ -4,7 +4,7 @@ when: status page, service status, uptime page, incident history, is-it-down pag
 needs: none
 deploy: inspiration
 editions: all
-capabilities_note: static — no infrastructure, status baked into the page. Publishes as an inspiration (instant, works on hosted) via grid_plug.
+capabilities_note: static — no infrastructure, status baked into the page. Publishes as an inspiration (instant, works on hosted) via grid_deploy.
 summary: Fetch the status-page template, fill it with the user's components and incidents, deploy it, and return the live share URL.
 ---
 
@@ -15,7 +15,7 @@ recipe. This is a display-only static page — the status is baked into the mark
 there is no live polling. Do not ask setup questions first; use sensible defaults
 and build.
 
-1. **Fetch the template.** Call `grid_fetch("template", "status-page")` to load
+1. **Fetch the template.** Call `grid_get_template("template", "status-page")` to load
    the self-contained HTML status page (overall banner, component list with
    up/degraded/down pills, per-component uptime bars, incident history).
 2. **Fill the template.** Replace the placeholders with the user's content:

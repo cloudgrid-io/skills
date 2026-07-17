@@ -54,7 +54,7 @@ non-technical user with technical questions they cannot answer. See the
    and build directly with the CLI.
 2. **Match intent.** Map what the user asked for to a workflow in that index
    (for example, "build me a presentation" -> the `presentation` workflow).
-3. **Load.** Call `grid_fetch(kind, name)` to pull the specific workflow,
+3. **Load.** Call `grid_get_template(kind, name)` to pull the specific workflow,
    template, or example live from the corpus. Fetch the workflow first, then the
    template it names, then optionally the closest example.
 4. **Build.** Fill the template with the user's content. This is pure model
