@@ -3,12 +3,12 @@
 A single self-contained HTML SaaS marketing site (hero, features, pricing tiers, testimonials, FAQ, and a closing call to action). Richer than the landing-page template.
 
 Static inspiration — a single self-contained `index.html` (inline CSS and JS,
-no external CDNs). It deploys instantly via `grid_plug` and works on every
+no external CDNs). It deploys instantly via `grid_deploy` and works on every
 CloudGrid edition, including hosted.
 
 ## Fill it in
 
-Fetch the template with `grid_fetch("template", "saas-marketing")`, then replace the
+Fetch the template with `grid_get_template("template", "saas-marketing")`, then replace the
 placeholders:
 
    - The product name, tagline, and hero eyebrow/headline/subheadline.

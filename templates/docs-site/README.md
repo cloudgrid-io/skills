@@ -3,12 +3,12 @@
 A single self-contained HTML documentation site: a sidebar nav, a scrolling content column with headings and code blocks, and a client-side search box that filters the nav. No backend.
 
 Static inspiration — a single self-contained `index.html` (inline CSS and JS,
-no external CDNs). It deploys instantly via `grid_plug` and works on every
+no external CDNs). It deploys instantly via `grid_deploy` and works on every
 CloudGrid edition, including hosted.
 
 ## Fill it in
 
-Fetch the template with `grid_fetch("template", "docs-site")`, then replace the
+Fetch the template with `grid_get_template("template", "docs-site")`, then replace the
 placeholders:
 
    - The project/doc name and the sidebar section links.

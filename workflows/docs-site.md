@@ -4,7 +4,7 @@ when: documentation site, docs, developer docs, guide, manual, knowledge base, h
 needs: none
 deploy: inspiration
 editions: all
-capabilities_note: static — no infrastructure, content baked into the page. Publishes as an inspiration (instant, works on hosted) via grid_plug.
+capabilities_note: static — no infrastructure, content baked into the page. Publishes as an inspiration (instant, works on hosted) via grid_deploy.
 summary: Fetch the docs-site template, fill it with the user's documentation, deploy it, and return the live share URL.
 ---
 
@@ -14,7 +14,7 @@ Detect the intent ("build me a docs site / documentation for X") and follow this
 recipe. For a REST API endpoint reference specifically, use `api-docs`. Do not
 ask setup questions first; use sensible defaults and build.
 
-1. **Fetch the template.** Call `grid_fetch("template", "docs-site")` to load
+1. **Fetch the template.** Call `grid_get_template("template", "docs-site")` to load
    the self-contained HTML docs layout (sidebar nav, content column, code blocks,
    client-side search box).
 2. **Fill the template.** Replace the placeholders with the user's content:

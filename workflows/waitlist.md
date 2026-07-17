@@ -4,7 +4,7 @@ when: waitlist, coming soon, early access, join the list, launch page, sign-up t
 needs: none
 deploy: inspiration
 editions: all
-capabilities_note: static — no infrastructure. The email form posts to a configurable mailto/external endpoint; it does NOT store signups. Publishes as an inspiration (instant, works on hosted) via grid_plug.
+capabilities_note: static — no infrastructure. The email form posts to a configurable mailto/external endpoint; it does NOT store signups. Publishes as an inspiration (instant, works on hosted) via grid_deploy.
 summary: Fetch the waitlist template, fill it with the user's launch copy, wire the form to a mailto or external endpoint, deploy it, and return the live share URL.
 ---
 
@@ -22,7 +22,7 @@ NOT store signups anywhere on CloudGrid. To actually **store** waitlist signups
 (`needs: { database: true }`) — that is a CRUD app, coming in the crud-app
 archetype (Wave 1b). Do not claim this static page persists data.
 
-1. **Fetch the template.** Call `grid_fetch("template", "waitlist")` to load
+1. **Fetch the template.** Call `grid_get_template("template", "waitlist")` to load
    the self-contained HTML waitlist page (hero, email form, social-proof counter).
 2. **Fill the template.** Replace the placeholders with the user's content:
    - The product name, coming-soon headline, and subheadline.

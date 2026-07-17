@@ -23,7 +23,7 @@ and offer a static alternative honestly.
 
 ## 2. Fetch the template
 
-`grid_fetch({kind: "template", name: "simple-semantic-search"})` — it
+`grid_get_template({kind: "template", name: "simple-semantic-search"})` — it
 contains the full working source (proven by a live deploy), the cloudgrid.yaml,
 and the `.cloudgrid/link.json` explainer.
 
