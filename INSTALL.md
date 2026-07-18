@@ -140,7 +140,39 @@ Then point your agent at the cloned directory.
 ## MCP server
 
 The MCP server is published separately as
-[`@cloudgrid-io/mcp`](https://github.com/cloudgrid-io/mcp):
+[`@cloudgrid-io/mcp`](https://github.com/cloudgrid-io/mcp).
+
+**Prerequisite for the local (STDIO) server: Node 18+** (`node --version`). To
+install Node: macOS `brew install node`; **Windows** `winget install
+OpenJS.NodeJS.LTS` (then reopen the terminal); Debian/Ubuntu `sudo apt install
+nodejs npm`; or the installer at https://nodejs.org.
+
+Recommended: install once with npm (persistent, no npx cache surprises) and
+register the `cloudgrid-mcp` command in your client:
+
+```
+npm install -g @cloudgrid-io/mcp
+```
+
+```json
+{ "mcpServers": { "cloudgrid": { "command": "cloudgrid-mcp" } } }
+```
+
+**On Windows**, npm installs the command as a `.cmd` shim — if your client
+fails to spawn it, use:
+
+```json
+{ "mcpServers": { "cloudgrid": { "command": "cloudgrid-mcp.cmd" } } }
+```
+
+TOML clients (Codex):
+
+```toml
+[mcp_servers.cloudgrid]
+command = "cloudgrid-mcp"
+```
+
+No-install fallback:
 
 ```
 npx -y @cloudgrid-io/mcp

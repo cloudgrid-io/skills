@@ -41,12 +41,40 @@ npx skills add cloudgrid-io/skills
 - **Find it under `/plugin`**; the skills also show under `/skills` (labeled Plugin).
 - Invoke as **`/cloudgrid:build`** (plugin namespace + short skill name, like `superpowers:brainstorming`), or describe the task.
 
-### Route 3 — the MCP server
+### Route 3 — the MCP server (STDIO, local)
+
+**Prerequisite: Node 18+.** The local (STDIO) server is a Node process. Check with
+`node --version`; to install Node:
+
 ```
-claude mcp add cloudgrid -- npx -y @cloudgrid-io/mcp
+brew install node                      # macOS
+winget install OpenJS.NodeJS.LTS       # Windows (then reopen the terminal)
+sudo apt install nodejs npm            # Debian/Ubuntu (or use nvm)
 ```
+
+Install the server globally with npm (recommended — a persistent install beats
+`npx`, which re-resolves and can serve a stale cache), then register it:
+
+```
+npm install -g @cloudgrid-io/mcp
+claude mcp add cloudgrid -- cloudgrid-mcp
+```
+
+- **On Windows**, npm installs the command as a `.cmd` shim — if your client
+  fails to spawn it, register `cloudgrid-mcp.cmd` instead.
+- No-install fallback: `claude mcp add cloudgrid -- npx -y @cloudgrid-io/mcp`
+  (if npx pins a stale version, clear the cache: `rm -rf ~/.npm/_npx`).
 - **Find it under `/mcp`.** Exposes tools `grid_deploy`, `grid_login`, …
 - Invoke by describing the task; the model calls the tool.
+
+### Route 3b — the MCP server (hosted, remote)
+
+Nothing to install and no Node needed — point a remote-capable client at the
+hosted endpoint (reduced, CLI-free toolset):
+
+```
+https://mcp.cloudgrid.io/mcp
+```
 
 > Where did my install go? `/skills` (skills), `/plugin` (plugin), `/mcp` (MCP).
 > If you don't see something, you're probably looking in the wrong menu, or you
@@ -65,10 +93,18 @@ Or each person runs Route 1 or `claude mcp add ... -s user` once.
 
 ## Claude Desktop (chat)
 
-Desktop chat extends via **MCP only** — it does not read a skills folder. Add to
-`~/Library/Application Support/Claude/claude_desktop_config.json`:
+Desktop chat extends via **MCP only** — it does not read a skills folder.
+Easiest: download `cloudgrid.mcpb` from
+https://github.com/cloudgrid-io/mcp/releases/latest and double-click to install
+(Settings → Extensions) — no terminal, no Node.
+
+Manual alternative (needs Node 18+, see the Node install box above): install
+globally and reference the command in
+`~/Library/Application Support/Claude/claude_desktop_config.json`
+(**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`, and use
+`cloudgrid-mcp.cmd` as the command):
 ```json
-{ "mcpServers": { "cloudgrid": { "command": "npx", "args": ["-y", "@cloudgrid-io/mcp"] } } }
+{ "mcpServers": { "cloudgrid": { "command": "cloudgrid-mcp" } } }
 ```
 Then **fully quit and reopen** Claude Desktop. The CloudGrid tools appear under the
 tools icon. Invoke by describing the task: "drop this HTML to CloudGrid."
@@ -84,7 +120,8 @@ Installs into the universal `.agents/skills/` location these agents read (Cursor
 also reads `~/.cursor/skills`; target one agent with `-a codex` / `-a cursor`).
 Codex and Cursor also take the plugin route (`codex plugin marketplace add
 cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
-(`npx -y @cloudgrid-io/mcp` in their MCP config) or remote with nothing installed
+(`npm install -g @cloudgrid-io/mcp`, then `cloudgrid-mcp` in their MCP config;
+**Windows:** `cloudgrid-mcp.cmd`) or remote with nothing installed
 (`https://mcp.cloudgrid.io/mcp` as a `url` entry in `~/.codex/config.toml` or
 `~/.cursor/mcp.json`). See INSTALL.md for exact snippets.
 
