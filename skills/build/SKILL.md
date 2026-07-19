@@ -21,6 +21,15 @@ The CLI verb is `grid` — only. The MCP tools are `grid_*` (`grid_start`,
 `grid_deploy`, and friends). Prefer the MCP tools when they are connected; the
 CLI commands below are the fallback and take the same arguments.
 
+**Always run the CLI as `npx -y @cloudgrid-io/cli@latest <command>` — never a
+bare `grid`.** A `grid` already on the machine is often a stale global install,
+and the CloudGrid API rejects CLIs below its version floor, so a bare `grid`
+fails with a version error while wasting turns. `npx …@latest` always resolves a
+current CLI. (The MCP `grid_*` tools handle this for you — they pick a current
+CLI automatically — so prefer them; drop to `npx …@latest` only when no MCP is
+connected.) Below, `grid <command>` is shorthand for
+`npx -y @cloudgrid-io/cli@latest <command>`.
+
 If the idea itself is still fuzzy, run the `brainstorm` skill first, then come
 back here.
 
