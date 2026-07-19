@@ -40,10 +40,11 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 
 **Expected behavior:**
 
-- Runs `grid init app my-thing` (with or without `--type`, depending on context).
-- Then runs `grid plug` from the project directory.
+- Runs `grid new my-thing` (with or without `--type`, depending on context).
+- Then runs `grid plug` from the project directory (the first plug creates the
+  entity from `cloudgrid.yaml`).
 - Then runs `grid visibility set my-thing link`.
-- Does not skip steps. Does not jump straight to `plug` without `init`.
+- Does not skip steps. Does not hand-author `.cloudgrid/link.json`.
 - Prints the live URL after `plug`. Prints the shareable URL after `share`.
 - Offers `logs` or `feedback` as a next step.
 
@@ -250,14 +251,15 @@ These exist to be run by a human (or by another agent acting as the user) in a f
 - Uses the `init` skill.
 - Infers `--type python` from the user's request.
 - Asks for a name if not provided (a slug, 3-40 lowercase characters).
-- Runs `grid init app <name> --type python` once the name is confirmed.
-- Reports that the entity is registered and suggests `grid plug` as the next step.
+- Runs `grid new <name> --type python` once the name is confirmed.
+- Reports that the project is scaffolded and suggests `grid plug` (which creates
+  the entity and deploys) as the next step.
 
 **Score:**
 
 - Pass: correct command with `--type python`, name confirmed, next step offered.
 - Partial: correct type but did not confirm the name or suggest the next step.
-- Fail: wrong type, skipped `init`, or used `agent` instead of `app`.
+- Fail: wrong type, or scaffolded an agent (`--agent`) instead of an app.
 
 ---
 
