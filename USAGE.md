@@ -90,10 +90,10 @@ client afterwards; a running session keeps its old server process.
 ### Route 3b — the MCP server (hosted, remote)
 
 Nothing to install and no Node needed — point a remote-capable client at the
-hosted endpoint (reduced, CLI-free toolset):
+hosted endpoint (reduced, CLI-free toolset; OAuth sign-in at add-time):
 
 ```
-https://mcp.cloudgrid.io/mcp
+https://mcp-connected.cloudgrid.io/mcp
 ```
 
 > Where did my install go? `/skills` (skills), `/plugin` (plugin), `/mcp` (MCP).
@@ -142,7 +142,7 @@ Codex and Cursor also take the plugin route (`codex plugin marketplace add
 cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
 (`npm install -g @cloudgrid-io/mcp`, then `cloudgrid-mcp` in their MCP config;
 **Windows:** `cloudgrid-mcp.cmd`) or remote with nothing installed
-(`https://mcp.cloudgrid.io/mcp` as a `url` entry in `~/.codex/config.toml` or
+(`https://mcp-connected.cloudgrid.io/mcp` as a `url` entry in `~/.codex/config.toml` or
 `~/.cursor/mcp.json`). See INSTALL.md for exact snippets.
 
 ---
@@ -155,8 +155,7 @@ edition is live — add it as a custom connector:
 Two endpoints, two postures:
 
 ```
-https://mcp.cloudgrid.io/mcp             anonymous-first: drop with no sign-in
-https://mcp-connected.cloudgrid.io/mcp   connected: native sign-in when you add it
+https://mcp-connected.cloudgrid.io/mcp   connected: OAuth sign-in when you add it (the hosted endpoint)
 ```
 
 The connected endpoint runs the client's own OAuth connect at add-time (sign in
