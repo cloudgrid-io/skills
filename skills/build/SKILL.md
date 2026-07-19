@@ -118,7 +118,7 @@ simplest form of any need is `true`.
 | `pubsub` | Redis broadcast pub/sub | `PUBSUB_REDIS_URL` |
 | `vector` | pgvector on Postgres (embeddings, semantic search) | `VECTOR_PGVECTOR_URL` (+ `PGVECTOR_URL`) |
 | `disk` | persistent FS mount (pins to 1 replica) | `DISK_PATH` |
-| `ai` | AI Gateway via `@cloudgrid-io/runtime` | `AI_GATEWAY_URL` |
+| `ai` | AI Gateway via `@cloudgrid-io/runtime` | `RUNTIME_GATEWAY_URL` |
 
 One more exists but is **gated — do not author it yet**:
 
@@ -153,7 +153,7 @@ Three things live outside the manifest. Teaching this saves the most confusion.
   grid env set <app-name> LOG_LEVEL=info
   ```
   Reserved names you cannot set: `PORT`, `APP_NAME`, `SERVICE_NAME`, `NODE_ENV`,
-  `MONGODB_URL`, `REDIS_URL`, `AI_GATEWAY_URL`, `N8N_WEBHOOK_URL`, and anything
+  `MONGODB_URL`, `REDIS_URL`, `RUNTIME_GATEWAY_URL`, `N8N_WEBHOOK_URL`, and anything
   starting with `CLOUDGRID_`.
 - **No Dockerfile.** Do not write one. The platform generates the container from
   the service `type`.
