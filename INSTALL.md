@@ -82,7 +82,7 @@ args = ["-y", "@cloudgrid-io/mcp"]
 
 # or remote, nothing installed:
 # [mcp_servers.cloudgrid]
-# url = "https://mcp.cloudgrid.io/mcp"
+# url = "https://mcp-connected.cloudgrid.io/mcp"
 ```
 
 ### Cursor
@@ -100,7 +100,7 @@ Or the MCP server, in `~/.cursor/mcp.json`:
 { "mcpServers": { "cloudgrid": { "command": "npx", "args": ["-y", "@cloudgrid-io/mcp"] } } }
 ```
 
-Remote variant, nothing installed: `{ "mcpServers": { "cloudgrid": { "url": "https://mcp.cloudgrid.io/mcp" } } }`
+Remote variant, nothing installed (OAuth at add-time): `{ "mcpServers": { "cloudgrid": { "url": "https://mcp-connected.cloudgrid.io/mcp" } } }`
 
 ### Gemini CLI
 
@@ -127,7 +127,7 @@ View raw config). Add the local stdio server:
 ```
 
 Antigravity uses `serverUrl` (not `url`) for remote HTTP servers, so the remote variant is
-`{ "mcpServers": { "cloudgrid": { "serverUrl": "https://mcp.cloudgrid.io/mcp" } } }`.
+`{ "mcpServers": { "cloudgrid": { "serverUrl": "https://mcp-connected.cloudgrid.io/mcp" } } }`.
 
 ### Manual
 
@@ -179,7 +179,7 @@ npx -y @cloudgrid-io/mcp
 ```
 
 It wraps the same `grid` CLI and uses the same credentials, so no extra login
-is needed. Remote-capable clients can point at `https://mcp.cloudgrid.io/mcp`
+is needed. Remote-capable clients can point at `https://mcp-connected.cloudgrid.io/mcp`
 instead. See [USAGE.md](USAGE.md) for per-client snippets.
 
 ### Claude Desktop — one-click install
