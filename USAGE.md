@@ -67,6 +67,26 @@ claude mcp add cloudgrid -- cloudgrid-mcp
 - **Find it under `/mcp`.** Exposes tools `grid_deploy`, `grid_login`, …
 - Invoke by describing the task; the model calls the tool.
 
+### Clean reinstall (old version still showing?)
+
+Old versions hide in three places: the global install, the npx cache, and the
+client registration. Clear all three, then install fresh:
+
+```
+npm uninstall -g @cloudgrid-io/mcp
+rm -rf ~/.npm/_npx                    # npx cache - a stale @latest pin lives here
+npm cache clean --force
+claude mcp remove cloudgrid           # or delete the entry from your client's MCP config
+npm install -g @cloudgrid-io/mcp
+claude mcp add cloudgrid -- cloudgrid-mcp
+```
+
+**Windows:** the npx cache is `%LocalAppData%\npm-cache\_npx` (clear with
+`rd /s /q "%LocalAppData%\npm-cache\_npx"`), and register `cloudgrid-mcp.cmd`.
+Claude Desktop's `.mcpb` extension never auto-updates - remove it in Settings,
+Extensions and install the fresh one from the latest release. Fully restart the
+client afterwards; a running session keeps its old server process.
+
 ### Route 3b — the MCP server (hosted, remote)
 
 Nothing to install and no Node needed — point a remote-capable client at the
