@@ -51,7 +51,7 @@ Two questions decide everything that follows.
 - A one-page static thing (a deck, a landing page, an HTML page, a demo, a game
   prototype that runs in the browser) is fastest to ship as an **inspiration**:
   deploy it with `grid_deploy` and the inline `html` param for an instant public
-  URL — works on any edition. Set who can see it with `grid_set_sharing`
+  URL — works on any edition. Set who can see it with `grid_visibility`
   (private, space, authenticated, org).
 - A real app (a backend, a dashboard, an API, anything with infrastructure or
   more than one service) is an **owned runtime**: a `cloudgrid.yaml` with

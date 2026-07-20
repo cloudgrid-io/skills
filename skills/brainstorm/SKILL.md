@@ -68,7 +68,7 @@ getter/handler. Managed relational Postgres/MySQL is bring-your-own only.
 The deploy shape follows from the needs: **no `needs:` and one self-contained
 HTML file -> an instant static page (any edition); any `needs:` or multiple files
 -> a runtime app** (built + deployed, local edition, async). Golden path:
-`grid_start` -> `grid_get_template` -> fill -> `grid_deploy` -> `grid_set_sharing`.
+`grid_start` -> `grid_get_template` -> fill -> `grid_deploy` -> `grid_visibility`.
 
 So for "build me a system / an app that saves X", infer `needs: { database: true }`
 up front and go straight from the brainstorm to a working build.
