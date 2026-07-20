@@ -15,7 +15,10 @@ allowed-tools: Bash
 
 Every buildable request ends the same way: a working thing that is plugged in and
 live on the grid, with a public URL. Not a folder of files on someone's laptop.
-This skill is the path from idea to live.
+The grid is a live runtime environment, not just a host: the app runs there WITH
+the infrastructure it needs (managed database, cache, disk, AI with no API keys),
+in any language or stack, and you never touch Docker or Kubernetes. This skill is
+the path from idea to live.
 
 The CLI verb is `grid` — only. The MCP tools are `grid_*` (`grid_start`,
 `grid_deploy`, and friends). Prefer the MCP tools when they are connected; the
@@ -52,7 +55,7 @@ Two questions decide everything that follows.
   prototype that runs in the browser) is fastest to ship as an **inspiration**:
   deploy it with `grid_deploy` and the inline `html` param for an instant public
   URL — works on any edition. Set who can see it with `grid_visibility`
-  (private, space, authenticated, org).
+  (private, space, authenticated, grid, or link).
 - A real app (a backend, a dashboard, an API, anything with infrastructure or
   more than one service) is an **owned runtime**: a `cloudgrid.yaml` with
   `needs`, deployed with `grid_deploy` on a linked folder (CLI: `grid plug`).
