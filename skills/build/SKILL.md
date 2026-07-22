@@ -21,7 +21,7 @@ in any language or stack, and you never touch Docker or Kubernetes. This skill i
 the path from idea to live.
 
 The CLI verb is `grid` — only. The MCP tools are `grid_*` (`grid_start`,
-`grid_deploy`, and friends). Prefer the MCP tools when they are connected; the
+`grid_plug`, and friends). Prefer the MCP tools when they are connected; the
 CLI commands below are the fallback and take the same arguments.
 
 **Always run the CLI as `npx -y @cloudgrid-io/cli@latest <command>` — never a
@@ -53,12 +53,12 @@ Two questions decide everything that follows.
 
 - A one-page static thing (a deck, a landing page, an HTML page, a demo, a game
   prototype that runs in the browser) is fastest to ship as an **inspiration**:
-  deploy it with `grid_deploy` and the inline `html` param for an instant public
+  deploy it with `grid_plug` and the inline `html` param for an instant public
   URL — works on any edition. Set who can see it with `grid_visibility`
   (private, space, authenticated, grid, or link).
 - A real app (a backend, a dashboard, an API, anything with infrastructure or
   more than one service) is an **owned runtime**: a `cloudgrid.yaml` with
-  `needs`, deployed with `grid_deploy` on a linked folder (CLI: `grid plug`).
+  `needs`, deployed with `grid_plug` on a linked folder (CLI: `grid plug`).
   The build is async — poll until it returns the live URL.
 
 **What service type is it?** One of: `node`, `nextjs`, `python`, `static`, `cron`.
@@ -181,7 +181,7 @@ it live.
 
 ## Step 6: Take it live
 
-MCP: `grid_deploy` on the linked folder, then poll until it returns the live
+MCP: `grid_plug` on the linked folder, then poll until it returns the live
 URL. CLI:
 
 ```bash

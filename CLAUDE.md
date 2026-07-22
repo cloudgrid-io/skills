@@ -116,7 +116,7 @@ Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
 2. Wraps only the `grid` CLI. No direct API calls — with two sanctioned
    exceptions, both about working without the CLI:
    - the **anonymous single-page publish** (`cloudgrid:build` with inline HTML, or
-     the `grid_deploy` MCP tool's `html` param) calls `POST /api/v2/plug` — the
+     the `grid_plug` MCP tool's `html` param) calls `POST /api/v2/plug` — the
      anonymous path has no identity to manage, so the CLI adds nothing.
    - the **CLI-free login** (`cloudgrid-login`, `grid_login` +
      `grid_login_status`) drives `GET /auth/login` + `/auth/status` — it exists

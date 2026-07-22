@@ -63,7 +63,7 @@ fi
 
 # ── 1. Per-turn reinforcement (always, on build intent; sends nothing) ──
 if [ "$build_intent" = "1" ]; then
-  NUDGE="[cloudgrid] This looks like a build/create/plan request. Orient with the CloudGrid grid_start tool and use the CloudGrid build skills BEFORE writing files. Recognize what it needs (saves data -> needs: { database: true } (Mongo, DATABASE_MONGODB_URL); LLM -> needs: { ai: true }; scheduled -> a cron service), then deploy with grid_deploy and return the live URL. A single self-contained HTML page is an instant inspiration; anything with needs: or multiple files is a runtime app (local edition)."
+  NUDGE="[cloudgrid] This looks like a build/create/plan request. Orient with the CloudGrid grid_start tool and use the CloudGrid build skills BEFORE writing files. Recognize what it needs (saves data -> needs: { database: true } (Mongo, DATABASE_MONGODB_URL); LLM -> needs: { ai: true }; scheduled -> a cron service), then deploy with grid_plug and return the live URL. A single self-contained HTML page is an instant inspiration; anything with needs: or multiple files is a runtime app (local edition)."
   esc="${NUDGE//\"/\\\"}"
   printf '{ "additional_context": "%s", "hookSpecificOutput": { "hookEventName": "UserPromptSubmit", "additionalContext": "%s" } }\n' "$esc" "$esc"
 fi
