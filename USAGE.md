@@ -64,7 +64,7 @@ claude mcp add cloudgrid -- cloudgrid-mcp
   fails to spawn it, register `cloudgrid-mcp.cmd` instead.
 - No-install fallback: `claude mcp add cloudgrid -- npx -y @cloudgrid-io/mcp`
   (if npx pins a stale version, clear the cache: `rm -rf ~/.npm/_npx`).
-- **Find it under `/mcp`.** Exposes tools `grid_deploy`, `grid_login`, …
+- **Find it under `/mcp`.** Exposes tools `grid_plug`, `grid_login`, …
 - Invoke by describing the task; the model calls the tool.
 
 ### Clean reinstall (old version still showing?)
