@@ -1,6 +1,6 @@
 {
   "name": "cloudgrid",
-  "version": "0.14.25",
+  "version": "0.14.26",
   "description": "Build and run apps on CloudGrid from Claude Code: brainstorming, planning, templates, and one-step deploys to a live URL - on a live runtime that provides managed databases, cache, disk, and AI (no API keys) out of the box",
   "keywords": [
     "build",

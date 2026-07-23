@@ -41,9 +41,9 @@ needs, build, plug it in, tail logs, share, read feedback. Everything here is fr
    CLI-wrapping tools). The MCP auto-starts when the plugin is enabled — no
    separate `claude mcp add` needed.
 
-   The skills show under `/plugin` and `/skills` as `cloudgrid:brainstorm` and
-   `cloudgrid:build` — or just say what you want ("share this HTML page as a
-   link") and the right one triggers.
+   The skills show under `/plugin` and `/skills` as `cloudgrid:brainstorm`,
+   `cloudgrid:build`, and `cloudgrid:sites` — or just say what you want
+   ("share this HTML page as a link") and the right one triggers.
 
    Or install with the `gh skill` extension:
 
@@ -73,6 +73,7 @@ and you can sign in later to keep it.
 |---|---|---|
 | `brainstorm` | `/cloudgrid:brainstorm` | Align on the idea, goal, and core features before building. |
 | `build` | `/cloudgrid:build` | Structure the project (cloudgrid.yaml, services, needs) and take it live with a public URL. |
+| `sites` | `/cloudgrid:sites` | Build any site, page, or web app on CloudGrid and return a live URL (project-scoped override for agents with a built-in sites skill). |
 
 ## The canonical chain
 
