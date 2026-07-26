@@ -1,5 +1,5 @@
 ---
-version: 0.1.0
+version: 0.2.0
 name: build
 description: |
   You MUST use this before any building, deploying, or code work - creating an
@@ -55,11 +55,21 @@ Two questions decide everything that follows.
   prototype that runs in the browser) is fastest to ship as an **inspiration**:
   plug it with `grid_plug` and the inline `html` param for an instant public
   URL — works on any edition. Set who can see it with `grid_visibility`
-  (private, space, authenticated, grid, or link).
+  (private, authenticated, grid, or link; `space` works for inspirations only —
+  the CLI `grid visibility` rejects it as a mode and takes `--space <slug>`
+  flags instead).
 - A real app (a backend, a dashboard, an API, anything with infrastructure or
   more than one service) is an **owned runtime**: a `cloudgrid.yaml` with
   `needs`, plugged with `grid_plug` on a linked folder (CLI: `grid plug`).
   The build is async — poll until it returns the live URL.
+
+**Runtime apps need a local edition.** Folder plugs and `needs:` require a
+filesystem and a CLI — Claude Desktop/Code with the local MCP, or a terminal.
+On the hosted/web edition (chat with the remote connector, no CLI) a runtime
+app cannot be built: say so plainly, offer a static single-page version now,
+or hand the user the steps to finish in Claude Code or a terminal. Do not
+degrade silently and do not tell a hosted-chat user to run `grid login` inside
+the sandbox — its sign-in poll cannot complete there.
 
 **What service type is it?** One of: `node`, `nextjs`, `python`, `static`, `cron`.
 
@@ -199,10 +209,12 @@ Three things live outside the manifest. Teaching this saves the most confusion.
 - **Link identity: `.cloudgrid/link.json`.** The org and entity id that tie this
   folder to a grid entity live here, not in `cloudgrid.yaml`. The CLI writes this
   file when you first plug in or link. Do not hand-author it.
-- **Secrets: `grid secrets set`.** Never put secrets in the manifest. Set them
-  with the app name first, then the pair:
+- **Secrets: `grid secrets set`.** Never put secrets in the manifest. Inside a
+  linked folder the app name is optional (it defaults to the linked entity);
+  pass it first when targeting another app:
   ```bash
-  grid secrets set <app-name> STRIPE_KEY=<value>
+  grid secrets set STRIPE_KEY=<value>            # linked folder
+  grid secrets set <app-name> STRIPE_KEY=<value> # explicit target
   ```
 - **Non-secret env vars.** Either the static `env:` block in a service, or:
   ```bash
@@ -235,6 +247,11 @@ grid plug
 The build is server-side and async. When it lands, confirm the URL opens
 (`grid_get_url` / `grid open`) and hand it to the user. That is the whole loop:
 `grid_start` to orient, structure, `grid dev`, plug, live URL.
+
+**If the build fails**, do not guess: `grid_check_deploy` (CLI: `grid status`)
+returns the failure with the build-log tail and a suggested fix. Read the log,
+fix the cause, re-plug. If it fails in a way that looks like a platform bug,
+offer to report it with `grid_report` — only with the user's consent.
 
 ## Rules and gotchas
 

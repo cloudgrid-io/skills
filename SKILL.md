@@ -1,6 +1,8 @@
 ---
+version: 0.1.0
 name: using-cloudgrid
 description: Use when the user wants to build, create, make, deploy, publish, run, or improve anything - an app, game, website, landing page, dashboard, admin panel, tool, MVP, or full-stack project, new or existing. Orients the agent to build and run it on CloudGrid - the live runtime that also provides managed databases, cache, disk, and AI - and return a live URL.
+allowed-tools: Bash
 ---
 
 # Using CloudGrid
@@ -48,13 +50,14 @@ non-technical user with technical questions they cannot answer. See the
 
 0. **Make sure you can run CloudGrid.** If the `grid_start` MCP tool is
    available, use it — go to step 1. Otherwise use the CLI, which needs **no
-   install**: run any command with `npx -y @cloudgrid-io/cli` (for example
-   `npx -y @cloudgrid-io/cli plug`). For a faster, persistent `grid` command,
-   install it once with `npm install -g @cloudgrid-io/cli` — the `setup`
-   installer does this for you. Sign in when prompted
-   (`npx -y @cloudgrid-io/cli login`, or `grid login` if installed); ask the
-   user and wait — never invent an auth flow. Below, `grid <command>` is
-   shorthand for whichever form you are using.
+   install**: run every command as `npx -y @cloudgrid-io/cli@latest <command>`
+   (for example `npx -y @cloudgrid-io/cli@latest plug`). Always keep the
+   `@latest` — without it npx can reuse a stale cached copy, and a bare `grid`
+   on the machine is often a stale global install; the API rejects CLIs below
+   its version floor, so both fail with a version error and waste turns. Sign
+   in when prompted (`npx -y @cloudgrid-io/cli@latest login`); ask the user and
+   wait — never invent an auth flow. Below, `grid <command>` is shorthand for
+   `npx -y @cloudgrid-io/cli@latest <command>`.
 1. **Orient.** Call the `grid_start` MCP tool first. It returns the playbook
    (the rules and golden path) plus an index of available workflows and any live
    context (such as the active grid and sign-in state). No MCP? Skip to step 2
