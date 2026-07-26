@@ -1,5 +1,23 @@
 name: release
 
+# The npm channel is RETIRED (last publish: 0.14.0, 2026-07-09).
+#
+# Every documented way to install these skills reads the GIT REPO, not npm:
+#   - Claude Code:  /plugin marketplace add cloudgrid-io/skills
+#   - gh extension: gh skill install cloudgrid-io/skills
+#   - Cursor/Cline/Gemini/Codex: npx skills add cloudgrid-io/skills
+#     (the third-party `skills` CLI reading THIS REPO — not
+#      `npm install @cloudgrid-io/skills`)
+#
+# So skills ship by MERGING TO MAIN; there is nothing to publish. package.json
+# is `private: true` and this workflow no longer runs `npm publish` — it only
+# cuts a GitHub release when a v* tag is pushed, for marking milestones.
+#
+# To revive the npm channel: drop `private` from package.json, restore the
+# publish step (needs secrets.NPM_TOKEN + `id-token: write` permission), and
+# keep package.json's version in lockstep with .claude-plugin/plugin.json — CI
+# already enforces that they match (.github/scripts/check-versions.mjs).
+
 on:
   push:
     tags:
@@ -7,21 +25,28 @@ on:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
-  publish:
+  github-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
-          registry-url: https://registry.npmjs.org
-      - run: npm install --no-save
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # A tag must not disagree with the shipped version.
+      - name: Version coherence
+        run: node .github/scripts/check-versions.mjs
+      - name: Tag matches plugin.json version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          shipped="$(node -e 'process.stdout.write(require("./.claude-plugin/plugin.json").version)')"
+          if [ "$tag" != "$shipped" ]; then
+            echo "Tag v${tag} does not match .claude-plugin/plugin.json (${shipped})."
+            echo "Tag the release commit whose plugin.json matches, or bump plugin.json first."
+            exit 1
+          fi
+          echo "Tag v${tag} matches plugin.json."
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
