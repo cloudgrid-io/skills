@@ -155,9 +155,9 @@ needs:
   database: true
 ```
 
-There is no dedicated multi-service template. Start from `app-with-data` and add
-a second service, or use the `semantic-search` template (which ships `web` +
-`backend` + `refresh` cron) as a structural reference.
+For a two-service layout (frontend + API), use the `multi-service` template. For
+a three-service layout (frontend + backend + cron), use `semantic-search` as a
+structural reference.
 
 ## Step 3: Declare infrastructure with `needs`
 
