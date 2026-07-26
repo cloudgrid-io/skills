@@ -9,8 +9,11 @@ Full authoring guidance lives in `CLAUDE.md`. This file covers the mechanics.
 
 ```
 skills/<name>/SKILL.md   one directory per skill, short name (e.g. build)
-VERSION                  canonical version; every SKILL.md version tracks it
-.claude-plugin/          marketplace manifest for Claude Code
+.claude-plugin/          marketplace manifest for Claude Code — SOURCE OF TRUTH
+                         for the plugin version
+VERSION                  mirror of plugin.json; read at RUNTIME by
+                         hooks/user-prompt and reported as plugin_version in
+                         telemetry, so it must never drift
 .codex-plugin/           marketplace manifest for Codex
 .cursor-plugin/          marketplace manifest for Cursor
 ```
@@ -43,7 +46,10 @@ Required frontmatter fields: `version`, `name`, `description`, `allowed-tools`.
    - Detect the user's language from their first message and reply in it.
      Technical flags stay in English.
    - Print results concisely -- URLs and short summaries, never raw JSON or IDs.
-4. Set `version:` in frontmatter to match the value in `VERSION`.
+4. Set `version:` in frontmatter to this skill's own semver. Per-skill versions
+   are INDEPENDENT of the plugin version — bump a skill's version when that
+   skill changes, not on every release. (An older instruction here said the
+   frontmatter must equal `VERSION`; that was never enforced and never true.)
 5. Run the linter locally before pushing:
 
 ```
@@ -58,19 +64,33 @@ claim. Eighth-grade reading level. Full rules in `CLAUDE.md`.
 
 ## CI checks
 
-Two scripts run in CI. Both must pass before merge.
+Three scripts run in CI. All must pass before merge.
 
-- `lint-skills.mjs` -- validates `SKILL.md` YAML frontmatter (required fields,
-  version match).
+- `lint-skills.mjs` -- validates `SKILL.md` YAML frontmatter (required keys are
+  present; it does NOT compare version values).
 - `no-internal-refs.mjs` -- scans for leaked internal references (org names,
   partnership claims).
+- `check-versions.mjs` -- version coherence: `.claude-plugin/plugin.json` is the
+  single source of truth, and `VERSION` + `package.json` must mirror it exactly.
+  `VERSION` is read at runtime by `hooks/user-prompt` and reported as
+  `plugin_version` in telemetry, so drift there silently mislabels every event.
 
 Run them locally the same way:
 
 ```
 node .github/scripts/lint-skills.mjs
 node .github/scripts/no-internal-refs.mjs
+node .github/scripts/check-versions.mjs
 ```
+
+## Releasing
+
+Skills ship by **merging to main** -- the marketplace serves the repo directly.
+Bump `.claude-plugin/plugin.json` (PATCH by default), then mirror the same value
+into `VERSION` and `package.json`. There is no npm publish: the npm channel is
+retired (last publish 0.14.0, 2026-07-09) and `package.json` is `private: true`.
+Every documented install path reads the git repo -- `/plugin marketplace add`,
+`gh skill install`, and `npx skills add cloudgrid-io/skills`.
 
 ## Testing
 

@@ -31,3 +31,16 @@ jobs:
           node-version: 20
       - name: Lint SKILL.md frontmatter
         run: node .github/scripts/lint-skills.mjs
+
+  versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+      # plugin.json is the single source of truth; VERSION and package.json
+      # mirror it. VERSION is read at runtime by hooks/user-prompt and reported
+      # as plugin_version in telemetry, so drift there corrupts release data.
+      - name: Version coherence (plugin.json / VERSION / package.json)
+        run: node .github/scripts/check-versions.mjs
