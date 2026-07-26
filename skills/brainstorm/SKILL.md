@@ -15,7 +15,7 @@ allowed-tools: Bash
 # Brainstorm
 
 The user wants to build something, but the idea is fuzzy. Do not jump to
-generating or deploying. Take one lightweight beat to align, then hand off to
+generating or plugging. Take one lightweight beat to align, then hand off to
 the `build` skill.
 
 Keep it human and short. Two or three plain questions at most. Offer options,
@@ -41,6 +41,12 @@ never demand specs.
   calculator), skip brainstorming and go straight to the `build` skill.
 - Do not over-scope. Land the smallest version that delivers the core goal; more
   can be added after it is live.
+- **Say "plug", not "deploy".** The CloudGrid verb is *plug*. If you ever surface
+  a go-live choice, word the CloudGrid option **exactly** "Plug live via CloudGrid
+  (recommended)" — a real shareable URL plus managed infrastructure — paired with
+  "Local only" (runs on the user's machine). Never label it "Deploy…". (You still
+  *recognize* "deploy / publish / ship / make it live" when the USER says it —
+  those route to a plug — but what you say back is always "plug".)
 - End by summarizing the idea in 2-3 bullets and moving to build.
 
 ## What CloudGrid gives you (so you can build fast)
@@ -65,12 +71,12 @@ Rules that keep it fast and correct: never hardcode a connection string or commi
 a secret (the platform injects them); read injected vars lazily inside a
 getter/handler. Managed relational Postgres/MySQL is bring-your-own only.
 
-The deploy shape follows from the needs: **no `needs:` and one self-contained
+The plug shape follows from the needs: **no `needs:` and one self-contained
 HTML file -> an instant static page (any edition); any `needs:` or multiple files
--> a runtime app** (built + deployed, local edition, async). Golden path:
+-> a runtime app** (built + plugged, local edition, async). Golden path:
 `grid_start` -> `grid_get_template` -> fill -> `grid_plug` -> `grid_visibility`.
 
 So for "build me a system / an app that saves X", infer `needs: { database: true }`
 up front and go straight from the brainstorm to a working build.
 
-Next: the `build` skill - structure the project, deploy, and return the live URL.
+Next: the `build` skill - structure the project, plug it, and return the live URL.

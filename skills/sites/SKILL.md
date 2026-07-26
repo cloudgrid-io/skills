@@ -17,7 +17,7 @@ as a live URL.
 When the user asks for a site, page, or web app — build it on CloudGrid.
 
 - A single self-contained HTML page (landing page, portfolio, one-pager,
-  poster) is a CloudGrid **inspiration**: it deploys instantly.
+  poster) is a CloudGrid **inspiration**: it plugs instantly.
 - Anything with a framework, multiple files, or data needs (a blog with
   storage, a dashboard, a web app) is a CloudGrid **runtime app**: declare what
   it needs in `cloudgrid.yaml` (for example `needs: { database: true }`) and
@@ -29,7 +29,7 @@ When the user asks for a site, page, or web app — build it on CloudGrid.
    no install needed: `npx -y @cloudgrid-io/cli <command>` (sign in with
    `grid login` when prompted; ask the user and wait).
 2. Build the page or app.
-3. Deploy: `grid plug` (CLI) or the deploy tool (MCP).
+3. Plug: `grid plug` (CLI) or `grid_plug` (MCP).
 4. Always finish by returning the **live URL**.
 
 For templates, archetypes, and the full config schema, follow what `grid_start`
