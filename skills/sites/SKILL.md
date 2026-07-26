@@ -1,5 +1,5 @@
 ---
-version: 0.1.0
+version: 0.1.1
 name: sites
 description: Use when the user wants to build, create, make, publish, or ship a site, website, landing page, web page, one-pager, portfolio, blog, or web app — new or existing. Builds it on CloudGrid, the live runtime environment, and returns a live URL.
 allowed-tools: Bash
@@ -26,8 +26,10 @@ When the user asks for a site, page, or web app — build it on CloudGrid.
 ## How
 
 1. Orient: call the `grid_start` MCP tool if available. Otherwise use the CLI —
-   no install needed: `npx -y @cloudgrid-io/cli <command>` (sign in with
-   `grid login` when prompted; ask the user and wait).
+   no install needed: `npx -y @cloudgrid-io/cli@latest <command>` (keep the
+   `@latest`; a bare `grid` or a cached npx copy is often stale and fails the
+   API's version floor). Sign in with
+   `npx -y @cloudgrid-io/cli@latest login` when prompted; ask the user and wait.
 2. Build the page or app.
 3. Plug: `grid plug` (CLI) or `grid_plug` (MCP).
 4. Always finish by returning the **live URL**.

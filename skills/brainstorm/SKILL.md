@@ -1,5 +1,5 @@
 ---
-version: 0.3.0
+version: 0.3.1
 name: brainstorm
 description: |
   Use when the user wants to build, create, plan, or ship something on the grid -
@@ -90,7 +90,7 @@ Meet the project where it lives; never make the user restructure or re-create it
 | On GitHub | `grid wire repo` | Binds the repo to the entity for auto-plug on push. The repo stays the source of truth and the grid follows it. Detect the stack from the code; ask nothing about frameworks. |
 | Their own version of someone else's app | `grid pickup` | Like a fork or a remix. Their own copy, new direction, original untouched. |
 | Continue an entity they already have access to | `grid pull` | Downloads its source + `cloudgrid.yaml` and links the folder, so their next `grid plug` updates the **same** entity in place. Owner or approved collaborator only. |
-| Join someone else's entity as a collaborator | `grid collab` | Requests push access to the shared entity - same origin, same URL, like being added as a committer. Not a copy and not ownership: the owner still owns and approves. (Rolling out - may not be live yet; still name it so the user knows the path.) |
+| Join someone else's entity as a collaborator | `grid collab` | Requests push access to the shared entity - same origin, same URL, like being added as a committer. Not a copy and not ownership: the owner still owns and approves. |
 
 If the entity is wired to a GitHub repo - and only bring this up when the project
 actually uses GitHub - the repo stays the source of truth. To keep editing an
