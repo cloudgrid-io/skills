@@ -115,6 +115,50 @@ needs:
   database: true
 ```
 
+### When to use more than one service
+
+Use more than one service when the user describes parts that run separately: a
+frontend with a backend API, a worker or queue consumer beside a UI, a scheduled
+job alongside a web service, or two different languages in one app (a React UI
+with a Python API, for example). One service is the default; do not split
+without a reason. Each service gets its own folder under `services/<name>/`.
+
+Multi-service app (a static frontend + a Node API with a database):
+
+```
+my-app/
+  cloudgrid.yaml
+  services/
+    web/                      # frontend
+      package.json
+      index.html
+    api/                      # backend
+      package.json
+      src/index.js
+```
+
+```yaml
+name: my-app
+services:
+  web:
+    type: static
+    path: /                   # URL mount — serves the frontend at the root
+    build:
+      command: npm run build
+      output: dist
+    depends_on: [api]         # start order; no cron targets, no cycles
+  api:
+    type: node
+    path: /api                # URL mount, not the filesystem path — code lives in services/api/
+# needs: sit at the app level — shared across all services
+needs:
+  database: true
+```
+
+There is no dedicated multi-service template. Start from `app-with-data` and add
+a second service, or use the `semantic-search` template (which ships `web` +
+`backend` + `refresh` cron) as a structural reference.
+
 ## Step 3: Declare infrastructure with `needs`
 
 You do not provision anything by hand. Declare what the app needs and the
