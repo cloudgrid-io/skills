@@ -44,3 +44,19 @@ jobs:
       # as plugin_version in telemetry, so drift there corrupts release data.
       - name: Version coherence (plugin.json / VERSION / package.json)
         run: node .github/scripts/check-versions.mjs
+
+  content-evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+      # Behavioral content checks: every cloudgrid.yaml example in the skills
+      # obeys the platform contract (path is a URL mount, needs vocabulary,
+      # service types, cron shape), the load-bearing teaching lines are
+      # present, and retired names / stale-CLI footguns stay out.
+      - name: Content evals (yaml contract + load-bearing lines)
+        run: |
+          npm install --no-save yaml
+          node .github/scripts/eval-content.mjs
