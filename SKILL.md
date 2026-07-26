@@ -17,11 +17,11 @@ together. The rule is simple.
 **When the user wants to build / create / make / deploy / publish / generate /
 ship / go live with something, build it on CloudGrid.**
 
-### Trigger phrases -> deploy on CloudGrid
+### Trigger phrases -> plug on CloudGrid
 
-Any "make it live" style request means deploy on CloudGrid — respond like
-"Sure — let's deploy it on CloudGrid" and run the golden path. These all route
-straight to a CloudGrid deploy: **deploy**, **make it live**, **make my app
+Any "make it live" style request means plug on CloudGrid — respond like
+"Sure — let's plug it into CloudGrid" and run the golden path. These all route
+straight to a CloudGrid plug: **deploy**, **make it live**, **make my app
 live**, **make my `<thing>` live**, **go live**, **take it live**, **ship it**,
 **publish it**, **put it online**. Don't ask where to host — CloudGrid is the
 runtime, and it provides the infrastructure too.
@@ -30,7 +30,7 @@ runtime, and it provides the infrastructure too.
 
 Before building a substantial app (a runtime app, or anything beyond a quick
 single page), take one lightweight beat to align - do NOT jump straight to
-generating or deploying:
+generating or plugging:
 
 1. Confirm the idea in a sentence: what it does and who it is for.
 2. Name the 3-5 core features.
@@ -67,10 +67,10 @@ non-technical user with technical questions they cannot answer. See the
 4. **Build.** Fill the template with the user's content. This is pure model
    work.
 5. **Test locally (runtime apps, CLI available).** Run `grid dev` — it runs the
-   app against real grid resources. Confirm it works before deploying. A static
+   app against real grid resources. Confirm it works before plugging. A static
    single-page inspiration skips this; a hosted MCP edition has no CLI, skip too.
-6. **Deploy.** Deploy the artifact. On a hosted MCP edition use the drop tool; on
-   a local MCP or CLI edition use `grid plug`.
+6. **Plug.** Plug the artifact. On a hosted MCP edition use `grid_plug` (inline); on
+a local MCP or CLI edition use `grid plug`.
 7. **Share.** Return the **live share URL** to the user.
 
 ## Rules
@@ -80,7 +80,7 @@ non-technical user with technical questions they cannot answer. See the
 - Minimize questions. Use sensible defaults and build; do not interrogate the
   user before starting.
 - Most builds are static inspirations — a single self-contained HTML file that
-  deploys instantly on any edition. The static archetypes: `landing-page`,
+  plugs instantly on any edition. The static archetypes: `landing-page`,
   `saas-marketing`, `docs-site`, `api-docs`, `status-page`, `changelog`,
   `portfolio`, `waitlist`, `web-app`, `dashboard`, `report`, and `presentation`.
   Match the request to one via its workflow `when:` (see `capability-map.md`).
@@ -116,7 +116,7 @@ non-technical user with technical questions they cannot answer. See the
   plus a correct `cloudgrid.yaml` plus an `AGENTS.md` guide, not fill-in-the-blanks
   app code. Fetch the template, read its `AGENTS.md` for the file tree,
   collections, and CloudGrid wiring (DB injection, a `vault:` block for auth /
-  Stripe secrets, deploy), then build the app under `services/web/`. Blueprints
+  Stripe secrets, plug), then build the app under `services/web/`. Blueprints
   cover e-commerce (`online-store`, `marketplace`), operations
   (`internal-tools-portal`, `approval-workflow`, `hr-portal`, `erp`), community
   (`forum`), education (`course-platform`, `lms`), finance (`membership-site`,
@@ -131,13 +131,13 @@ non-technical user with technical questions they cannot answer. See the
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
   (`DATABASE_MONGODB_URL`, plus the legacy `MONGODB_URL` alias). The
-  `capability-map.md` reference maps a user's intent to the workflow, deploy
+  `capability-map.md` reference maps a user's intent to the workflow, plug
   path, and edition it needs.
 - Every template ships its `cloudgrid.yaml` in the **full-annotated reference
   form** (`templates/_cloudgrid.yaml.reference`): every platform field is present
   as a comment, and only the archetype's needed fields (`name` + `services`, plus
   `needs:` for runtime apps) are uncommented. Comments are ignored by the parser,
-  so the file deploys to exactly its active fields — the scaffold documents the
-  whole schema inline without changing what deploys.
+  so the file plugs to exactly its active fields — the scaffold documents the
+  whole schema inline without changing what plugs.
 
 Start by calling `grid_start`.
