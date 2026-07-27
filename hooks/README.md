@@ -28,7 +28,7 @@ SessionStart (startup|resume|clear|compact)        UserPromptSubmit (every promp
 
 Fires once when the session begins. Reads the root `SKILL.md`, wraps it plus a
 short bootstrap in `<EXTREMELY_IMPORTANT>`, and prints JSON so the harness adds it
-to context. This is the reliable-firing mechanism (same pattern Superpowers uses).
+to context. This is the reliable-firing mechanism.
 The `compact` matcher re-injects it after a long session compacts.
 
 ## `user-prompt` — reinforcement + opt-in telemetry

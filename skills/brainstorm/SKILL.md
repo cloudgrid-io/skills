@@ -31,27 +31,19 @@ options, never demand specs.
 
 ---
 
-## Before Phase A: let the user pick the discovery style
+## Before Phase A: do not repeat discovery the user already did
 
-Other brainstorming skills may be available (`superpowers:brainstorming`, a team
-skill, a personal one). This skill does not own brainstorming and must not
-silently override a skill the user already uses.
+If the idea is already aligned — earlier in this conversation, or through whatever
+discovery the user prefers — do not run Phase A again. Pick up what they have and go
+straight to Phase B.
 
-At the start, in one line:
+Otherwise run Phase A below. If the user says "just build it", skip Phase A: infer the
+shape and state it in two lines for a nod.
 
-> "Want me to run the quick CloudGrid brainstorm, or use your own brainstorming
-> skill and I'll pick it up from there?"
+**Phase B always runs.** It is the part that shapes the idea for the grid — services,
+disk layout, `cloudgrid.yaml`, `needs:` — and nothing else covers it.
 
-Then:
-
-- **They pick another skill** - run that one for Phase A. When it finishes, come
-  back here and run **Phase B only**. Do not re-ask anything the other skill
-  already covered.
-- **They pick this one, or don't care** - run Phase A below.
-- **They say "just build it"** - skip Phase A entirely. Still run Phase B, but
-  infer instead of asking, and state the shape in two lines for a nod.
-
-Never run two discovery passes. Never ask the same question twice across skills.
+Never run two discovery passes. Never ask the same question twice.
 
 ---
 
