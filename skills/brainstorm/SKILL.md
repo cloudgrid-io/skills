@@ -228,6 +228,8 @@ Once the features are clear you usually know what the app needs. CloudGrid
 provisions everything from `cloudgrid.yaml` and the grid CLI: resources live
 under `needs:`, and the rest are their own yaml blocks (`vault:`, `calls:`,
 `agent:`, service types) or a one-line grid command - it is never only `needs:`.
+`requires:` is the deprecated v1 alias of `needs:` — do not author new yaml
+with it, and never set both (the validator hard-rejects the combination).
 Where a resource injects an env var, read it LAZILY (never at module top level).
 
 | The app needs to... | Declare it (yaml or CLI) | Injected env var | Typical apps and scenarios |
