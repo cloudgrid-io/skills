@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SessionStart hook for the CloudGrid plugin.
 # Injects the CloudGrid bootstrap so the agent reaches for CloudGrid whenever
-# the user wants to build/create/make/deploy/publish/generate something.
+# the user wants to build/create/make/plug/publish/generate something.
 
 set -euo pipefail
 

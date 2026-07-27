@@ -8,7 +8,7 @@
 # STANDARD: every CloudGrid template ships its cloudgrid.yaml in THIS full form.
 # Uncomment ONLY the fields the archetype needs (always: name + services; plus
 # needs: for runtime apps). Leave everything else commented. Comments are
-# ignored by the parser, so the file deploys to exactly the active fields.
+# ignored by the parser, so the file plugs to exactly the active fields.
 #
 # Only two fields are required: name and services. Everything else is optional.
 # Full docs: docs/cloudgrid-yaml-reference.md
@@ -90,9 +90,9 @@ name: my-app
 #   # vector — pgvector on Postgres. Injects VECTOR_PGVECTOR_URL (+ PGVECTOR_URL).
 #   #   true | pgvector | { engine: pgvector, dim: 1536 }
 #   vector: pgvector
-#   # object_storage — GCS bucket. Injects OBJECT_STORAGE_GCS_BUCKET, _GCS_REGION.
-#   #   true | { size: 10Gi }
-#   object_storage: true
+#   # object_storage — GATED (#1678), rejected at plug-time. Use disk: or a
+#   #   bring-your-own bucket via a secret. Do not author this need.
+#   # object_storage: true
 #   # disk — persistent FS mount (PVC). Injects DISK_PATH. Pins to 1 replica.
 #   #   true | { size: 1Gi, mount: /var/data }  (forbidden: /proc /sys /dev)
 #   disk: true

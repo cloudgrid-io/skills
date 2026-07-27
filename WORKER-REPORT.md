@@ -1,146 +1,82 @@
-# Worker Report: multi-service template
+# Worker Report: fix(skills) — P1 accuracy fixes
 
-## Branch / status
-
-- **pwd:** `/private/tmp/claude-501/-Users-michal-cloudgrid-v2/479905ff-af33-4e8c-855c-8fa474a338be/scratchpad/wt-msvc-tpl`
-- **Branch:** `feat/multi-service-template`
-- **HEAD:** (will be set after commit)
-
-## Diff stat
+## diff --stat
 
 ```
-.claude-plugin/plugin.json                          |   2 +-
-capability-map.md                                   |  10 +++++-----
-skills/build/SKILL.md                               |   6 +++---
-templates/multi-service/cloudgrid.yaml              | new (full-annotated reference form)
-templates/multi-service/index.md                    | new
-templates/multi-service/README.md                   | new
-templates/multi-service/services/web/index.html     | new
-templates/multi-service/services/api/package.json   | new
-templates/multi-service/services/api/src/index.js   | new
-workflows/multi-service.md                          | new
+ .claude-plugin/plugin.json                    |  4 ++--
+ VERSION                                       |  2 +-
+ hooks/session-start                           |  2 +-
+ hooks/user-prompt                             |  2 +-
+ skills/build/SKILL.md                         | 10 +++++-----
+ skills/build/reference/cloudgrid.yaml.example |  8 ++++----
+ 6 files changed, 14 insertions(+), 14 deletions(-)
 ```
 
-## The empirical answer: /api prefix behavior
+No twinned files in the diff.
 
-**The platform forwards requests with the path prefix INTACT.**
+## Changes by file:line
 
-When `api` is mounted at `path: /api` in `cloudgrid.yaml`, a browser request to
-`/api/items` arrives at the Node server as `req.path = "/api/items"` — the
-`/api` prefix is NOT stripped. Express routes must include the prefix:
-`app.get("/api/items", ...)`.
+### Task 1 — dead file reference
 
-### Evidence
+| File | Line | Change |
+|---|---|---|
+| `skills/build/SKILL.md` | 274-278 | Repointed `reference/cloudgrid.yaml.example` (unreachable via MCP) to `grid_get_template({kind: "doc", name: "cloudgrid-yaml"})` with `cloudgrid-yaml.md` as fallback. The old path resolves locally but not when the skill is read through the MCP corpus, which does not ship the `reference/` subdirectory. |
 
-The diagnostic 404 handler echoes the received path:
+### Task 2 — verb drift ("deploy" -> "plug")
 
-```
-GET /api/nonexistent  ->  {"path":"/api/nonexistent","method":"GET","message":"not found"}
-```
+| File | Line | Change |
+|---|---|---|
+| `skills/build/SKILL.md` | 5 | "deploying" -> "plugging" in skill description (agent-facing prose describing what the skill does) |
+| `skills/build/reference/cloudgrid.yaml.example` | 11 | "deploys to exactly" -> "plugs to exactly" in reference file header comment |
+| `.claude-plugin/plugin.json` | 4 | "one-step deploys" -> "one-step plugs" in plugin marketplace description |
+| `hooks/session-start` | 4 | "deploy" -> "plug" in bash comment (not agent-facing, hygiene) |
 
-Routes registered at `/api/items` (with prefix) return 200. A route registered
-at just `/items` (without prefix) would never match because the incoming path
-is `/api/items`.
+**Judgment calls (not changed):**
 
-The frontend fetches from `/api/items` (absolute path, no hostname) and the
-platform routes by prefix to the correct service.
+- `skills/build/SKILL.md:8` — "deploy" in trigger keyword list ("Trigger on build, make, create, scaffold, prototype, deploy, ship..."). This is a detection keyword for user intent, not agent speech. The brainstorm skill explicitly says "recognize 'deploy' when the USER says it; say 'plug' when you speak." Kept for detection.
+- `SKILL.md:4` (root) — "deploy" in description trigger list. Same reasoning: user-intent detection.
+- `SKILL.md:19` (root) — "When the user wants to build / create / make / deploy / publish..." — lists user intents. The sentence routes to "plug" as the action.
+- `hooks/session-start:31` — bootstrap sentence lists "deploy" as a user-intent word ("When the user wants to build, create, make, deploy, publish..."). The sentence ends with "plug -> return the live share URL". Changing this would break the bootstrap hash test AND is incorrect (the agent needs to recognize "deploy" from users). Kept.
+- `hooks/user-prompt:33` — "deploy" in the regex that detects build intent from user prompts. This is a detection keyword. Kept.
+- `grid_check_deploy`, `grid_rollback_deploy` — real tool names. Not touched.
 
-## Deploy transcript
+### Task 3 — at-risk rules surfaced
 
-### 1. Deploy
+| File | Line | Change |
+|---|---|---|
+| `hooks/user-prompt` | 66 | Added lazy-env-read rule to the per-turn nudge: "Read grid-injected env vars lazily (inside a handler or getter, never at module top level — a top-level read breaks next build)." |
 
-```
-$ cd /tmp/msvc-test && npx -y @cloudgrid-io/cli@latest plug --grid michal-tests --no-progress
-Note: 'my-app' was taken in michal-tests-hub; using 'my-app-1f07'.
-Adopting my-app-1f07 (app) in michal-tests-hub from the existing cloudgrid.yaml...
-  Kept cloudgrid.yaml (unchanged)
-  Linked .cloudgrid/link.json
-  Charged. Plugging now...
-Plugging my-app into michal-tests-hub...
-```
+**Assessment — persistence rule:** Already well-placed in the skills surface. Present in:
+- `skills/brainstorm/SKILL.md:74` (Phase A, step 5 — "does it need to save data / accounts / AI?")
+- `skills/brainstorm/SKILL.md:129` ("it saves data, has logins, or uses AI — those are `needs:` lines, not services")
+- `skills/brainstorm/SKILL.md:233-235` (table: "save data / accounts / multi-user state" -> `needs: { database: true }`)
+- `skills/build/SKILL.md:52-64` (Step 1: static vs runtime distinction)
+- `hooks/user-prompt:66` (nudge: "saves data -> needs: { database: true }")
+- `SKILL.md:90-91` (root rules section)
 
-### 2. Status polling (building -> live)
+No change needed — the skills surface has this rule at six independent points including the per-turn nudge.
 
-```
-$ npx -y @cloudgrid-io/cli@latest info
-my-app  (app)
-  Org:         michal-tests
-  Last deploy: building  4m ago
-  URL:         https://my-app-1f07--michal-tests.cloudgrid.io
+**Assessment — lazy env reads:** Was in the build skill (step 3, line 203) and brainstorm skill (Phase B6, lines 231, 252) but NOT in the user-prompt nudge — the most durable reinforcement channel. Added it there. This is the single highest-leverage placement: the nudge fires on every build-intent turn and survives context compression.
 
-  ...
+### Task 4 — `object_storage` assessment
 
-  Last deploy: live  5s ago
-  URL:         https://my-app-1f07--michal-tests.cloudgrid.io
-```
+| File | Line | Change |
+|---|---|---|
+| `skills/build/reference/cloudgrid.yaml.example` | 93-95 | Replaced usage forms (`true | { size: 10Gi }`) with GATED warning and "Do not author this need." |
 
-### 3. Frontend loads
+**Assessment:** `cloudgrid-yaml.md` (twinned, not edited) already says GATED + "rejected at plug-time" at every occurrence. In the skills surface:
+- `skills/build/SKILL.md:189-192` — already properly gated: "gated — do not author it yet" with the `#1678` reference and workaround. No change needed.
+- `skills/build/reference/cloudgrid.yaml.example:93-95` — showed `object_storage: true` and `{ size: 10Gi }` usage forms as commented examples, identical in appearance to every other need. An agent reading the reference file would see it as usable. Fixed: replaced usage forms with GATED warning + "Do not author this need."
+- `skills/build/reference/cloudgrid.yaml.example:75` — lists `object_storage` in the nine-needs comment alongside the others. Left unchanged: it is a factual enumeration, and the GATED warning at line 93 now guards the usage.
 
-```
-$ curl -s -o /dev/null -w "HTTP %{http_code}" https://my-app-1f07--michal-tests.cloudgrid.io/
-HTTP 200
-```
+No other skills-side file presents `object_storage` as usable.
 
-(After setting visibility to `link` — default `grid` visibility returns 403.)
+## Version bump
 
-### 4. API responds
+- `.claude-plugin/plugin.json`: 0.14.34 -> 0.14.35
+- `VERSION`: 0.14.34 -> 0.14.35
 
-```
-$ curl -s https://my-app-1f07--michal-tests.cloudgrid.io/api/items
-[]
---- HTTP 200 ---
-
-$ curl -s https://my-app-1f07--michal-tests.cloudgrid.io/api/health
-{"status":"ok"}
---- HTTP 200 ---
-```
-
-### 5. Write/read round-trip
-
-```
-$ curl -s -X POST -H "Content-Type: application/json" \
-  -d '{"text":"hello from the deploy test"}' \
-  https://my-app-1f07--michal-tests.cloudgrid.io/api/items
-{"id":"6a6605dfc22113e984a41e48","text":"hello from the deploy test"}
---- HTTP 201 ---
-
-$ curl -s https://my-app-1f07--michal-tests.cloudgrid.io/api/items
-[{"id":"6a6605dfc22113e984a41e48","text":"hello from the deploy test"}]
---- HTTP 200 ---
-
-$ curl -s -X POST -H "Content-Type: application/json" \
-  -d '{"text":"second note"}' \
-  https://my-app-1f07--michal-tests.cloudgrid.io/api/items
-{"id":"6a6605e0c22113e984a41e49","text":"second note"}
---- HTTP 201 ---
-
-$ curl -s https://my-app-1f07--michal-tests.cloudgrid.io/api/items
-[{"id":"6a6605e0c22113e984a41e49","text":"second note"},{"id":"6a6605dfc22113e984a41e48","text":"hello from the deploy test"}]
---- HTTP 200 ---
-
-$ curl -s -X DELETE https://my-app-1f07--michal-tests.cloudgrid.io/api/items/6a6605dfc22113e984a41e48
-{"ok":true}
---- HTTP 200 ---
-
-$ curl -s https://my-app-1f07--michal-tests.cloudgrid.io/api/items
-[{"id":"6a6605e0c22113e984a41e49","text":"second note"}]
---- HTTP 200 ---
-```
-
-### 6. Teardown
-
-```
-$ npx -y @cloudgrid-io/cli@latest unplug --hard my-app-1f07 --skip-confirm
-x my-app-1f07 unplugged. Archived. K8s teardown running in the background.
-  Trace: d_ms1t8pco_68d570
-
-$ curl -s -o /dev/null -w "HTTP %{http_code}" https://my-app-1f07--michal-tests.cloudgrid.io/
-HTTP 404
-```
-
-Entity confirmed gone.
-
-## Lint outputs
+## Lint output
 
 ```
 $ node .github/scripts/lint-skills.mjs
@@ -151,48 +87,9 @@ All 3 SKILL.md file(s) passed.
 
 $ node .github/scripts/no-internal-refs.mjs
 No internal references found.
+
+$ node --test bin/bootstrap-hash.test.mjs
+pass 1, fail 0
 ```
 
-## Files created
-
-| File | Purpose |
-|------|---------|
-| `templates/multi-service/cloudgrid.yaml` | Full-annotated reference form; active: name, services(web static + api node), depends_on, needs |
-| `templates/multi-service/index.md` | Template reference with key rules (proven by deploy) |
-| `templates/multi-service/README.md` | Short description |
-| `templates/multi-service/services/web/index.html` | Static frontend — fetches /api/items |
-| `templates/multi-service/services/api/package.json` | Express + mongodb deps |
-| `templates/multi-service/services/api/src/index.js` | Express CRUD server with lazy Mongo |
-| `workflows/multi-service.md` | Workflow with frontmatter + recipe |
-
-## Files modified
-
-| File | Change |
-|------|--------|
-| `skills/build/SKILL.md` | Replaced "no dedicated multi-service template" with pointer to `multi-service` |
-| `capability-map.md` | Updated multi-service row to point at `multi-service` template; updated "How to choose" bullet; updated template count 61 -> 62 |
-| `.claude-plugin/plugin.json` | PATCH bump 0.14.30 -> 0.14.31 |
-
-## Judgment calls
-
-1. **Static frontend (no build step):** chose plain HTML + inline JS for the
-   `web` service rather than React/Vite. This keeps the template trivially
-   correct — no `build:` step needed, no node_modules, deploys without any
-   build failure risk. The "Adapt it" section tells users how to swap in a
-   Vite/React frontend.
-
-2. **Express routes include `/api` prefix:** based on the empirical finding that
-   the platform does NOT strip the path prefix, all Express routes are defined
-   with the `/api` prefix (e.g., `app.get("/api/items", ...)`). This is the
-   single most important discovery for agents building multi-service apps.
-
-3. **Diagnostic 404 handler kept:** the catch-all handler that echoes the
-   received path serves as a debugging aid for agents. It lets them verify
-   prefix behavior without reading the template docs.
-
-4. **`depends_on: [api]` on web:** ensures the API service is ready before the
-   static frontend starts serving. Without this, a browser could load the page
-   and fetch `/api/items` before the API is up.
-
-5. **"Notes" app, not "Todos":** chose a different domain name to avoid
-   confusion with the `app-with-data` template which uses "Todos".
+The session-start bootstrap sentence (line 31) was NOT changed. Only the bash comment above it (line 4) was updated. The bootstrap hash test passes because the hash-tested sentence is unchanged.
