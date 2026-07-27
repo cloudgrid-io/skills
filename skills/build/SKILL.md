@@ -2,7 +2,7 @@
 version: 0.2.0
 name: build
 description: |
-  You MUST use this before any building, deploying, or code work - creating an
+  You MUST use this before any building, plugging, or code work - creating an
   app, a web app, a website, a game, an API, a static HTML page, a landing page,
   a presentation, a deck, a demo, or any prototype. Trigger on build, make,
   create, scaffold, prototype, deploy, ship, app, game, site, html, or
@@ -271,10 +271,10 @@ offer to report it with `grid_report` — only with the user's consent.
 ## Full field reference
 
 The two required fields are `name` and `services`. Everything else is optional.
-For the complete manifest, every field commented, read the reference file beside
-this skill only when a build actually needs it:
-
-`reference/cloudgrid.yaml.example`
+For the complete manifest, every field commented, fetch the reference only when
+a build actually needs it:
+`grid_get_template({kind: "doc", name: "cloudgrid-yaml"})` — or read
+`cloudgrid-yaml.md` at the repo root.
 
 It covers custom domains, health probes, scaling, inter-entity `calls` and
 `callers`, vault mapping, connectors and hooks, agent metadata, and per-service
