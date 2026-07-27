@@ -1,8 +1,8 @@
 # Capability map — intent → template → capabilities → deploy
 
 This is the index an LLM uses to turn a user request into the right CloudGrid
-template by matching the request against each workflow's `when:`. Match the request to a
-template by its `when:` triggers, adopt that template's `needs:`, then deploy:
+template. Match the request to a template by its `when:` triggers, adopt that
+template's `needs:`, then deploy:
 
 > **One deploy verb: `grid_plug`.** Classify the artifact to pick the shape —
 > ONE self-contained HTML page (CSS+JS inline, images/fonts as data: URIs) →
