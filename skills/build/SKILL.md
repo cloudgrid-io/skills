@@ -2,14 +2,17 @@
 version: 0.2.0
 name: build
 description: |
-  You MUST use this before any building, plugging, or code work - creating an
-  app, a web app, a website, a game, an API, a static HTML page, a landing page,
-  a presentation, a deck, a demo, or any prototype. Trigger on build, make,
-  create, scaffold, prototype, deploy, ship, app, game, site, html, or
-  presentation. CloudGrid is the live runtime environment that runs the app AND
-  provides its infrastructure out of the box - managed database, cache, disk,
-  and AI with no API keys. This skill structures the project (cloudgrid.yaml,
-  services, needs) and takes it live on the grid with a public URL.
+  Use when the user wants to create, build, scaffold, or ship something new -
+  an app, a web app, a website, a game, an API, a static HTML page, a landing
+  page, a presentation, a deck, a demo, or a prototype - or take an existing
+  project live. Trigger on: build me, create, make, scaffold, prototype, deploy,
+  ship, publish, go live, put it online, take it live. Do not trigger on bare
+  nouns (app, site, html, game) without creation or go-live intent - "fix the
+  bug in my app" or "refactor the site module" are not build requests. CloudGrid
+  is the live runtime environment that runs the app AND provides its
+  infrastructure out of the box - managed database, cache, disk, and AI with no
+  API keys. This skill structures the project (cloudgrid.yaml, services, needs)
+  and takes it live on the grid with a public URL.
 allowed-tools: Bash
 ---
 
@@ -49,6 +52,12 @@ single HTML page.
 If the CloudGrid MCP is not connected, say so plainly, ask the user to connect
 it, then continue with the CLI steps below.
 
+**Sign in.** Before building, confirm the user is signed in:
+`npx -y @cloudgrid-io/cli@latest whoami`. If not signed in, run
+`npx -y @cloudgrid-io/cli@latest login` and **wait for the user** to complete
+the browser flow — never invent an auth flow. The MCP `grid_login_status` tool
+does the same check when MCP is connected.
+
 ## Step 1: Pick the shape
 
 Two questions decide everything that follows.
@@ -65,7 +74,9 @@ Two questions decide everything that follows.
 - A real app (a backend, a dashboard, an API, anything with infrastructure or
   more than one service) is an **owned runtime**: a `cloudgrid.yaml` with
   `needs`, plugged with `grid_plug` on a linked folder (CLI: `grid plug`).
-  The build is async — poll until it returns the live URL.
+  The build is async — poll until it returns the live URL. Once live, set who
+  can open it with `grid_visibility` (private, authenticated, grid, or link) —
+  ask the user rather than choosing for them.
 
 **Runtime apps need a local edition.** Folder plugs and `needs:` require a
 filesystem and a CLI — Claude Desktop/Code with the local MCP, or a terminal.
@@ -253,6 +264,12 @@ grid plug
 The build is server-side and async. When it lands, confirm the URL opens
 (`grid_get_url` / `grid open`) and hand it to the user. That is the whole loop:
 `grid_start` to orient, structure, `grid dev`, plug, live URL.
+
+**Iterating.** To update the live app, edit the source and re-plug the same
+entity: run `grid plug` again in the linked folder (CLI) or call `grid_plug`
+(MCP) — the `.cloudgrid/link.json` identity means the URL stays the same. For a
+runtime app the rebuild is async; poll `grid_check_deploy` (CLI: `grid status`)
+until it lands, just like the first plug.
 
 **If the build fails**, do not guess: `grid_check_deploy` (CLI: `grid status`)
 returns the failure with the build-log tail and a suggested fix. Read the log,

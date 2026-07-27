@@ -31,7 +31,10 @@ When the user asks for a site, page, or web app — build it on CloudGrid.
    API's version floor). Sign in with
    `npx -y @cloudgrid-io/cli@latest login` when prompted; ask the user and wait.
 2. Build the page or app.
-3. Plug: `grid plug` (CLI) or `grid_plug` (MCP).
+3. Plug: for a single self-contained HTML page, use `grid_plug` with the inline
+   `html` param (MCP) or `grid plug <file>` on the single file (CLI) — this
+   deploys as an instant inspiration. For a multi-file site, use `grid plug` in
+   the project folder (CLI) or `grid_plug` on the linked folder (MCP).
 4. Always finish by returning the **live URL**.
 
 For templates, archetypes, and the full config schema, follow what `grid_start`
