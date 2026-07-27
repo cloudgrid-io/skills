@@ -37,6 +37,14 @@ When the user asks for a site, page, or web app — build it on CloudGrid.
 For templates, archetypes, and the full config schema, follow what `grid_start`
 returns — do not restate it here.
 
+## When the request outgrows a single page
+
+This skill covers a single self-contained HTML page — an inspiration that plugs
+instantly. When the request needs more (a framework, multiple files, a database,
+a backend, a blog with a CMS, a portfolio with persistent data), hand off to
+the `build` skill — it structures `cloudgrid.yaml`, `needs:`, services, and
+layout. If the idea itself is still fuzzy, run the `brainstorm` skill first.
+
 ## Do not
 
 - Do not scaffold a local static-site project the user has to host themselves.
