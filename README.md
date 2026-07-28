@@ -36,7 +36,7 @@ needs, build, plug it in, tail logs, share, read feedback. Everything here is fr
    separate `claude mcp add` needed.
 
    The skills show under `/plugin` and `/skills` as `cloudgrid:brainstorm`,
-   `cloudgrid:build`, and `cloudgrid:sites` — or just say what you want
+   and `cloudgrid:build` — or just say what you want
    ("share this HTML page as a link") and the right one triggers.
 
    Or install with the `gh skill` extension:
@@ -68,7 +68,7 @@ sign-in, scaffolding, and plugging — you get a live link.
 |---|---|---|
 | `brainstorm` | `/cloudgrid:brainstorm` | Align on the idea, goal, and core features before building. |
 | `build` | `/cloudgrid:build` | Structure the project (cloudgrid.yaml, services, needs) and take it live with a public URL. |
-| `sites` | `/cloudgrid:sites` | Build any site, page, or web app on CloudGrid and return a live URL (project-scoped override for agents with a built-in sites skill). |
+| `sites` (project-scoped) | written by `grid agent` | Not a plugin skill: `grid agent` drops it into a project (`.agents/skills/sites/`) to shadow a coding agent's built-in sites skill. Canonical copy: `project-skills/sites/`. |
 
 ## The canonical chain
 
@@ -88,6 +88,16 @@ MCP server is published separately as
 actions as MCP tools, for agents that speak the Model Context Protocol.
 Install it with `npx -y @cloudgrid-io/mcp`, or point a remote-capable client at
 `https://mcp.cloudgrid.io/mcp`. See [USAGE.md](USAGE.md) for per-client setup.
+
+**Do not run the plugin and a hosted connector side by side.** The plugin bundles
+the local (stdio) MCP server; if the same client ALSO has a CloudGrid remote
+connector (`mcp.cloudgrid.io` or `mcp-connected.cloudgrid.io`), every `grid_*`
+tool appears twice, the two servers hold separate sign-in state, and they can
+disagree about whether you are signed in. How to tell: two `cloudgrid` entries in
+the client's MCP/connector list, or duplicate `grid_*` tools in the tool picker.
+Fix: keep the plugin (it can build runtime apps from folders and shares the CLI's
+sign-in) and remove the connector in that client — or the reverse in a client
+where you only publish single pages.
 
 ## License
 

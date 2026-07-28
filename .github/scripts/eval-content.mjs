@@ -118,10 +118,10 @@ function checkNeeds(file, needs, prefix = "") {
 // 1. Every yaml example in the skill files obeys the contract.
 // ---------------------------------------------------------------------------
 const YAML_SOURCES = [
-  "SKILL.md",
+  "skills/using-cloudgrid/SKILL.md",
   "skills/brainstorm/SKILL.md",
   "skills/build/SKILL.md",
-  "skills/sites/SKILL.md",
+  "project-skills/sites/SKILL.md",
 ];
 
 let blockCount = 0;
@@ -156,9 +156,9 @@ const CONTRACTS = [
   ["skills/brainstorm/SKILL.md", /`path:` is the URL mount, NOT the filesystem path/, "the #1 agent mistake"],
   ["skills/brainstorm/SKILL.md", /A resource is never a service/, "the #2 agent mistake"],
   ["skills/brainstorm/SKILL.md", /Say "plug", not "deploy"/, "voice rule with fixed go-live labels"],
-  ["skills/sites/SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard"],
-  ["SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard in the session-injected orientation"],
-  ["SKILL.md", /grid_start/, "orientation must route through grid_start"],
+  ["project-skills/sites/SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard"],
+  ["skills/using-cloudgrid/SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard in the session-injected orientation"],
+  ["skills/using-cloudgrid/SKILL.md", /grid_start/, "orientation must route through grid_start"],
 ];
 for (const [file, needle, why] of CONTRACTS) {
   const text = read(file);

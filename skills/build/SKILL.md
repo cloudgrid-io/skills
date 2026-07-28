@@ -13,7 +13,6 @@ description: |
   infrastructure out of the box - managed database, cache, disk, and AI with no
   API keys. This skill structures the project (cloudgrid.yaml, services, needs)
   and takes it live on the grid with a public URL.
-allowed-tools: Bash
 ---
 
 # Build on CloudGrid

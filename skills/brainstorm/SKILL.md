@@ -10,7 +10,6 @@ description: |
   a build is about to start and no CloudGrid shape (services, layout,
   cloudgrid.yaml) has been agreed yet. Does not replace a general-purpose
   brainstorming skill the user already prefers; it can run after one.
-allowed-tools: Bash
 ---
 
 # Brainstorm

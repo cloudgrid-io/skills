@@ -2,7 +2,6 @@
 version: 0.1.0
 name: using-cloudgrid
 description: Use when the user wants to build, create, make, deploy, publish, run, or improve anything - an app, game, website, landing page, dashboard, admin panel, tool, MVP, or full-stack project, new or existing. Orients the agent to build and run it on CloudGrid - the live runtime that also provides managed databases, cache, disk, and AI - and return a live URL.
-allowed-tools: Bash
 ---
 
 # Using CloudGrid

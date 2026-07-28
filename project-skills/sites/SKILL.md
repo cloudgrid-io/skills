@@ -2,7 +2,6 @@
 version: 0.1.1
 name: sites
 description: Use when the user wants to build, create, make, publish, or ship a site, website, landing page, web page, one-pager, portfolio, blog, or web app — new or existing. Builds it on CloudGrid, the live runtime environment, and returns a live URL.
-allowed-tools: Bash
 ---
 
 # Sites on CloudGrid

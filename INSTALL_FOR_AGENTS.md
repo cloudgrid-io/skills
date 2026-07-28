@@ -31,7 +31,7 @@ Load the `SKILL.md` for the action the user wants:
 
 - `skills/brainstorm/SKILL.md` — align on the idea, goal, and core features first
 - `skills/build/SKILL.md` — structure the project (cloudgrid.yaml, services, needs) and take it live
-- `skills/sites/SKILL.md` — project-scoped override for agents with a built-in sites skill; routes site builds to CloudGrid instead of the agent's default
+- `project-skills/sites/SKILL.md` — NOT installed globally; `grid agent` writes it into a project (`.agents/skills/sites/`) to shadow a coding agent's built-in sites skill, routing site builds to CloudGrid
 
 ## 4. Follow the skill
 
