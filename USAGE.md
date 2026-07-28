@@ -1,7 +1,6 @@
 # Using CloudGrid skills and MCP
 
-Two surfaces expose the **same** CloudGrid actions — drop, login, claim, init,
-plug, logs, share, feedback, brain:
+Two surfaces expose CloudGrid actions:
 
 - **Skills** — `SKILL.md` files an agent loads (this repo). They trigger from
   natural language (their `description`) or a slash command.
@@ -11,12 +10,42 @@ plug, logs, share, feedback, brain:
 
 Which one you use depends on the client. Pick your client below.
 
+## Skills
+
+| Skill | Invoke | What it does |
+|---|---|---|
+| `brainstorm` | `/cloudgrid:brainstorm` | Align on the idea, goal, and core features before building. |
+| `build` | `/cloudgrid:build` | Structure the project (cloudgrid.yaml, services, needs) and take it live with a public URL. |
+| `sites` | `/cloudgrid:sites` | Project-scoped override for agents with a built-in sites skill. Routes site builds to CloudGrid. |
+
+## MCP tools (shared — available on both local and hosted editions)
+
+| Tool | What it does |
+|---|---|
+| `grid_start` | Orient: returns the playbook, context, and sign-in state. |
+| `grid_get_template` | Fetch a workflow, template, or example from the corpus. |
+| `grid_plug` | Plug a directory, URL, or inline HTML into the grid. Returns the live URL. |
+| `grid_pull` | Pull an existing entity's source into a local directory. |
+| `grid_pickup` | Pick up where a previous entity left off. |
+| `grid_get_app_source` | Read the deployed source of an entity. |
+| `grid_check_deploy` | Check the status of a deploy (build log, errors). |
+| `grid_login` | Sign in to CloudGrid (in-tool, no CLI needed). |
+| `grid_login_status` | Check whether the login flow has completed. |
+| `grid_visibility` | Set entity visibility (link, grid, unlisted). |
+| `grid_create_grid` | Create a new grid. |
+| `grid_list_grids` | List the user's grids. |
+| `grid_note` | Send a note to the CloudGrid team. |
+| `grid_report` | Report an issue with an entity. |
+
+The local (stdio) edition has 22 additional CLI-wrapping tools for project
+management, secrets, environment variables, logs, and more.
+
 ## Prerequisites
 
 - **Node 18+** (for `npx`).
-- **No login needed to try it** — anonymous drop works out of the box. For owned
-  drops (into your org), run `grid login` once, or use the
-  `grid_login` MCP tool.
+- **No login needed to try it** — anonymous plug works out of the box. For owned
+  entities (into your grid), run `npx -y @cloudgrid-io/cli@latest login` once,
+  or use the `grid_login` MCP tool.
 
 ---
 
@@ -31,12 +60,13 @@ npx skills add cloudgrid-io/skills
 ```
 - Installs into `~/.claude/skills/` (personal). Auto-loads, no restart.
 - **Find them under `/skills`** (labeled Personal). **Not** under `/plugin`.
-- Invoke as **`/drop`**, `/login`, … (bare — the personal route has no namespace), or describe the task.
+- Invoke as **`/brainstorm`**, `/build`, … (bare — the personal route has no
+  namespace), or describe the task.
 
 ### Route 2 — skills as a plugin
 ```
 /plugin marketplace add cloudgrid-io/skills
-/plugin install cloudgrid
+/plugin install cloudgrid@cloudgrid-skills
 ```
 - **Find it under `/plugin`**; the skills also show under `/skills` (labeled Plugin).
 - Invoke as **`/cloudgrid:build`** (plugin namespace + short skill name), or describe the task.
@@ -52,37 +82,29 @@ winget install OpenJS.NodeJS.LTS       # Windows (then reopen the terminal)
 sudo apt install nodejs npm            # Debian/Ubuntu (or use nvm)
 ```
 
-Install the server globally with npm (recommended — a persistent install beats
-`npx`, which re-resolves and can serve a stale cache), then register it:
+Register the server:
 
 ```
-npm install -g @cloudgrid-io/mcp
-claude mcp add cloudgrid -- cloudgrid-mcp
+claude mcp add cloudgrid -- npx -y @cloudgrid-io/mcp
 ```
 
-- **On Windows**, npm installs the command as a `.cmd` shim — if your client
-  fails to spawn it, register `cloudgrid-mcp.cmd` instead.
-- No-install fallback: `claude mcp add cloudgrid -- npx -y @cloudgrid-io/mcp`
-  (if npx pins a stale version, clear the cache: `rm -rf ~/.npm/_npx`).
 - **Find it under `/mcp`.** Exposes tools `grid_plug`, `grid_login`, …
 - Invoke by describing the task; the model calls the tool.
 
 ### Clean reinstall (old version still showing?)
 
-Old versions hide in three places: the global install, the npx cache, and the
-client registration. Clear all three, then install fresh:
+Old versions hide in two places: the npx cache and the client registration.
+Clear both, then register fresh:
 
 ```
-npm uninstall -g @cloudgrid-io/mcp
 rm -rf ~/.npm/_npx                    # npx cache - a stale @latest pin lives here
 npm cache clean --force
 claude mcp remove cloudgrid           # or delete the entry from your client's MCP config
-npm install -g @cloudgrid-io/mcp
-claude mcp add cloudgrid -- cloudgrid-mcp
+claude mcp add cloudgrid -- npx -y @cloudgrid-io/mcp
 ```
 
 **Windows:** the npx cache is `%LocalAppData%\npm-cache\_npx` (clear with
-`rd /s /q "%LocalAppData%\npm-cache\_npx"`), and register `cloudgrid-mcp.cmd`.
+`rd /s /q "%LocalAppData%\npm-cache\_npx"`).
 Claude Desktop's `.mcpb` extension never auto-updates - remove it in Settings,
 Extensions and install the fresh one from the latest release. Fully restart the
 client afterwards; a running session keeps its old server process.
@@ -90,11 +112,16 @@ client afterwards; a running session keeps its old server process.
 ### Route 3b — the MCP server (hosted, remote)
 
 Nothing to install and no Node needed — point a remote-capable client at the
-hosted endpoint (reduced, CLI-free toolset; OAuth sign-in at add-time):
+hosted endpoint. Two endpoints, two postures:
 
 ```
-https://mcp-connected.cloudgrid.io/mcp
+https://mcp.cloudgrid.io/mcp              anonymous-first; sign in later from inside the conversation
+https://mcp-connected.cloudgrid.io/mcp    OAuth sign-in at add-time; every plug is owned from the first one
 ```
+
+Use `mcp.cloudgrid.io` for casual, no-account installs. Use
+`mcp-connected.cloudgrid.io` for org connectors (claude.ai, ChatGPT) where
+OAuth sign-in at add-time is preferred.
 
 > Where did my install go? `/skills` (skills), `/plugin` (plugin), `/mcp` (MCP).
 > If you don't see something, you're probably looking in the wrong menu, or you
@@ -118,16 +145,15 @@ Easiest: download `cloudgrid.mcpb` from
 https://github.com/cloudgrid-io/mcp/releases/latest and double-click to install
 (Settings → Extensions) — no terminal, no Node.
 
-Manual alternative (needs Node 18+, see the Node install box above): install
-globally and reference the command in
+Manual alternative (needs Node 18+, see the Node install box above):
+register the server in
 `~/Library/Application Support/Claude/claude_desktop_config.json`
-(**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`, and use
-`cloudgrid-mcp.cmd` as the command):
+(**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`):
 ```json
-{ "mcpServers": { "cloudgrid": { "command": "cloudgrid-mcp" } } }
+{ "mcpServers": { "cloudgrid": { "command": "npx", "args": ["-y", "@cloudgrid-io/mcp"] } } }
 ```
 Then **fully quit and reopen** Claude Desktop. The CloudGrid tools appear under the
-tools icon. Invoke by describing the task: "drop this HTML to CloudGrid."
+tools icon. Invoke by describing the task.
 
 ---
 
@@ -140,10 +166,10 @@ Installs into the universal `.agents/skills/` location these agents read (Cursor
 also reads `~/.cursor/skills`; target one agent with `-a codex` / `-a cursor`).
 Codex and Cursor also take the plugin route (`codex plugin marketplace add
 cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
-(`npm install -g @cloudgrid-io/mcp`, then `cloudgrid-mcp` in their MCP config;
-**Windows:** `cloudgrid-mcp.cmd`) or remote with nothing installed
-(`https://mcp-connected.cloudgrid.io/mcp` as a `url` entry in `~/.codex/config.toml` or
-`~/.cursor/mcp.json`). See INSTALL.md for exact snippets.
+(`npx -y @cloudgrid-io/mcp` in their MCP config) or remote with nothing
+installed (`https://mcp-connected.cloudgrid.io/mcp` as a `url` entry in
+`~/.codex/config.toml` or `~/.cursor/mcp.json`). See INSTALL.md for exact
+snippets.
 
 ---
 
@@ -155,11 +181,12 @@ edition is live — add it as a custom connector:
 Two endpoints, two postures:
 
 ```
-https://mcp-connected.cloudgrid.io/mcp   connected: OAuth sign-in when you add it (the hosted endpoint)
+https://mcp.cloudgrid.io/mcp              anonymous-first; sign in later from inside the conversation
+https://mcp-connected.cloudgrid.io/mcp    OAuth sign-in at add-time (the connected endpoint)
 ```
 
 The connected endpoint runs the client's own OAuth connect at add-time (sign in
-with CloudGrid right in the flow); every drop is owned from the first one. The
+with CloudGrid right in the flow); every plug is owned from the first one. The
 anonymous endpoint needs no account; sign in later from inside the conversation.
 
 - **claude.ai web** — Settings → Connectors → add custom connector.
@@ -179,17 +206,3 @@ Same capabilities; different surface.
   Desktop, claude.ai web, ChatGPT) or when you want explicit tools.
 
 You can install both; they do not conflict.
-
-## Capabilities (both surfaces)
-
-| Action | What it does |
-|---|---|
-| drop | Share an artifact, get a public URL. No login needed (anonymous, claimable) or owned if signed in. Re-drop with the entity id to update the same URL. |
-| login | Sign in to CloudGrid, with or without the CLI. |
-| claim | Claim an anonymous drop into your account; the URL stays the same. |
-| init | Scaffold a new app or agent. |
-| plug | Deploy a directory or URL. |
-| logs | Tail an entity's logs. |
-| share | Set visibility and print the URL. |
-| feedback | Read the feedback feed. |
-| brain | Refresh Grid Brain metadata. |

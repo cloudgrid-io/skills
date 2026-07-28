@@ -65,7 +65,7 @@ ${BOLD}Options:${RESET}
 
 ${BOLD}Reference:${RESET}
   README.md    Overview and skill list.
-  COOKBOOK.md   Canonical skill chains.
+  USAGE.md     Per-client install and usage.
 USAGE
   exit 0
 }
@@ -117,17 +117,15 @@ else
     cli_version="$(grid --version 2>/dev/null || echo "unknown")"
     ok "grid CLI already installed ($cli_version)."
   else
-    info "Installing @cloudgrid-io/cli via npm..."
-    if ! command -v npm >/dev/null 2>&1; then
-      die "npm is not on \$PATH. Install Node.js (https://nodejs.org) and try again."
+    info "Checking CLI via npx..."
+    if ! command -v npx >/dev/null 2>&1; then
+      die "npx is not on \$PATH. Install Node.js (https://nodejs.org) and try again."
     fi
-    npm install -g @cloudgrid-io/cli
-    if command -v grid >/dev/null 2>&1; then
-      cli_version="$(grid --version 2>/dev/null || echo "unknown")"
-      ok "grid CLI installed ($cli_version)."
-    else
-      die "npm install succeeded but 'grid' is not on \$PATH. Check your npm global bin directory."
+    cli_version="$(npx -y @cloudgrid-io/cli@latest --version 2>/dev/null || echo "unknown")"
+    if [ "$cli_version" = "unknown" ]; then
+      die "npx -y @cloudgrid-io/cli@latest --version failed. Check your Node.js installation."
     fi
+    ok "grid CLI available via npx ($cli_version)."
   fi
 fi
 
@@ -138,16 +136,12 @@ if [ "$SKIP_AUTH" = true ]; then
 else
   info "Step 2/4: Authentication"
 
-  if ! command -v grid >/dev/null 2>&1; then
-    die "grid CLI not found. Run without --skip-cli or install it manually."
-  fi
-
-  if grid whoami >/dev/null 2>&1; then
-    identity="$(grid whoami 2>/dev/null || echo "")"
+  if npx -y @cloudgrid-io/cli@latest whoami >/dev/null 2>&1; then
+    identity="$(npx -y @cloudgrid-io/cli@latest whoami 2>/dev/null || echo "")"
     ok "Authenticated. $identity"
   else
     err "Not authenticated."
-    info "Run 'grid login' and then re-run this script."
+    info "Run 'npx -y @cloudgrid-io/cli@latest login' and then re-run this script."
     exit 1
   fi
 fi
@@ -288,10 +282,8 @@ fi
 
 printf '\n%sDone.%s Skills are installed for %s.\n\n' "$BOLD" "$RESET" "$DETECTED_HOST"
 printf 'Try these in your agent:\n'
-printf '  %s"deploy my project to CloudGrid"%s     — triggers the plug skill\n' "$DIM" "$RESET"
-printf '  %s"share this HTML page as a link"%s     — triggers the plug skill\n' "$DIM" "$RESET"
-printf '  %s"tail the logs for my-thing"%s         — triggers the logs skill\n' "$DIM" "$RESET"
-printf '  %s"scaffold a new static app"%s          — triggers the init skill\n' "$DIM" "$RESET"
+printf '  %s"build me a landing page"%s            — triggers the build skill\n' "$DIM" "$RESET"
+printf '  %s"share this HTML page as a link"%s     — triggers the build skill\n' "$DIM" "$RESET"
+printf '  %s"brainstorm a task manager app"%s      — triggers the brainstorm skill\n' "$DIM" "$RESET"
 printf '\nReference:\n'
-printf '  README.md    — overview and skill list\n'
-printf '  COOKBOOK.md   — canonical skill chains\n\n'
+printf '  README.md    — overview and skill list\n\n'

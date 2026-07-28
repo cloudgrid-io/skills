@@ -5,14 +5,13 @@ cover the CLI prerequisite, then each agent.
 
 ## Prerequisite: the CloudGrid CLI
 
-Every skill drives the `grid` CLI. Install it once and log in:
+Every skill drives the `grid` CLI. Log in (installs the CLI on first run):
 
 ```
-npm install -g @cloudgrid-io/cli
-grid login
+npx -y @cloudgrid-io/cli@latest login
 ```
 
-`grid whoami` confirms you are logged in.
+`npx -y @cloudgrid-io/cli@latest whoami` confirms you are logged in.
 
 ## Add the skills
 
@@ -158,40 +157,25 @@ install Node: macOS `brew install node`; **Windows** `winget install
 OpenJS.NodeJS.LTS` (then reopen the terminal); Debian/Ubuntu `sudo apt install
 nodejs npm`; or the installer at https://nodejs.org.
 
-Recommended: install once with npm (persistent, no npx cache surprises) and
-register the `cloudgrid-mcp` command in your client:
-
-```
-npm install -g @cloudgrid-io/mcp
-```
+Register the server in your client config:
 
 ```json
-{ "mcpServers": { "cloudgrid": { "command": "cloudgrid-mcp" } } }
-```
-
-**On Windows**, npm installs the command as a `.cmd` shim — if your client
-fails to spawn it, use:
-
-```json
-{ "mcpServers": { "cloudgrid": { "command": "cloudgrid-mcp.cmd" } } }
+{ "mcpServers": { "cloudgrid": { "command": "npx", "args": ["-y", "@cloudgrid-io/mcp"] } } }
 ```
 
 TOML clients (Codex):
 
 ```toml
 [mcp_servers.cloudgrid]
-command = "cloudgrid-mcp"
-```
-
-No-install fallback:
-
-```
-npx -y @cloudgrid-io/mcp
+command = "npx"
+args = ["-y", "@cloudgrid-io/mcp"]
 ```
 
 It wraps the same `grid` CLI and uses the same credentials, so no extra login
-is needed. Remote-capable clients can point at `https://mcp-connected.cloudgrid.io/mcp`
-instead. See [USAGE.md](USAGE.md) for per-client snippets.
+is needed. Remote-capable clients can point at a hosted endpoint instead:
+`https://mcp.cloudgrid.io/mcp` (anonymous-first, no account needed) or
+`https://mcp-connected.cloudgrid.io/mcp` (OAuth sign-in at add-time).
+See [USAGE.md](USAGE.md) for per-client snippets.
 
 ### Claude Desktop — one-click install
 

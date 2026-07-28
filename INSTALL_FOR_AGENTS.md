@@ -3,28 +3,26 @@
 You are an agent. These are steps to execute, not prose to summarize. Run them in
 order. Stop and ask the user only where a step says to.
 
-## 1. Ensure the CLI is present
+## 1. Ensure the CLI is available
 
-Check whether `grid` is on `$PATH`:
-
-```
-grid --version
-```
-
-If that fails, install it:
+Run the CLI through npx (always resolves a current version):
 
 ```
-npm install -g @cloudgrid-io/cli
+npx -y @cloudgrid-io/cli@latest --version
 ```
+
+Never run a bare `grid` command — a stale global install causes version-floor
+errors. Always use `npx -y @cloudgrid-io/cli@latest <command>`.
 
 ## 2. Ensure the user is logged in
 
 ```
-grid whoami
+npx -y @cloudgrid-io/cli@latest whoami
 ```
 
-If that fails, tell the user to run `grid login` and wait for them to confirm.
-Do not attempt to log in for them. Do not invent an auth flow.
+If that fails, tell the user to run `npx -y @cloudgrid-io/cli@latest login`
+and wait for them to confirm. Do not attempt to log in for them. Do not invent
+an auth flow.
 
 ## 3. Confirm the skills are available
 
@@ -33,6 +31,7 @@ Load the `SKILL.md` for the action the user wants:
 
 - `skills/brainstorm/SKILL.md` — align on the idea, goal, and core features first
 - `skills/build/SKILL.md` — structure the project (cloudgrid.yaml, services, needs) and take it live
+- `skills/sites/SKILL.md` — project-scoped override for agents with a built-in sites skill; routes site builds to CloudGrid instead of the agent's default
 
 ## 4. Follow the skill
 

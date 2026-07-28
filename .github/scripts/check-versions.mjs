@@ -61,6 +61,21 @@ if (pkg.version !== source) {
   failures.push(`package.json (${pkg.version}) != plugin.json (${source}). Update package.json.`);
 }
 
+// Codex and Cursor manifests must track the same version.
+for (const manifest of [".codex-plugin/plugin.json", ".cursor-plugin/plugin.json"]) {
+  try {
+    const m = json(manifest);
+    if (m.version !== source) {
+      failures.push(
+        `${manifest} (${m.version}) != plugin.json (${source}). ` +
+          `Update ${manifest} to match.`,
+      );
+    }
+  } catch {
+    failures.push(`${manifest} is missing or unreadable.`);
+  }
+}
+
 if (pkg.private !== true) {
   failures.push(
     `package.json must keep "private": true — the npm channel is retired ` +
@@ -78,4 +93,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Version coherence OK — plugin.json, VERSION, package.json all at ${source}; npm channel retired.`);
+console.log(`Version coherence OK — plugin.json, VERSION, package.json, codex, cursor all at ${source}; npm channel retired.`);

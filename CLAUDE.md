@@ -58,7 +58,7 @@ Example:
 .codex-plugin/       plugin.json (Codex shape)
 .cursor-plugin/      plugin.json (Cursor shape)
 skills/              all skills live here (required by Claude Code plugins)
-  <skill-name>/      one directory per skill (short name, e.g. drop)
+  <skill-name>/      one directory per skill (short name, e.g. build)
     SKILL.md         YAML frontmatter + markdown body
     references/      optional supporting docs
 workflows/           build recipes, one per artifact kind (fetched at build time)
@@ -135,8 +135,10 @@ example `/cloudgrid:build`) and also auto-triggers from its `description`.
 
 ## Versioning
 
-`VERSION` is canonical. Each `SKILL.md` `version:` tracks the repo version. Do not
-version skills independently — it is over-engineering for now.
+`.claude-plugin/plugin.json` is the single source of truth for the **plugin**
+version. `VERSION` and `package.json` mirror it exactly — `check-versions.mjs`
+enforces this. Each `SKILL.md` `version:` is **independent**: bump a skill's
+version when that skill changes, not on every release.
 
 ## Workflow
 

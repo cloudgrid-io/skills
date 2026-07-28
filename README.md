@@ -15,21 +15,15 @@ becomes a live, addressable, running thing in about 30 seconds. These skills are
 your agent crosses that second wall on your behalf: scaffold, declare what the app
 needs, build, plug it in, tail logs, share, read feedback. Everything here is free.
 
-## Install in 3 steps
+## Install in 2 steps
 
-1. Install the CLI:
-
-   ```
-   npm install -g @cloudgrid-io/cli
-   ```
-
-2. Log in:
+1. Log in (installs the CLI on first run):
 
    ```
-   grid login
+   npx -y @cloudgrid-io/cli@latest login
    ```
 
-3. Add the agent-core. In Claude Code (recommended):
+2. Add the agent-core. In Claude Code (recommended):
 
    ```
    /plugin marketplace add cloudgrid-io/skills
@@ -57,15 +51,16 @@ needs, build, plug it in, tail logs, share, read feedback. Everything here is fr
 
    Claude Desktop, claude.ai, ChatGPT, and every route in one place: [USAGE.md](USAGE.md).
 
-## Share something in one step, no login
+## What it looks like
 
 ```
-/cloudgrid:build index.html
+/cloudgrid:build
 ```
 
 `cloudgrid:build` publishes a single HTML page (or deploys a full app) and hands
-back a public URL. For a single page: no account, no CLI — the link lasts 7 days,
-and you can sign in later to keep it.
+back a public URL. Describe what you want ("build me a landing page for my
+podcast"), or point it at an existing project directory. The skill handles
+sign-in, scaffolding, and plugging — you get a live link.
 
 ## Skills
 
