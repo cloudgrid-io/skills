@@ -44,7 +44,7 @@ const SCAN_DIRS = [
 const SCAN_FILES = [
   "capability-map.md",
   "cloudgrid-yaml.md",
-  "SKILL.md",
+  "skills/using-cloudgrid/SKILL.md",
 ];
 
 function walk(dir) {

@@ -16,7 +16,7 @@ Which one you use depends on the client. Pick your client below.
 |---|---|---|
 | `brainstorm` | `/cloudgrid:brainstorm` | Align on the idea, goal, and core features before building. |
 | `build` | `/cloudgrid:build` | Structure the project (cloudgrid.yaml, services, needs) and take it live with a public URL. |
-| `sites` | `/cloudgrid:sites` | Project-scoped override for agents with a built-in sites skill. Routes site builds to CloudGrid. |
+| `sites` (project-scoped) | written by `grid agent` | Not installed globally: `grid agent` drops it into a project to shadow a coding agent's built-in sites skill (canonical copy in `project-skills/sites/`). |
 
 ## MCP tools (shared — available on both local and hosted editions)
 

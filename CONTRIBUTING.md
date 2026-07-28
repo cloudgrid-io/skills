@@ -26,11 +26,12 @@ version: 0.2.0
 name: build
 description: |
   One-line purpose, then detail.
-allowed-tools: Bash
 ---
 ```
 
-Required frontmatter fields: `version`, `name`, `description`, `allowed-tools`.
+Required frontmatter fields: `version`, `name`, `description`. The
+`allowed-tools` key is BANNED (lint-enforced): a restrictive tool list blocks
+the skill's own `grid_*` instructions on hosts that enforce it.
 
 ## Adding or changing a skill
 
