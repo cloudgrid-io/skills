@@ -26,9 +26,10 @@ share URL?
 **Shipped default:** no. The watermark lives on the served page, not in CLI or
 skill output.
 
-## 4. Skill versioning
+## 4. Skill versioning — RESOLVED (2026-07-28)
 
-**Question:** Version each skill independently, or track one repo version?
-
-**Shipped default:** one repo version. `VERSION` is canonical; each `SKILL.md`
-`version:` tracks it. Independent versioning is over-engineering for now.
+**Resolved:** per-skill versions are independent. `.claude-plugin/plugin.json`
+is the single source of truth for the plugin version; `VERSION` and
+`package.json` mirror it (`check-versions.mjs` enforces this). Each `SKILL.md`
+`version:` carries its own semver — bump it when that skill changes, not on
+every release.
