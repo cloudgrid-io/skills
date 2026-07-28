@@ -1,5 +1,5 @@
 ---
-version: 0.2.0
+version: 0.2.1
 name: build
 description: |
   Use when the user wants to create, build, scaffold, or ship something new -
@@ -68,14 +68,15 @@ Two questions decide everything that follows.
   prototype that runs in the browser) is fastest to ship as an **inspiration**:
   plug it with `grid_plug` and the inline `html` param for an instant public
   URL — works on any edition. Set who can see it with `grid_visibility`
-  (private, authenticated, grid, or link; `space` works for inspirations only —
-  the CLI `grid visibility` rejects it as a mode and takes `--space <slug>`
-  flags instead).
+  (private, grid, or link — anyone with the link; add require_signin for
+  signed-in accounts only, or indexed to be findable by search engines.
+  Finer control: the inside/outside axes — inside: private|spaces|grid,
+  outside: none|link|public. 'authenticated' is retired; 'org' is gone).
 - A real app (a backend, a dashboard, an API, anything with infrastructure or
   more than one service) is an **owned runtime**: a `cloudgrid.yaml` with
   `needs`, plugged with `grid_plug` on a linked folder (CLI: `grid plug`).
   The build is async — poll until it returns the live URL. Once live, set who
-  can open it with `grid_visibility` (private, authenticated, grid, or link) —
+  can open it with `grid_visibility` (private, grid, or link; finer control via the inside/outside axes) —
   ask the user rather than choosing for them.
 
 **Runtime apps need a local edition.** Folder plugs and `needs:` require a
