@@ -152,7 +152,7 @@ const CONTRACTS = [
   ["skills/build/SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard (version-floor errors)"],
   ["skills/build/SKILL.md", /Runtime apps need a local edition/i, "hosted-edition guard (MCP 0.20.37 steer)"],
   ["skills/build/SKILL.md", /grid_check_deploy/, "failure branch — read the build log, don't guess"],
-  ["skills/build/SKILL.md", /space[^.]*inspirations only/i, "visibility vocab accuracy (CLI rejects space as a mode)"],
+  ["skills/build/SKILL.md", /inside: private\|spaces\|grid/, "visibility vocab accuracy (two-axis model: inside/outside axes; authenticated retired)"],
   ["skills/brainstorm/SKILL.md", /`path:` is the URL mount, NOT the filesystem path/, "the #1 agent mistake"],
   ["skills/brainstorm/SKILL.md", /A resource is never a service/, "the #2 agent mistake"],
   ["skills/brainstorm/SKILL.md", /Say "plug", not "deploy"/, "voice rule with fixed go-live labels"],
