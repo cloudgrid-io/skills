@@ -45,6 +45,16 @@ jobs:
       - name: Version coherence (plugin.json / VERSION / package.json)
         run: node .github/scripts/check-versions.mjs
 
+  corpus-tool-names:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+      - name: Corpus edition-safety (shared-14 tool names only)
+        run: node .github/scripts/corpus-tool-names.mjs
+
   content-evals:
     runs-on: ubuntu-latest
     steps:
