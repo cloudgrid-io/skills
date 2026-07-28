@@ -262,7 +262,7 @@ grid plug
 ```
 
 The build is server-side and async. When it lands, confirm the URL opens
-(`grid_get_url` / `grid open`) and hand it to the user. That is the whole loop:
+(`grid open --print` / `grid open`) and hand it to the user. That is the whole loop:
 `grid_start` to orient, structure, `grid dev`, plug, live URL.
 
 **Iterating.** To update the live app, edit the source and re-plug the same
