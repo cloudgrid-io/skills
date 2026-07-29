@@ -190,7 +190,7 @@ resolve_target_dir() {
       ;;
     cursor)
       # Cursor supports both ~/.cursor/skills and ~/.cursor/plugins.
-      # Prefer skills/ if it exists; otherwise use skills/.
+      # Prefer skills/ if it exists; fall back to plugins/, default to skills/.
       if [ -d "$HOME/.cursor/skills" ]; then
         echo "$HOME/.cursor/skills"
       elif [ -d "$HOME/.cursor/plugins" ]; then

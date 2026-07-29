@@ -296,8 +296,7 @@ offer to report it with `grid_report` — only with the user's consent.
 The two required fields are `name` and `services`. Everything else is optional.
 For the complete manifest, every field commented, fetch the reference only when
 a build actually needs it:
-`grid_get_template({kind: "doc", name: "cloudgrid-yaml"})` — or read
-`cloudgrid-yaml.md` at the repo root.
+`grid_get_template({kind: "doc", name: "cloudgrid-yaml"})`.
 
 It covers custom domains, health probes, scaling, inter-entity `calls` and
 `callers`, vault mapping, connectors and hooks, agent metadata, and per-service

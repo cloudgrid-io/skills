@@ -30,7 +30,7 @@ shopt -s nocasematch
 
 # Is this a build/create/plan intent at all? If not, do nothing.
 build_intent=0
-if [[ "$prompt" =~ (build|create|make|plan|brainstorm|prototype|scaffold|deploy|publish|launch|ship|website|web[[:space:]]?app|landing[[:space:]]?page|dashboard|admin[[:space:]]?panel|game|internal[[:space:]]?tool|api|backend|full[[:space:]-]?stack|mvp|saas|an[[:space:]]app|the[[:space:]]app)([[:space:]]|$) ]]; then
+if [[ "$prompt" =~ (build|create|brainstorm|prototype|scaffold|deploy|publish|launch|ship|website|web[[:space:]]?app|landing[[:space:]]?page|dashboard|admin[[:space:]]?panel|game|internal[[:space:]]?tool|api|backend|full[[:space:]-]?stack|mvp|saas|an[[:space:]]app|the[[:space:]]app|make[[:space:]].+live)([[:space:]]|$) ]]; then
   build_intent=1
 fi
 
