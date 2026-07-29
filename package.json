@@ -1,6 +1,6 @@
 {
   "name": "@cloudgrid-io/skills",
-  "version": "0.14.41",
+  "version": "0.14.42",
   "//version": "Mirror of .claude-plugin/plugin.json, which is the single source of truth. Enforced by .github/scripts/check-versions.mjs.",
   "private": true,
   "//private": "The npm channel is RETIRED (last publish 0.14.0, 2026-07-09). Every documented install path is git-based: /plugin marketplace add, gh skill install, npx skills add <repo>. `private: true` makes an accidental `npm publish` hard-fail.",

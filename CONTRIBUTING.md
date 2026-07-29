@@ -64,27 +64,33 @@ claim. Eighth-grade reading level. Full rules in `CLAUDE.md`.
 
 ## CI checks
 
-These scripts run in CI. All must pass before merge.
+These guards run in CI. All must pass before merge.
 
-- `lint-skills.mjs` -- validates `SKILL.md` YAML frontmatter (required keys are
-  present; it does NOT compare version values).
-- `check-versions.mjs` -- version coherence: `.claude-plugin/plugin.json` is the
+- `license` -- LICENSE file is Apache 2.0 (`ci.yml`).
+- `lint-skills` -- validates `SKILL.md` YAML frontmatter (required keys are
+  present; it does NOT compare version values) (`ci.yml`).
+- `check-versions` -- version coherence: `.claude-plugin/plugin.json` is the
   single source of truth, and `VERSION`, `package.json`, `.codex-plugin/plugin.json`,
-  and `.cursor-plugin/plugin.json` must mirror it exactly.
-- `corpus-tool-names.mjs` -- edition-safety: only the 14 shared tool names may
-  appear as bare `grid_*` tokens in corpus and skill prose.
-- `eval-content.mjs` -- behavioral content evals: yaml examples obey the platform
-  contract; load-bearing teaching lines are present; banned patterns stay out.
-- `no-internal-refs.mjs` -- scans for leaked internal references (org names,
-  partnership claims).
+  and `.cursor-plugin/plugin.json` must mirror it exactly (`ci.yml`).
+- `corpus-tool-names` -- edition-safety: only the 14 shared tool names may
+  appear as bare `grid_*` tokens in corpus and skill prose (`ci.yml`).
+- `eval-content` -- behavioral content evals: yaml examples obey the platform
+  contract; load-bearing teaching lines are present; banned patterns stay out
+  (`ci.yml`).
+- `bootstrap-hash` -- the bootstrap sentence hash is locked; guards a
+  hash-locked string in `bin/` (`ci.yml`).
+- `no-internal-refs` -- scans for leaked internal references (org names,
+  partnership claims) (`internal-refs.yml`).
+- `gitleaks` -- scans for committed secrets (`secret-scan.yml`).
 
-Run them locally the same way:
+Run the script-based guards locally:
 
 ```
 node .github/scripts/lint-skills.mjs
 node .github/scripts/check-versions.mjs
 node .github/scripts/corpus-tool-names.mjs
 npm install --no-save yaml && node .github/scripts/eval-content.mjs
+node bin/bootstrap-hash.test.mjs
 node .github/scripts/no-internal-refs.mjs
 ```
 
