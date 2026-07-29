@@ -177,6 +177,16 @@ is needed. Remote-capable clients can point at a hosted endpoint instead:
 `https://mcp-connected.cloudgrid.io/mcp` (OAuth sign-in at add-time).
 See [USAGE.md](USAGE.md) for per-client snippets.
 
+**One CloudGrid server per client.** Run either the local (stdio) server or a
+hosted connector in a given client, never both. Running both duplicates the 14
+shared `grid_*` tool names, and the two servers hold separate sign-in state (the
+local edition uses the CLI's `~/.cloudgrid/credentials`; the connector holds an
+OAuth session) — they can disagree about whether you are signed in. How to tell:
+duplicate `grid_*` entries in the tool list, or two CloudGrid servers in the
+client's MCP settings. Which to keep: the local edition wherever you build
+runtime apps from folders; the connector in chat-only clients where you publish
+single pages.
+
 ### Claude Desktop — one-click install
 
 Claude Desktop users can install the MCP as a Desktop Extension with no terminal,

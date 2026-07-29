@@ -84,9 +84,8 @@ templates/           starting-point files per artifact kind (+ cloudgrid.yaml,
                      e-commerce (online-store, marketplace), operations
                      (internal-tools-portal, approval-workflow, hr-portal, erp),
                      booking (booking-system, calendar-scheduler,
-                     appointment-booking, restaurant-reservations, travel-booking;
-                     reminder cron pending #1543), and a RAG ai-knowledge-base
-                     (ideal vector: pgvector available, #1545 shipped).
+                     appointment-booking, restaurant-reservations, travel-booking),
+                     and a RAG ai-knowledge-base (vector: pgvector available).
 examples/            filled reference artifacts per kind
 rules/               cross-cutting build rules
 troubleshooting/     failure-mode playbooks (deploy errors, persistent apps)
@@ -108,26 +107,21 @@ them here first; the MCP corpus is a downstream snapshot of this repo.
 
 ## How a skill works
 
-Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`,
-`argument-hint`, `allowed-tools`) and a markdown body. The body always:
+Each `SKILL.md` carries YAML frontmatter (`version`, `name`, `description`)
+and a markdown body. Skills wrap the `grid` CLI. No direct API calls — with
+two sanctioned exceptions, both about working without the CLI:
 
-1. Bootstraps: install `@cloudgrid-io/cli` if missing, prompt `grid login`
-   if not authenticated.
-2. Wraps only the `grid` CLI. No direct API calls — with two sanctioned
-   exceptions, both about working without the CLI:
-   - the **anonymous single-page publish** (`cloudgrid:build` with inline HTML, or
-     the `grid_plug` MCP tool's `html` param) calls `POST /api/v2/plug` — the
-     anonymous path has no identity to manage, so the CLI adds nothing.
-   - the **CLI-free login** (`cloudgrid-login`, `grid_login` +
-     `grid_login_status`) drives `GET /auth/login` + `/auth/status` — it exists
-     precisely to get an identity without the CLI, and writes the same
-     `~/.cloudgrid/credentials` the CLI uses, so the two share one identity.
+- the **anonymous single-page publish** (`cloudgrid:build` with inline HTML, or
+  the `grid_plug` MCP tool's `html` param) calls `POST /api/v2/plug` — the
+  anonymous path has no identity to manage, so the CLI adds nothing.
+- the **CLI-free login** (`grid_login` + `grid_login_status` MCP tools) drives
+  `GET /auth/login` + `/auth/status` — it exists precisely to get an identity
+  without the CLI, and writes the same `~/.cloudgrid/credentials` the CLI uses,
+  so the two share one identity.
 
-   Do not "fix" either to use the CLI. Everything else (authenticated ops) still
-   wraps the CLI.
-3. Detects the user's language from their first message and replies in it.
-   Technical flags stay in English.
-4. Prints results concisely — URLs and short summaries, never raw JSON or IDs.
+Do not "fix" either to use the CLI. Everything else (authenticated ops) still
+wraps the CLI. Results are concise — URLs and short summaries, never raw JSON
+or IDs.
 
 Skills live under `skills/<name>/` with a short directory name (e.g. `build`). The
 plugin is named `cloudgrid`, so a skill is invoked as `/cloudgrid:<name>` (for

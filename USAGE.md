@@ -123,6 +123,11 @@ Use `mcp.cloudgrid.io` for casual, no-account installs. Use
 `mcp-connected.cloudgrid.io` for org connectors (claude.ai, ChatGPT) where
 OAuth sign-in at add-time is preferred.
 
+**One CloudGrid server per client.** If this client already has the CloudGrid
+plugin (Route 2, which bundles a local MCP server), do not also add a hosted
+connector — the 14 shared `grid_*` tool names will appear twice, and the two
+servers hold separate sign-in state. Keep whichever route you started with.
+
 > Where did my install go? `/skills` (skills), `/plugin` (plugin), `/mcp` (MCP).
 > If you don't see something, you're probably looking in the wrong menu, or you
 > installed a different route than you're checking. `/doctor` flags real problems.
@@ -169,7 +174,9 @@ cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
 (`npx -y @cloudgrid-io/mcp` in their MCP config) or remote with nothing
 installed (`https://mcp-connected.cloudgrid.io/mcp` as a `url` entry in
 `~/.codex/config.toml` or `~/.cursor/mcp.json`). See INSTALL.md for exact
-snippets.
+snippets. Run one CloudGrid MCP server per client — not both local and remote.
+Running both duplicates the 14 shared `grid_*` tool names and splits sign-in
+state.
 
 ---
 
@@ -205,4 +212,6 @@ Same capabilities; different surface.
 - **MCP** exposes the actions as tools. Best where skills are not read (Claude
   Desktop, claude.ai web, ChatGPT) or when you want explicit tools.
 
-You can install both; they do not conflict.
+You can install skills and the MCP server side by side; they do not conflict.
+(This is about skills + MCP together, not two MCP servers — run only one
+CloudGrid MCP server per client.)

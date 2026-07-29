@@ -38,13 +38,10 @@ the skill's own `grid_*` instructions on hosts that enforce it.
 1. Create a branch. Never commit directly to `main`.
 2. Place the skill in `skills/<name>/` with a `SKILL.md`.
 3. The skill body must:
-   - Bootstrap the CLI: install `@cloudgrid-io/cli` if missing, prompt
-     `grid login` if not authenticated.
    - Wrap the `grid` CLI. No direct API calls, with two sanctioned
-     exceptions: anonymous drop (`POST /api/v2/drop/auto`) and CLI-free login
-     (`/auth/login` + `/auth/status`). See `CLAUDE.md` for details.
-   - Detect the user's language from their first message and reply in it.
-     Technical flags stay in English.
+     exceptions: anonymous single-page publish (`POST /api/v2/plug`) and
+     CLI-free login (`/auth/login` + `/auth/status`). See `CLAUDE.md` for
+     details.
    - Print results concisely -- URLs and short summaries, never raw JSON or IDs.
 4. Set `version:` in frontmatter to this skill's own semver. Per-skill versions
    are INDEPENDENT of the plugin version — bump a skill's version when that
@@ -82,6 +79,14 @@ These guards run in CI. All must pass before merge.
 - `no-internal-refs` -- scans for leaked internal references (org names,
   partnership claims) (`internal-refs.yml`).
 - `gitleaks` -- scans for committed secrets (`secret-scan.yml`).
+- `corpus-drift` -- verifies the five twinned corpus paths
+  (`capability-map.md`, `cloudgrid-yaml.md`, `workflows/`, `templates/`,
+  `examples/`) are byte-identical between this repo and `cloudgrid-io/mcp`
+  (`corpus-drift.yml`). Runs on **push to main**, a nightly cron, and
+  `workflow_dispatch` — **not on PRs**, because corpus changes land as paired
+  PRs and the first of a pair is legitimately ahead. A twinned edit that passes
+  all PR checks can still turn main red after merge. Land twinned corpus edits
+  as a coordinated pair across both repos.
 
 Run the script-based guards locally:
 

@@ -98,8 +98,8 @@ function lintFile(path) {
     if (key in fields) errors.push(`banned key: ${key} — removed repo-wide (H8): a restrictive tool list blocks the skill's own grid_* instructions on enforcing hosts`);
   }
 
-  // Skill names are short (e.g. plug); the CloudGrid brand comes from the plugin
-  // namespace at install time — /cloudgrid:plug — exactly like superpowers.
+  // Skill names are short (e.g. build); the CloudGrid brand comes from the plugin
+  // namespace at install time — /cloudgrid:build — exactly like superpowers.
 
   for (const key of VOICE_FIELDS) {
     const value = fields[key];
