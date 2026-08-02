@@ -20,7 +20,11 @@ jobs:
             echo "LICENSE is not MIT"
             exit 1
           fi
-          echo "LICENSE is MIT"
+          if ! grep -q "Copyright (c) 2026 CloudGrid Inc." LICENSE; then
+            echo "COPYRIGHT holder is wrong or missing"
+            exit 1
+          fi
+          echo "LICENSE is MIT with correct copyright holder"
 
   lint-skills:
     runs-on: ubuntu-latest
