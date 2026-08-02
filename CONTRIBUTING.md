@@ -1,6 +1,6 @@
 # Contributing
 
-This repo is Apache 2.0. Contributions are welcome -- skills, docs, bug fixes,
+This repo is MIT licensed. Contributions are welcome -- skills, docs, bug fixes,
 and CI improvements.
 
 Full authoring guidance lives in `CLAUDE.md`. This file covers the mechanics.
@@ -63,7 +63,7 @@ claim. Eighth-grade reading level. Full rules in `CLAUDE.md`.
 
 These guards run in CI. All must pass before merge.
 
-- `license` -- LICENSE file is Apache 2.0 (`ci.yml`).
+- `license` -- LICENSE file is MIT (`ci.yml`).
 - `lint-skills` -- validates `SKILL.md` YAML frontmatter (required keys are
   present; it does NOT compare version values) (`ci.yml`).
 - `check-versions` -- version coherence: `.claude-plugin/plugin.json` is the

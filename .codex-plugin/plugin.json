@@ -7,5 +7,5 @@
   "brandColor": "#1A1A1A",
   "capabilities": ["skills"],
   "homepage": "https://github.com/cloudgrid-io/skills",
-  "license": "Apache-2.0"
+  "license": "MIT"
 }
