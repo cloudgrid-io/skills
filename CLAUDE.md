@@ -8,7 +8,7 @@ Guidance for Claude Code (and other agents) working in this repo.
 multi-agent skills, plus an MCP server, that let an AI agent drive CloudGrid
 through the `grid` CLI. It installs into Claude Code, Codex, or Cursor.
 
-This repo is public and Apache 2.0. Everything here is read by builders and by
+This repo is public and MIT licensed. Everything here is read by builders and by
 other agents. Write accordingly.
 
 ## The thesis
@@ -97,7 +97,7 @@ INSTALL_FOR_AGENTS.md  install steps written for an agent to execute
 COOKBOOK.md          canonical skill chains
 README.md            front door
 VERSION              canonical repo version
-LICENSE              Apache 2.0
+LICENSE              MIT
 ```
 
 The corpus directories (`workflows/ templates/ examples/ rules/

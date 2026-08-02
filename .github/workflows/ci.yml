@@ -10,17 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: LICENSE is Apache 2.0
+      - name: LICENSE is MIT
         run: |
           if [ ! -f LICENSE ]; then
             echo "LICENSE file is missing"
             exit 1
           fi
-          if ! grep -q "Apache License" LICENSE || ! grep -q "Version 2.0" LICENSE; then
-            echo "LICENSE is not Apache License 2.0"
+          if ! grep -q "MIT License" LICENSE; then
+            echo "LICENSE is not MIT"
             exit 1
           fi
-          echo "LICENSE is Apache 2.0"
+          if ! grep -q "Copyright (c) 2026 CloudGrid Inc." LICENSE; then
+            echo "COPYRIGHT holder is wrong or missing"
+            exit 1
+          fi
+          echo "LICENSE is MIT with correct copyright holder"
 
   lint-skills:
     runs-on: ubuntu-latest

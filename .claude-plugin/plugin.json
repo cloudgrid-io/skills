@@ -65,7 +65,7 @@
     "name": "CloudGrid"
   },
   "homepage": "https://github.com/cloudgrid-io/skills",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "mcpServers": {
     "cloudgrid": {
       "command": "npx",

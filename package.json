@@ -5,7 +5,7 @@
   "private": true,
   "//private": "The npm channel is RETIRED (last publish 0.14.0, 2026-07-09). Every documented install path is git-based: /plugin marketplace add, gh skill install, npx skills add <repo>. `private: true` makes an accidental `npm publish` hard-fail.",
   "description": "Multi-agent skills for CloudGrid: brainstorm, build, and sites. Install in Claude Code, Codex, or Cursor.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "homepage": "https://github.com/cloudgrid-io/skills",
   "repository": {
     "type": "git",
