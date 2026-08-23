@@ -25,8 +25,9 @@
 // carries its own semver) and is not checked here — lint-skills.mjs only
 // requires the key to be present.
 //
-// package.json must also stay `private: true`: the npm channel is retired, and
-// every documented install path is git-based.
+// package.json is published to npm on a v* tag (see .github/workflows/
+// release.yml), so its version must match plugin.json exactly — a published
+// package one patch behind the marketplace is the drift this guards against.
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -76,11 +77,11 @@ for (const manifest of [".codex-plugin/plugin.json", ".cursor-plugin/plugin.json
   }
 }
 
-if (pkg.private !== true) {
+if (pkg.private === true) {
   failures.push(
-    `package.json must keep "private": true — the npm channel is retired ` +
-      `(last publish 0.14.0, 2026-07-09) and all documented installs are git-based. ` +
-      `Removing it re-arms accidental publishing.`,
+    `package.json must NOT be "private": true — the npm channel is live and a ` +
+      `v* tag publishes @cloudgrid-io/skills (.github/workflows/release.yml). ` +
+      `private: true makes npm publish hard-fail.`,
   );
 }
 
@@ -93,4 +94,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Version coherence OK — plugin.json, VERSION, package.json, codex, cursor all at ${source}; npm channel retired.`);
+console.log(`Version coherence OK — plugin.json, VERSION, package.json, codex, cursor all at ${source}; npm channel live.`);
