@@ -13,9 +13,21 @@ name: release
 # is `private: true` and this workflow no longer runs `npm publish` — it only
 # cuts a GitHub release when a v* tag is pushed, for marking milestones.
 #
-# To revive the npm channel: drop `private` from package.json, restore the
-# publish step (needs secrets.NPM_TOKEN + `id-token: write` permission), and
-# keep package.json's version in lockstep with .claude-plugin/plugin.json — CI
+# To revive the npm channel: drop `private` from package.json, configure a
+# trusted publisher for the package on npmjs.com FIRST, then add a publish step
+# modelled on cloudgrid-io/mcp's .github/workflows/release.yml — do not restate
+# its steps here, since two copies of a publish recipe are how the last note
+# went stale. That workflow is the reference for all of it: `id-token: write`
+# (mcp release.yml:10), a pinned `npm install -g npm@<version >= 11.5.1>`
+# (mcp:21-24), and `npm publish --provenance --access public` with no stored
+# token (mcp:30).
+#
+# The npm-version pin is the part that bites if omitted: OIDC trusted publishing
+# needs npm >= 11.5.1, but actions/setup-node with Node 22 ships 10.9.8. Without
+# the pinned upgrade the publish does not fail loudly — it silently falls back to
+# looking for a stored token, so a reader lands on the token path by default.
+#
+# Keep package.json's version in lockstep with .claude-plugin/plugin.json — CI
 # already enforces that they match (.github/scripts/check-versions.mjs).
 
 on:
