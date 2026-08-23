@@ -1,22 +1,21 @@
 name: release
 
-# The npm channel is RETIRED (last publish: 0.14.0, 2026-07-09).
+# Publishing @cloudgrid-io/skills to npm on a v* tag, plus a GitHub release.
 #
-# Every documented way to install these skills reads the GIT REPO, not npm:
-#   - Claude Code:  /plugin marketplace add cloudgrid-io/skills
-#   - gh extension: gh skill install cloudgrid-io/skills
-#   - Cursor/Cline/Gemini/Codex: npx skills add cloudgrid-io/skills
-#     (the third-party `skills` CLI reading THIS REPO — not
-#      `npm install @cloudgrid-io/skills`)
+# npm auth is OIDC trusted publishing — NO stored token. The trusted publisher
+# (GitHub Actions -> cloudgrid-io/skills -> release.yml) is configured on
+# npmjs.com; this workflow authenticates as that identity via `id-token: write`.
 #
-# So skills ship by MERGING TO MAIN; there is nothing to publish. package.json
-# is `private: true` and this workflow no longer runs `npm publish` — it only
-# cuts a GitHub release when a v* tag is pushed, for marking milestones.
+# The publish is modelled on cloudgrid-io/mcp's .github/workflows/release.yml —
+# read that as the reference rather than trusting a second copy of the recipe
+# here (two copies is how the prior note in this file went stale). One detail
+# that bites if dropped: OIDC needs npm >= 11.5.1, but actions/setup-node with
+# Node 22 ships 10.9.8, so the pinned `npm install -g npm@11.19.0` below is
+# load-bearing. Without it the publish does NOT fail loudly — it silently falls
+# back to looking for a stored token.
 #
-# To revive the npm channel: drop `private` from package.json, restore the
-# publish step (needs secrets.NPM_TOKEN + `id-token: write` permission), and
-# keep package.json's version in lockstep with .claude-plugin/plugin.json — CI
-# already enforces that they match (.github/scripts/check-versions.mjs).
+# package.json's version stays in lockstep with .claude-plugin/plugin.json, and
+# the tag must match both; check-versions.mjs and the tag check below enforce it.
 
 on:
   push:
@@ -25,15 +24,17 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
-  github-release:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20
+          node-version: 22
+          registry-url: https://registry.npmjs.org
       # A tag must not disagree with the shipped version.
       - name: Version coherence
         run: node .github/scripts/check-versions.mjs
@@ -47,6 +48,14 @@ jobs:
             exit 1
           fi
           echo "Tag v${tag} matches plugin.json."
+      # OIDC trusted publishing requires npm >= 11.5.1; Node 22 ships 10.9.8.
+      # Pinned (not npm@latest) so a tag-triggered release on an immutable tag
+      # can't be surprised by a new npm major.
+      - run: npm install -g npm@11.19.0
+      # No stored token: publish authenticates via the workflow's OIDC identity
+      # (trusted publisher). --provenance is kept so the run fails rather than
+      # publishing without provenance if attestation can't be generated.
+      - run: npm publish --provenance --access public
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
