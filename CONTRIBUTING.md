@@ -69,8 +69,9 @@ These guards run in CI. All must pass before merge.
 - `check-versions` -- version coherence: `.claude-plugin/plugin.json` is the
   single source of truth, and `VERSION`, `package.json`, `.codex-plugin/plugin.json`,
   and `.cursor-plugin/plugin.json` must mirror it exactly (`ci.yml`).
-- `corpus-tool-names` -- edition-safety: only the 14 shared tool names may
-  appear as bare `grid_*` tokens in corpus and skill prose (`ci.yml`).
+- `corpus-tool-names` -- edition-safety: only the 15 shared tool names may
+  appear as bare `grid_*` tokens in corpus and skill prose (`ci.yml`). The
+  allowlist must match the one in `cloudgrid-io/mcp`; `corpus-drift` checks it.
 - `eval-content` -- behavioral content evals: yaml examples obey the platform
   contract; load-bearing teaching lines are present; banned patterns stay out
   (`ci.yml`).
@@ -79,10 +80,12 @@ These guards run in CI. All must pass before merge.
 - `no-internal-refs` -- scans for leaked internal references (org names,
   partnership claims) (`internal-refs.yml`).
 - `gitleaks` -- scans for committed secrets (`secret-scan.yml`).
-- `corpus-drift` -- verifies the five twinned corpus paths
+- `corpus-drift` -- verifies the seven twinned corpus paths
   (`capability-map.md`, `cloudgrid-yaml.md`, `workflows/`, `templates/`,
-  `examples/`) are byte-identical between this repo and `cloudgrid-io/mcp`
-  (`corpus-drift.yml`). Runs on **push to main**, a nightly cron, and
+  `examples/`, `rules/`, `troubleshooting/`) are byte-identical between this
+  repo and `cloudgrid-io/mcp`, and that both repos' `corpus-tool-names`
+  allowlists hold the same names (`corpus-drift.yml`). Other files the mcp
+  snapshot renames (the `skill-*.md` and top-level docs) are not compared. Runs on **push to main**, a nightly cron, and
   `workflow_dispatch` — **not on PRs**, because corpus changes land as paired
   PRs and the first of a pair is legitimately ahead. A twinned edit that passes
   all PR checks can still turn main red after merge. Land twinned corpus edits
