@@ -46,6 +46,9 @@ def main() -> int:
     if not (src / "app" / "__init__.py").is_file():
         print(f"no app package under {src}")
         return 2
+    # No __pycache__ inside the template: in mcp the template sits under src/,
+    # which is the published package, and in both repos it is a twinned tree.
+    sys.dont_write_bytecode = True
     sys.path.insert(0, str(src))
 
     import app  # noqa: E402
