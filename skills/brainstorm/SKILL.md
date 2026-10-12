@@ -1,5 +1,5 @@
 ---
-version: 0.3.1
+version: 0.3.2
 name: brainstorm
 description: |
   Use when the user wants to build, create, plan, or ship something on the grid -
@@ -234,7 +234,7 @@ Where a resource injects an env var, read it LAZILY (never at module top level).
 | run on a schedule | a `type: cron` service (`path: false`) | - | daily digests, cleanups, scrapers, reminders |
 | semantic search / embeddings | `needs: { vector: pgvector }` (template: `simple-semantic-search`) | `VECTOR_PGVECTOR_URL` | document search, RAG, recommendations |
 | durable files on disk | `needs: { disk: true }` | `DISK_PATH` | uploads, SQLite, generated PDFs and images |
-| use an org-wide key without seeing its value | `vault: { STRIPE_KEY: STRIPE_LIVE_KEY }` | the var you named | payments, shared org API accounts |
+| use a grid-wide key without seeing its value | `vault: { STRIPE_KEY: STRIPE_LIVE_KEY }` | the var you named | payments, shared team API accounts |
 | per-app secrets and plain config | `grid secrets set` / `grid env set` (CLI, not yaml) | the vars you name | third-party API keys, toggles, log levels |
 | its own domain | `grid domains add` (CLI) | - | anything production-facing |
 | call another of your apps | `calls:` / `callers:` | - | one backend serving several apps |

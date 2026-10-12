@@ -1,5 +1,5 @@
 ---
-version: 0.2.1
+version: 0.2.2
 name: build
 description: |
   Use when the user wants to create, build, scaffold, or ship something new -
@@ -223,7 +223,7 @@ var LAZILY (inside a getter or handler, never at module top level).
 
 Three things live outside the manifest. Teaching this saves the most confusion.
 
-- **Link identity: `.cloudgrid/link.json`.** The org and entity id that tie this
+- **Link identity: `.cloudgrid/link.json`.** The grid and entity id that tie this
   folder to a grid entity live here, not in `cloudgrid.yaml`. The CLI writes this
   file when you first plug in or link. Do not hand-author it.
 - **Secrets: `grid secrets set`.** Never put secrets in the manifest. Inside a
