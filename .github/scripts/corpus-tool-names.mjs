@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Corpus edition-safety guard.
 //
-// The corpus is served on BOTH the local and hosted MCP editions, but only 14
+// The corpus is served on BOTH the local and hosted MCP editions, but only 15
 // tool names exist on both. Any other `grid_*` name in corpus prose causes a
 // hosted agent to call a tool it does not have.
 //
@@ -10,13 +10,16 @@
 //
 // The allowlist mirrors the web-edition registration in cloudgrid-io/mcp
 // src/tools/register.js (everything before the local-only gate). The existing
-// corpus-drift.mjs keeps the two repos' twinned paths in sync.
+// corpus-drift.mjs keeps the two repos' twinned paths in sync, and fails if
+// this SHARED set and the one in cloudgrid-io/mcp's copy of this script differ
+// (skills#149: grid_collab was in mcp's and missing here).
 
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const SHARED = new Set([
   "grid_check_deploy",
+  "grid_collab",
   "grid_create_grid",
   "grid_get_app_source",
   "grid_get_template",
@@ -82,7 +85,7 @@ for (const file of files) {
 
 if (violations.length) {
   console.error("Corpus edition-safety violation: non-shared tool names in corpus/skill prose.\n");
-  console.error("The corpus is served on both editions. Only the 14 shared tool names");
+  console.error(`The corpus is served on both editions. Only the ${SHARED.size} shared tool names`);
   console.error("may appear as bare grid_* tokens. Use CLI text (`grid <verb>`) for local-only");
   console.error("commands, or mark them explicitly as local MCP only.\n");
   for (const v of violations) {
@@ -92,4 +95,4 @@ if (violations.length) {
   process.exit(1);
 }
 
-console.log(`Corpus edition-safety: ${files.length} files scanned, all tool names are shared-14.`);
+console.log(`Corpus edition-safety: ${files.length} files scanned, all tool names are shared-${SHARED.size}.`);
