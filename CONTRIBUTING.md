@@ -77,6 +77,10 @@ These guards run in CI. All must pass before merge.
   (`ci.yml`).
 - `bootstrap-hash` -- the bootstrap sentence hash is locked; guards a
   hash-locked string in `bin/` (`ci.yml`).
+- `template-python` -- installs each `semantic-search` Python service's
+  pinned `requirements.txt` on Python 3.12, imports every module in its `app`
+  package, and checks PDF text extraction against a golden output
+  (`template-python.yml`). Runs only when those files change.
 - `no-internal-refs` -- scans for leaked internal references (org names,
   partnership claims) (`internal-refs.yml`).
 - `gitleaks` -- scans for committed secrets (`secret-scan.yml`).
@@ -101,6 +105,21 @@ npm install --no-save yaml && node .github/scripts/eval-content.mjs
 node bin/bootstrap-hash.test.mjs
 node .github/scripts/no-internal-refs.mjs
 ```
+
+## Template dependencies are user-facing
+
+The pinned dependencies under `templates/` ship to builders. A builder who
+starts from a template runs those exact pins on their own machine, in a repo
+they now own. A broken pin does not break this repo's CI; it breaks their
+first run. So the bar for a template dependency change is "a fresh builder can
+install and run it", not "our checks are green".
+
+For the `semantic-search` Python services, `template-python` is that check.
+If its PDF golden output changes after a `pypdf` bump, do not just update the
+hash: print the old and new text
+(`.github/scripts/semantic-search-smoke.py <service-dir> --print`) and decide
+whether the change is one builders should get. The extracted text is what the
+template embeds, so a change there re-ranks search results.
 
 ## Releasing
 
