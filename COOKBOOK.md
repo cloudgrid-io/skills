@@ -42,12 +42,17 @@ The skill creates `cloudgrid.yaml`, writes the services, and plugs the result
 into the grid. It prints the live URL when done. This usually takes about
 30 seconds for a single page, longer for a runtime app.
 
-## Share a single page with no account
+## Share a single page
 
-The fastest path has one step and no login. The `cloudgrid:build` skill and the
+The fastest path is one step after sign-in. The `cloudgrid:build` skill and the
 `grid_plug` MCP tool (inline `html` param) do this for you — hand the agent an
-HTML file or describe what you want and it publishes a public URL. Anonymous
-pages expire after 7 days unless claimed.
+HTML file or describe what you want and it publishes a public URL. Publishing
+needs a CloudGrid account: sign in first with
+`npx -y @cloudgrid-io/cli@latest login` or the `grid_login` MCP tool. Signed out, `grid_plug` returns `needs_auth` and publishes nothing.
+
+An anonymous page made earlier still works two ways: re-plug it in place with
+its `owner_token`, or sign in and claim it into your grid with its
+`claim_token`.
 
 ## Ship an existing directory
 

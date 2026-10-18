@@ -43,9 +43,9 @@ management, secrets, environment variables, logs, and more.
 ## Prerequisites
 
 - **Node 18+** (for `npx`).
-- **No login needed to try it** — anonymous plug works out of the box. For owned
-  entities (into your grid), run `npx -y @cloudgrid-io/cli@latest login` once,
-  or use the `grid_login` MCP tool.
+- **A CloudGrid account to publish.** Run `npx -y @cloudgrid-io/cli@latest login`
+  once, or use the `grid_login` MCP tool. Signed out, `grid_plug` returns
+  `needs_auth` and publishes nothing.
 
 ---
 
@@ -115,11 +115,12 @@ Nothing to install and no Node needed — point a remote-capable client at the
 hosted endpoint. Two endpoints, two postures:
 
 ```
-https://mcp.cloudgrid.io/mcp              anonymous-first; sign in later from inside the conversation
+https://mcp.cloudgrid.io/mcp              connect without an account; sign in from inside the conversation before the first publish
 https://mcp-connected.cloudgrid.io/mcp    OAuth sign-in at add-time; every plug is owned from the first one
 ```
 
-Use `mcp.cloudgrid.io` for casual, no-account installs. Use
+Use `mcp.cloudgrid.io` to connect without an account and sign in when you
+first publish. Use
 `mcp-connected.cloudgrid.io` for org connectors (claude.ai, ChatGPT) where
 OAuth sign-in at add-time is preferred.
 
@@ -188,13 +189,14 @@ edition is live — add it as a custom connector:
 Two endpoints, two postures:
 
 ```
-https://mcp.cloudgrid.io/mcp              anonymous-first; sign in later from inside the conversation
+https://mcp.cloudgrid.io/mcp              connect without an account; sign in from inside the conversation before the first publish
 https://mcp-connected.cloudgrid.io/mcp    OAuth sign-in at add-time (the connected endpoint)
 ```
 
 The connected endpoint runs the client's own OAuth connect at add-time (sign in
 with CloudGrid right in the flow); every plug is owned from the first one. The
-anonymous endpoint needs no account; sign in later from inside the conversation.
+other endpoint connects without an account; sign in from inside the conversation
+(`grid_login`) before the first publish.
 
 - **claude.ai web** — Settings → Connectors → add custom connector.
 - **ChatGPT** — add it as a custom connector (Developer Mode; availability depends

@@ -173,7 +173,7 @@ args = ["-y", "@cloudgrid-io/mcp"]
 
 It wraps the same `grid` CLI and uses the same credentials, so no extra login
 is needed. Remote-capable clients can point at a hosted endpoint instead:
-`https://mcp.cloudgrid.io/mcp` (anonymous-first, no account needed) or
+`https://mcp.cloudgrid.io/mcp` (connect without an account, sign in before the first publish) or
 `https://mcp-connected.cloudgrid.io/mcp` (OAuth sign-in at add-time).
 See [USAGE.md](USAGE.md) for per-client snippets.
 
