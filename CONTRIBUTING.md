@@ -3,8 +3,6 @@
 This repo is MIT licensed. Contributions are welcome -- skills, docs, bug fixes,
 and CI improvements.
 
-Full authoring guidance lives in `CLAUDE.md`. This file covers the mechanics.
-
 ## Repo structure
 
 ```
@@ -41,10 +39,8 @@ the skill's own `grid_*` instructions on hosts that enforce it.
 1. Create a branch. Never commit directly to `main`.
 2. Place the skill in `plugins/cloudgrid/skills/<name>/` with a `SKILL.md`.
 3. The skill body must:
-   - Wrap the `grid` CLI. No direct API calls, with two sanctioned
-     exceptions: anonymous single-page publish (`POST /api/v2/plug`) and
-     CLI-free login (`/auth/login` + `/auth/status`). See `CLAUDE.md` for
-     details.
+   - Use the `grid` CLI for files on disk and the CloudGrid connector tools
+     for content in the conversation. No direct API calls.
    - Print results concisely -- URLs and short summaries, never raw JSON or IDs.
 4. Set `version:` in frontmatter to this skill's own semver. Per-skill versions
    are INDEPENDENT of the plugin version — bump a skill's version when that
@@ -60,7 +56,7 @@ node .github/scripts/lint-skills.mjs
 
 No emoji. No exclamation marks. No marketing adjectives ("seamless", "powerful",
 "easy", "blazing", "leverage", "unlock"). Lead with the noun. One sentence per
-claim. Eighth-grade reading level. Full rules in `CLAUDE.md`.
+claim. Eighth-grade reading level.
 
 ## CI checks
 
