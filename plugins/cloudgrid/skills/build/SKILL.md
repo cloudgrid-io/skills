@@ -1,5 +1,5 @@
 ---
-version: 0.3.0
+version: 0.3.1
 name: build
 description: |
   Use when the user wants to create, build, scaffold, or put live an app, web
@@ -32,7 +32,9 @@ back here.
 **Route by where the work lives.**
 
 - **Files on disk** (a project folder, even a few files you just wrote): use the
-  `grid` CLI. `grid plug <folder>` plugs it; `grid logs`, `grid secrets set`,
+  `grid` CLI. A one-page site (`index.html` at the folder root) plugs with
+  `grid plug <folder>`; an app with a `cloudgrid.yaml` plugs with `grid plug`
+  run inside its folder, with no path. `grid logs`, `grid secrets set`,
   `grid env set`, `grid dev`, `grid status`, and `grid pull` cover the rest.
 - **Content not saved anywhere** (one HTML page written in chat): use the
   connector, `grid_plug` with `html`.
@@ -67,7 +69,12 @@ Two questions decide everything that follows.
 - A one-page static thing (a deck, a landing page, an HTML page, a demo, a game
   prototype that runs in the browser) is fastest as an **inspiration**. If it
   exists only in the conversation, plug it with `grid_plug` and the inline
-  `html` param; if it is a file on disk, `grid plug <file-or-folder>`. Set who
+  `html` param; if it is on disk, put `index.html` at the folder root and run
+  `grid plug <folder>`. It goes live in seconds; do not add a `cloudgrid.yaml`
+  or a `services/` folder for it. Ask who should see it before plugging and
+  pass it then: `grid plug <folder> --visibility link` (or `private`). The CLI
+  cannot change a page's visibility afterwards, and plugging the folder again
+  makes a new link. For content plugged with `grid_plug`, set who
   can see it with `grid_visibility` (private, grid, or link - anyone with the
   link; add require_signin for signed-in accounts only, or indexed to be
   findable by search engines. Finer control: the inside/outside axes -
@@ -75,7 +82,9 @@ Two questions decide everything that follows.
   retired; 'org' is gone).
 - A real app (a backend, a dashboard, an API, anything with infrastructure or
   more than one service) is an **owned runtime**: a folder with a
-  `cloudgrid.yaml` that declares `needs`, plugged with `grid plug <folder>`.
+  `cloudgrid.yaml` that declares `needs`, plugged by running `grid plug` with
+  no path from inside that folder (`grid plug <folder>` treats the folder as a
+  one-page site and fails without a root `index.html`).
   The build is async - poll until it returns the live URL. Once live, set who
   can open it with `grid_visibility` - ask the user rather than choosing for
   them.
