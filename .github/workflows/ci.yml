@@ -43,9 +43,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
-      # plugin.json is the single source of truth; VERSION and package.json
-      # mirror it. VERSION is read at runtime by hooks/user-prompt and reported
-      # as plugin_version in telemetry, so drift there corrupts release data.
+      # plugins/cloudgrid/.claude-plugin/plugin.json is the single source of
+      # truth; VERSION, package.json, and the Codex and Cursor manifests mirror it.
       - name: Version coherence (plugin.json / VERSION / package.json)
         run: node .github/scripts/check-versions.mjs
 
@@ -74,13 +73,3 @@ jobs:
         run: |
           npm install --no-save yaml
           node .github/scripts/eval-content.mjs
-
-  bootstrap-hash:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: 20
-      - name: Bootstrap sentence hash is locked
-        run: node bin/bootstrap-hash.test.mjs

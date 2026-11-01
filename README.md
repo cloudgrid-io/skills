@@ -4,40 +4,43 @@ Multi-agent skills for CloudGrid. Install them in Claude Code, Codex, or Cursor,
 and your agent can build, ship, and run things on CloudGrid through the
 `grid` CLI.
 
-## Why CloudGrid
+## What CloudGrid is
 
-Claude Code and Codex removed the wall around writing code. CloudGrid removes the
-wall around running it. It is a live runtime environment: your app runs there WITH
-the infrastructure it needs out of the box — managed MongoDB, Redis (cache, queues,
-pub/sub), a pgvector store, persistent disk, and built-in AI with no API keys — in
-any language or stack, with no Docker or Kubernetes to manage. A directory or a URL
-becomes a live, addressable, running thing in about 30 seconds. These skills are how
-your agent crosses that second wall on your behalf: scaffold, declare what the app
-needs, build, plug it in, tail logs, share, read feedback. Everything here is free.
+CloudGrid runs web apps at a live public URL with the infrastructure they need:
+managed MongoDB, Redis (cache, queues, pub/sub), a pgvector store, persistent
+disk, and an AI gateway that needs no API key, in any language or stack, with no
+Docker or Kubernetes to manage. A directory becomes a live app in about 30
+seconds. These skills let your agent scaffold, declare what the app needs,
+build, plug it in, tail logs, share, and read feedback.
 
-## Install in 2 steps
+## Install
 
-1. Log in (installs the CLI on first run):
+1. Install the `grid` CLI and sign in. The skills use it for project folders.
 
    ```
-   npx -y @cloudgrid-io/cli@latest login
+   brew install cloudgrid-io/tap/grid     # macOS, Linux
+   npm install -g @cloudgrid-io/cli       # any platform
+   grid login
    ```
 
-2. Add the agent-core. In Claude Code (recommended):
+2. Add the plugin in Claude Code:
 
    ```
    /plugin marketplace add cloudgrid-io/skills
    /plugin install cloudgrid@cloudgrid-skills
    ```
 
-   One install wires up everything: the skills, the SessionStart orientation
-   hook, and the CloudGrid MCP server (`grid_start`, `grid_get_template`, and the
-   CLI-wrapping tools). The MCP auto-starts when the plugin is enabled — no
-   separate `claude mcp add` needed.
+   The plugin adds the skills and connects the hosted CloudGrid connector
+   (`https://mcp.cloudgrid.io/mcp`). It starts no local server, has no hooks,
+   and collects no telemetry. A project folder goes live through the `grid`
+   CLI; content from the conversation, and account actions such as visibility,
+   collaborators, and grids, go through the connector. The plugin folder is
+   [`plugins/cloudgrid/`](plugins/cloudgrid/); its README lists everything the
+   plugin runs, sends, and connects to.
 
-   The skills show under `/plugin` and `/skills` as `cloudgrid:brainstorm`,
-   and `cloudgrid:build` — or just say what you want
-   ("share this HTML page as a link") and the right one triggers.
+   The skills show under `/plugin` and `/skills` as `cloudgrid:brainstorm`
+   and `cloudgrid:build`, or describe what you want ("share this HTML page as
+   a link") and the matching one triggers.
 
    Or install with the `gh skill` extension:
 
@@ -46,8 +49,8 @@ needs, build, plug it in, tail logs, share, read feedback. Everything here is fr
    ```
 
    Other agents (Cursor, Cline, Gemini CLI): `npx skills add cloudgrid-io/skills`.
-   They install as `build`, `brainstorm` — the CloudGrid brand comes from the plugin
-   namespace, which those agents don't have.
+   They install as `build`, `brainstorm`; the CloudGrid prefix comes from the
+   plugin namespace, which those agents don't have.
 
    Claude Desktop, claude.ai, ChatGPT, and every route in one place: [USAGE.md](USAGE.md).
 
@@ -81,23 +84,21 @@ walks through it end to end.
 
 ## MCP server
 
-The Claude Code plugin above already bundles the MCP server — installing
-`cloudgrid@cloudgrid-skills` starts it automatically. For every other client, the
-MCP server is published separately as
-[`@cloudgrid-io/mcp`](https://github.com/cloudgrid-io/mcp). It exposes the same
-actions as MCP tools, for agents that speak the Model Context Protocol.
-Install it with `npx -y @cloudgrid-io/mcp`, or point a remote-capable client at
-`https://mcp.cloudgrid.io/mcp`. See [USAGE.md](USAGE.md) for per-client setup.
+The Claude Code plugin above connects the hosted CloudGrid connector. For other
+clients, point a remote-capable client at `https://mcp.cloudgrid.io/mcp`, or run
+the local server published as
+[`@cloudgrid-io/mcp`](https://github.com/cloudgrid-io/mcp). See
+[USAGE.md](USAGE.md) for per-client setup.
 
-**Do not run the plugin and a hosted connector side by side.** The plugin bundles
-the local (stdio) MCP server; if the same client ALSO has a CloudGrid remote
-connector (`mcp.cloudgrid.io` or `mcp-connected.cloudgrid.io`), every `grid_*`
-tool appears twice, the two servers hold separate sign-in state, and they can
-disagree about whether you are signed in. How to tell: two `cloudgrid` entries in
-the client's MCP/connector list, or duplicate `grid_*` tools in the tool picker.
-Fix: keep the plugin (it can build runtime apps from folders and shares the CLI's
-sign-in) and remove the connector in that client — or the reverse in a client
-where you only publish single pages.
+**One CloudGrid server per client.** Do not add the connector or the local server
+again in a client that has the plugin: every `grid_*` tool would appear twice,
+and the two servers hold separate sign-in state. How to tell: two `cloudgrid`
+entries in the client's MCP or connector list, or duplicate `grid_*` tools.
+
+## Contact
+
+Support: support@cloudgrid.io. Privacy: privacy@cloudgrid.io. Legal:
+legal@cloudgrid.io. Security reports: see [SECURITY.md](SECURITY.md).
 
 ## License
 

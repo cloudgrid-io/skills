@@ -1,7 +1,7 @@
 {
   "name": "@cloudgrid-io/skills",
-  "version": "0.14.42",
-  "//version": "Mirror of .claude-plugin/plugin.json, which is the single source of truth. Enforced by .github/scripts/check-versions.mjs.",
+  "version": "0.15.0",
+  "//version": "Mirror of plugins/cloudgrid/.claude-plugin/plugin.json, which is the single source of truth. Enforced by .github/scripts/check-versions.mjs.",
   "description": "Multi-agent skills for CloudGrid: brainstorm, build, and sites. Install in Claude Code, Codex, or Cursor.",
   "license": "MIT",
   "homepage": "https://github.com/cloudgrid-io/skills",
@@ -19,8 +19,7 @@
     "cursor"
   ],
   "files": [
-    "skills",
-    "hooks",
+    "plugins",
     "workflows",
     "templates",
     "examples",

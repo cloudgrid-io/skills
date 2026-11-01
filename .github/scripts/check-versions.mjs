@@ -4,26 +4,22 @@
 //
 // WHY THIS EXISTS
 // ---------------
-// This repo had FOUR version declarations, one authority, and zero coupling:
+// This repo declares the plugin version in several places, with one authority:
 //
-//   .claude-plugin/plugin.json  0.14.31  <- what actually ships (marketplace)
-//   VERSION                     0.14.0   <- read at RUNTIME by hooks/user-prompt
-//   package.json                0.14.0   <- npm (retired channel)
-//   skills/*/SKILL.md           0.x.y    <- per-skill semver, independent
+//   plugins/cloudgrid/.claude-plugin/plugin.json  <- what ships (marketplace)
+//   VERSION, package.json                        <- mirrors
+//   .codex-plugin/plugin.json, .cursor-plugin/plugin.json  <- mirrors
+//   plugins/cloudgrid/skills/*/SKILL.md          <- per-skill semver, independent
 //
-// The VERSION drift was not cosmetic: hooks/user-prompt reads it and reports it
-// as `plugin_version` on every build-intent telemetry event. VERSION froze at
-// 0.14.0 on 2026-07-09 while plugin.json advanced 31 patches, so ~17 days of
-// telemetry was attributed to a single stale version and no release after
-// 0.14.0 was distinguishable in the data.
+// They drifted before (VERSION froze at 0.14.0 for weeks while plugin.json
+// advanced 31 patches), so this check couples them.
 //
 // THE RULE
 // --------
-// `.claude-plugin/plugin.json` is the SINGLE SOURCE OF TRUTH for the plugin
-// version. VERSION and package.json are mirrors of it and must match exactly.
-// Per-skill `version:` frontmatter is deliberately INDEPENDENT (each skill
-// carries its own semver) and is not checked here — lint-skills.mjs only
-// requires the key to be present.
+// `plugins/cloudgrid/.claude-plugin/plugin.json` is the SINGLE SOURCE OF TRUTH
+// for the plugin version. The mirrors must match exactly. Per-skill `version:`
+// frontmatter is deliberately INDEPENDENT (each skill carries its own semver)
+// and is not checked here; lint-skills.mjs only requires the key to be present.
 //
 // package.json is published to npm on a v* tag (see .github/workflows/
 // release.yml), so its version must match plugin.json exactly — a published
@@ -39,22 +35,21 @@ const json = (p) => JSON.parse(read(p));
 
 const failures = [];
 
-const plugin = json(".claude-plugin/plugin.json");
+const plugin = json("plugins/cloudgrid/.claude-plugin/plugin.json");
 const pkg = json("package.json");
 const versionFile = read("VERSION").trim();
 
 const source = plugin.version;
 if (!source || !/^\d+\.\d+\.\d+$/.test(source)) {
   failures.push(
-    `.claude-plugin/plugin.json version is missing or not x.y.z: ${JSON.stringify(source)}`,
+    `plugins/cloudgrid/.claude-plugin/plugin.json version is missing or not x.y.z: ${JSON.stringify(source)}`,
   );
 }
 
 if (versionFile !== source) {
   failures.push(
     `VERSION (${versionFile}) != plugin.json (${source}). ` +
-      `VERSION is read at runtime by hooks/user-prompt and reported as plugin_version ` +
-      `in telemetry — a mismatch silently mislabels every event. Update VERSION.`,
+      `Update VERSION.`,
   );
 }
 
@@ -89,7 +84,7 @@ if (failures.length > 0) {
   console.error("Version coherence check FAILED:\n");
   for (const f of failures) console.error(`  - ${f}\n`);
   console.error(
-    "Single source of truth: .claude-plugin/plugin.json. Bump it, then mirror into VERSION and package.json.",
+    "Single source of truth: plugins/cloudgrid/.claude-plugin/plugin.json. Bump it, then mirror into VERSION and package.json.",
   );
   process.exit(1);
 }

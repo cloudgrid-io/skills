@@ -14,7 +14,7 @@ name: release
 # load-bearing. Without it the publish does NOT fail loudly — it silently falls
 # back to looking for a stored token.
 #
-# package.json's version stays in lockstep with .claude-plugin/plugin.json, and
+# package.json's version stays in lockstep with plugins/cloudgrid/.claude-plugin/plugin.json, and
 # the tag must match both; check-versions.mjs and the tag check below enforce it.
 
 on:
@@ -41,9 +41,9 @@ jobs:
       - name: Tag matches plugin.json version
         run: |
           tag="${GITHUB_REF_NAME#v}"
-          shipped="$(node -e 'process.stdout.write(require("./.claude-plugin/plugin.json").version)')"
+          shipped="$(node -e 'process.stdout.write(require("./plugins/cloudgrid/.claude-plugin/plugin.json").version)')"
           if [ "$tag" != "$shipped" ]; then
-            echo "Tag v${tag} does not match .claude-plugin/plugin.json (${shipped})."
+            echo "Tag v${tag} does not match plugins/cloudgrid/.claude-plugin/plugin.json (${shipped})."
             echo "Tag the release commit whose plugin.json matches, or bump plugin.json first."
             exit 1
           fi

@@ -40,7 +40,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$SCRIPT_DIR"
 
 [ -f "$REPO_ROOT/VERSION" ]   || die "VERSION file not found in $REPO_ROOT. Are you running this from the skills repo?"
-[ -d "$REPO_ROOT/skills" ]    || die "skills/ directory not found in $REPO_ROOT. Are you running this from the skills repo?"
+[ -d "$REPO_ROOT/plugins/cloudgrid/skills" ] || die "plugins/cloudgrid/skills/ directory not found in $REPO_ROOT. Are you running this from the skills repo?"
 
 VERSION="$(tr -d '[:space:]' < "$REPO_ROOT/VERSION")"
 
@@ -218,10 +218,10 @@ installed=0
 skipped=0
 warned=0
 
-for skill_dir in "$REPO_ROOT/skills"/*/; do
+for skill_dir in "$REPO_ROOT/plugins/cloudgrid/skills"/*/; do
   [ -d "$skill_dir" ] || continue
   skill_name="$(basename "$skill_dir")"
-  source_path="$REPO_ROOT/skills/$skill_name"
+  source_path="$REPO_ROOT/plugins/cloudgrid/skills/$skill_name"
   target_path="$TARGET_DIR/$skill_name"
 
   if [ -L "$target_path" ]; then
@@ -261,7 +261,7 @@ fi
 info "Step 4/4: Verify"
 
 errors=0
-for skill_dir in "$REPO_ROOT/skills"/*/; do
+for skill_dir in "$REPO_ROOT/plugins/cloudgrid/skills"/*/; do
   [ -d "$skill_dir" ] || continue
   skill_name="$(basename "$skill_dir")"
   target_path="$TARGET_DIR/$skill_name"

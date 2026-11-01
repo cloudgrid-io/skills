@@ -18,13 +18,13 @@ const BANNED_KEYS = ["allowed-tools"];
 const VOICE_FIELDS = ["name", "description"];
 const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}️]/u;
 
-// Skills live under skills/ (the layout Claude Code plugins require). Each skill
+// Plugin skills live under plugins/cloudgrid/skills/ (the plugin folder). Each skill
 // is a directory there with a SKILL.md.
 function findSkillFiles(root) {
   const out = [];
-  // skills/ = the plugin surface; project-skills/ = per-project drops written
+  // plugins/cloudgrid/skills/ = the plugin surface; project-skills/ = per-project drops written
   // by `grid agent` (not installed globally). Both are linted.
-  for (const bucket of ["skills", "project-skills"]) {
+  for (const bucket of ["plugins/cloudgrid/skills", "project-skills"]) {
     const skillsDir = join(root, bucket);
     let entries;
     try {
