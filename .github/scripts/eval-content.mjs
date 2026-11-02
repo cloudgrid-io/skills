@@ -118,9 +118,9 @@ function checkNeeds(file, needs, prefix = "") {
 // 1. Every yaml example in the skill files obeys the contract.
 // ---------------------------------------------------------------------------
 const YAML_SOURCES = [
-  "skills/using-cloudgrid/SKILL.md",
-  "skills/brainstorm/SKILL.md",
-  "skills/build/SKILL.md",
+  "plugins/cloudgrid/skills/using-cloudgrid/SKILL.md",
+  "plugins/cloudgrid/skills/brainstorm/SKILL.md",
+  "plugins/cloudgrid/skills/build/SKILL.md",
   "project-skills/sites/SKILL.md",
 ];
 
@@ -149,16 +149,18 @@ if (blockCount === 0) fail("(corpus)", "no yaml blocks found at all — extracti
 // ---------------------------------------------------------------------------
 const CONTRACTS = [
   // file, must-contain (string or regex), why
-  ["skills/build/SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard (version-floor errors)"],
-  ["skills/build/SKILL.md", /Runtime apps need a local edition/i, "hosted-edition guard (MCP 0.20.37 steer)"],
-  ["skills/build/SKILL.md", /grid_check_deploy/, "failure branch — read the build log, don't guess"],
-  ["skills/build/SKILL.md", /inside: private\|spaces\|grid/, "visibility vocab accuracy (two-axis model: inside/outside axes; authenticated retired)"],
-  ["skills/brainstorm/SKILL.md", /`path:` is the URL mount, NOT the filesystem path/, "the #1 agent mistake"],
-  ["skills/brainstorm/SKILL.md", /A resource is never a service/, "the #2 agent mistake"],
-  ["skills/brainstorm/SKILL.md", /Say "plug", not "deploy"/, "voice rule with fixed go-live labels"],
+  ["plugins/cloudgrid/skills/build/SKILL.md", "brew install cloudgrid-io/tap/grid", "CLI install command shown to the user (skills#170)"],
+  ["plugins/cloudgrid/skills/build/SKILL.md", /grid plug <folder>/, "files on disk route to the CLI (skills#170)"],
+  ["plugins/cloudgrid/skills/build/SKILL.md", /Runtime apps need files and a build/i, "chat-only guard: no runtime build without files"],
+  ["plugins/cloudgrid/skills/build/SKILL.md", /grid_check_deploy/, "failure branch — read the build log, don't guess"],
+  ["plugins/cloudgrid/skills/build/SKILL.md", /inside: private\|spaces\|grid/, "visibility vocab accuracy (two-axis model: inside/outside axes; authenticated retired)"],
+  ["plugins/cloudgrid/skills/brainstorm/SKILL.md", /`path:` is the URL mount, NOT the filesystem path/, "the #1 agent mistake"],
+  ["plugins/cloudgrid/skills/brainstorm/SKILL.md", /A resource is never a service/, "the #2 agent mistake"],
+  ["plugins/cloudgrid/skills/brainstorm/SKILL.md", /Say "plug", not "deploy"/, "voice rule with fixed go-live labels"],
   ["project-skills/sites/SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard"],
-  ["skills/using-cloudgrid/SKILL.md", "npx -y @cloudgrid-io/cli@latest", "stale-CLI guard in the session-injected orientation"],
-  ["skills/using-cloudgrid/SKILL.md", /grid_start/, "orientation must route through grid_start"],
+  ["plugins/cloudgrid/skills/using-cloudgrid/SKILL.md", "npm install -g @cloudgrid-io/cli", "CLI install command shown to the user (skills#170)"],
+  ["plugins/cloudgrid/skills/using-cloudgrid/SKILL.md", /grid_visibility/, "account actions route to the connector (skills#170)"],
+  ["plugins/cloudgrid/skills/using-cloudgrid/SKILL.md", /grid_start/, "orientation must route through grid_start"],
 ];
 for (const [file, needle, why] of CONTRACTS) {
   const text = read(file);
@@ -166,12 +168,26 @@ for (const [file, needle, why] of CONTRACTS) {
   if (!hit) fail(file, `missing load-bearing line (${why}): ${needle}`);
 }
 
-// Negative contracts: retired names and the stale-global footgun must not return.
+// Negative contracts: retired names must not return in any skill.
 const BANNED = [
   [/grid_set_sharing|grid_deploy\b|grid_fork|grid_remix|grid_download|gridctl/, "retired tool/verb names"],
-  [/npm install -g @cloudgrid-io\/cli/, "global-install advice (the stale-global footgun)"],
   [/npx -y @cloudgrid-io\/cli(?!@latest)[ `]/, "npx without @latest (cached-stale footgun)"],
 ];
+// The plugin skills use an installed `grid` CLI, which the user installs; they
+// never run the CLI through a package launcher (skills#170). The project-scoped
+// sites skill is written by `grid agent` and keeps its own guidance.
+const PLUGIN_BANNED = [
+  [/npx -y @cloudgrid-io\/cli/, "package-launcher CLI fallback (the user installs grid)"],
+  [/EXTREMELY_IMPORTANT|Minimize questions|Don't ask where to host/i, "coercive routing text"],
+  [/Vercel|Netlify|GitHub Pages|Heroku/, "other products named in skill prose"],
+];
+for (const file of YAML_SOURCES.filter((f) => f.startsWith("plugins/"))) {
+  const text = read(file);
+  for (const [re, why] of PLUGIN_BANNED) {
+    const m = text.match(re);
+    if (m) fail(file, `banned pattern (${why}): '${m[0]}'`);
+  }
+}
 for (const file of YAML_SOURCES) {
   const text = read(file);
   for (const [re, why] of BANNED) {

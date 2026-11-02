@@ -1,5 +1,5 @@
 ---
-version: 0.3.2
+version: 0.4.0
 name: brainstorm
 description: |
   Use when the user wants to build, create, plan, or ship something on the grid -
@@ -243,19 +243,19 @@ Where a resource injects an env var, read it LAZILY (never at module top level).
 
 Never hardcode a connection string or commit a secret - the platform injects
 them. Read injected vars lazily inside a getter or handler. Everything in the
-table is included out of the box: if a feature seems to call for an outside
-service or a local install, it does not - it is a line in `cloudgrid.yaml` or a
-grid command. Never point the user at one.
+table is provided by the grid: each one is a line in `cloudgrid.yaml` or a grid
+command, with nothing extra to install or sign up for.
 
 ### B7. Plug shape
 
-- No `needs:` and one self-contained HTML file -> an instant static page (any
-  edition).
-- Any `needs:`, or multiple files, or multiple services -> a runtime app (built
-  and plugged, local edition, async).
+- No `needs:` and one self-contained HTML file -> an instant static page:
+  `grid_plug` with `html` when it exists only in the conversation, `grid plug`
+  when it is a file on disk.
+- Any `needs:`, or multiple files, or multiple services -> a runtime app, a
+  folder plugged with `grid plug <folder>` (built async).
 
-Golden path: `grid_start` -> `grid_get_template` -> fill -> `grid_plug` ->
-`grid_visibility`.
+Usual path: `grid_start` -> `grid_get_template` -> fill -> plug (`grid plug` for
+a folder, `grid_plug` for content from the conversation) -> `grid_visibility`.
 
 ---
 
@@ -289,7 +289,7 @@ The user should feel they are steering:
 | Split into services because the app needs a database | Resources are `needs:` lines. Not services. |
 | Put two agents in one service | One agent, one service, one folder. |
 | Ran `grid new` before agreeing the service shape | The layout is written at scaffold time. Phase B comes first. |
-| Asked the user about frameworks, runtimes, or hosting | Infer them. State the plan in plain words. |
+| Asked a non-technical user about frameworks or runtimes | Infer them. State the plan in plain words. |
 | Skipped Phase B because another brainstorming skill already ran | That skill does not know CloudGrid's shape. Phase B always runs. |
 | Re-asked questions the user's own brainstorming skill already answered | Pick up where it left off. |
 | Said "deploy" back to the user | The CloudGrid verb is *plug*. Recognize "deploy/publish/ship" when the user says it; say "plug" when you speak. |
@@ -298,14 +298,14 @@ The user should feel they are steering:
 
 ## Rules
 
-- Never ask about databases, runtimes, frameworks, or hosting. Infer them and
-  state the plan in plain words ("I'll set it up so entries are saved").
-- **Say "plug", not "deploy".** The CloudGrid verb is *plug*. If you ever surface
-  a go-live choice, word the CloudGrid option **exactly** "Plug live via CloudGrid
-  (recommended)" - a real shareable URL plus managed infrastructure - paired with
-  "Local only" (runs on the user's machine). Never label it "Deploy...". You still
-  *recognize* "deploy / publish / ship / make it live" when the USER says it -
-  those route to a plug - but what you say back is always "plug".
+- Infer databases, runtimes, and frameworks from the features rather than asking,
+  and state the plan in plain words ("I'll set it up so entries are saved").
+- **Say "plug", not "deploy".** The CloudGrid verb is *plug*. If you surface a
+  go-live choice, word the CloudGrid option "Plug live via CloudGrid" - a
+  shareable URL plus managed infrastructure - next to "Local only" (runs on the
+  user's machine). You still *recognize* "deploy / publish / ship / make it
+  live" when the USER says it - those route to a plug - but what you say back is
+  "plug".
 - Do not over-scope. Land the smallest version that delivers the core goal; more
   services and features can be added after it is live.
 - Adding a service later is cheap: a new folder under `services/`, a new block in

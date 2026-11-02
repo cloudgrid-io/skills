@@ -5,13 +5,15 @@ cover the CLI prerequisite, then each agent.
 
 ## Prerequisite: the CloudGrid CLI
 
-Every skill drives the `grid` CLI. Log in (installs the CLI on first run):
+The skills plug project folders with the `grid` CLI. Install it, then sign in:
 
 ```
-npx -y @cloudgrid-io/cli@latest login
+brew install cloudgrid-io/tap/grid     # macOS, Linux
+npm install -g @cloudgrid-io/cli       # any platform
+grid login
 ```
 
-`npx -y @cloudgrid-io/cli@latest whoami` confirms you are logged in.
+`grid whoami` confirms you are signed in.
 
 ## Add the skills
 
@@ -59,9 +61,10 @@ staying pinned while the source moves ahead is the usual cause of "the skills
 won't install / update".)
 
 The marketplace manifest lives in `.claude-plugin/` (marketplace name:
-`cloudgrid-skills`, plugin name: `cloudgrid`). Installing the plugin bundles the
-skills, the SessionStart orientation hook, and the CloudGrid MCP server — the MCP
-auto-starts when the plugin is enabled, so no separate `claude mcp add` is needed.
+`cloudgrid-skills`, plugin name: `cloudgrid`); the plugin itself is in
+`plugins/cloudgrid/`. Installing the plugin adds the skills and connects the
+hosted CloudGrid connector (`https://mcp.cloudgrid.io/mcp`), so no separate
+`claude mcp add` is needed. It starts no local server and has no hooks.
 
 ### Codex
 
@@ -83,7 +86,7 @@ codex plugin marketplace add cloudgrid-io/skills      # plugin (manifest: .codex
 npx skills add cloudgrid-io/skills -a codex           # skills only (-> ~/.agents/skills)
 ```
 
-Or the MCP server, in `~/.codex/config.toml` — local or the hosted URL:
+Or the MCP server, in `~/.codex/config.toml`, local or the hosted URL:
 
 ```toml
 [mcp_servers.cloudgrid]
@@ -92,7 +95,7 @@ args = ["-y", "@cloudgrid-io/mcp"]
 
 # or remote, nothing installed:
 # [mcp_servers.cloudgrid]
-# url = "https://mcp-connected.cloudgrid.io/mcp"
+# url = "https://mcp.cloudgrid.io/mcp"
 ```
 
 ### Cursor
@@ -110,7 +113,7 @@ Or the MCP server, in `~/.cursor/mcp.json`:
 { "mcpServers": { "cloudgrid": { "command": "npx", "args": ["-y", "@cloudgrid-io/mcp"] } } }
 ```
 
-Remote variant, nothing installed (OAuth at add-time): `{ "mcpServers": { "cloudgrid": { "url": "https://mcp-connected.cloudgrid.io/mcp" } } }`
+Remote variant, nothing installed: `{ "mcpServers": { "cloudgrid": { "url": "https://mcp.cloudgrid.io/mcp" } } }`. The Cursor plugin manifest (`.cursor-plugin/`) connects this URL.
 
 ### Gemini CLI
 
@@ -137,7 +140,7 @@ View raw config). Add the local stdio server:
 ```
 
 Antigravity uses `serverUrl` (not `url`) for remote HTTP servers, so the remote variant is
-`{ "mcpServers": { "cloudgrid": { "serverUrl": "https://mcp-connected.cloudgrid.io/mcp" } } }`.
+`{ "mcpServers": { "cloudgrid": { "serverUrl": "https://mcp.cloudgrid.io/mcp" } } }`.
 
 ### Manual
 
@@ -172,9 +175,8 @@ args = ["-y", "@cloudgrid-io/mcp"]
 ```
 
 It wraps the same `grid` CLI and uses the same credentials, so no extra login
-is needed. Remote-capable clients can point at a hosted endpoint instead:
-`https://mcp.cloudgrid.io/mcp` (connect without an account, sign in before the first publish) or
-`https://mcp-connected.cloudgrid.io/mcp` (OAuth sign-in at add-time).
+is needed. Remote-capable clients can point at the hosted endpoint instead:
+`https://mcp.cloudgrid.io/mcp`.
 See [USAGE.md](USAGE.md) for per-client snippets.
 
 **One CloudGrid server per client.** Run either the local (stdio) server or a
@@ -183,9 +185,8 @@ shared `grid_*` tool names, and the two servers hold separate sign-in state (the
 local edition uses the CLI's `~/.cloudgrid/credentials`; the connector holds an
 OAuth session) — they can disagree about whether you are signed in. How to tell:
 duplicate `grid_*` entries in the tool list, or two CloudGrid servers in the
-client's MCP settings. Which to keep: the local edition wherever you build
-runtime apps from folders; the connector in chat-only clients where you publish
-single pages.
+client's MCP settings. The Claude Code plugin connects the hosted connector, so
+do not add the local server in a client that has the plugin.
 
 ### Claude Desktop — one-click install
 

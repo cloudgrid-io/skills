@@ -42,10 +42,12 @@ management, secrets, environment variables, logs, and more.
 
 ## Prerequisites
 
-- **Node 18+** (for `npx`).
-- **A CloudGrid account to publish.** Run `npx -y @cloudgrid-io/cli@latest login`
-  once, or use the `grid_login` MCP tool. Signed out, `grid_plug` returns
-  `needs_auth` and publishes nothing.
+- **A CloudGrid account to publish.** The connector asks you to sign in the
+  first time it is needed; with the CLI, run `grid login`. Signed out,
+  `grid_plug` returns `needs_auth` and publishes nothing.
+- **The `grid` CLI, for project folders.** Install it with
+  `brew install cloudgrid-io/tap/grid` (macOS, Linux) or
+  `npm install -g @cloudgrid-io/cli` (any platform).
 
 ---
 
@@ -70,6 +72,9 @@ npx skills add cloudgrid-io/skills
 ```
 - **Find it under `/plugin`**; the skills also show under `/skills` (labeled Plugin).
 - Invoke as **`/cloudgrid:build`** (plugin namespace + short skill name), or describe the task.
+- The plugin connects the hosted CloudGrid connector (`https://mcp.cloudgrid.io/mcp`)
+  and starts no local server. A project folder goes live through the `grid` CLI;
+  content from the conversation goes live through the connector.
 
 ### Route 3 — the MCP server (STDIO, local)
 
@@ -112,22 +117,16 @@ client afterwards; a running session keeps its old server process.
 ### Route 3b — the MCP server (hosted, remote)
 
 Nothing to install and no Node needed — point a remote-capable client at the
-hosted endpoint. Two endpoints, two postures:
+hosted endpoint:
 
 ```
-https://mcp.cloudgrid.io/mcp              connect without an account; sign in from inside the conversation before the first publish
-https://mcp-connected.cloudgrid.io/mcp    OAuth sign-in at add-time; every plug is owned from the first one
+https://mcp.cloudgrid.io/mcp
 ```
 
-Use `mcp.cloudgrid.io` to connect without an account and sign in when you
-first publish. Use
-`mcp-connected.cloudgrid.io` for org connectors (claude.ai, ChatGPT) where
-OAuth sign-in at add-time is preferred.
-
-**One CloudGrid server per client.** If this client already has the CloudGrid
-plugin (Route 2, which bundles a local MCP server), do not also add a hosted
-connector — the 14 shared `grid_*` tool names will appear twice, and the two
-servers hold separate sign-in state. Keep whichever route you started with.
+**One CloudGrid server per client.** The CloudGrid plugin (Route 2) already
+connects this endpoint, so do not add it again, and do not add the local server
+(Route 3) beside it: the shared `grid_*` tool names would appear twice, and the
+two servers hold separate sign-in state. Keep one.
 
 > Where did my install go? `/skills` (skills), `/plugin` (plugin), `/mcp` (MCP).
 > If you don't see something, you're probably looking in the wrong menu, or you
@@ -173,7 +172,7 @@ also reads `~/.cursor/skills`; target one agent with `-a codex` / `-a cursor`).
 Codex and Cursor also take the plugin route (`codex plugin marketplace add
 cloudgrid-io/skills`; Cursor's in-app marketplace) and the MCP server — local
 (`npx -y @cloudgrid-io/mcp` in their MCP config) or remote with nothing
-installed (`https://mcp-connected.cloudgrid.io/mcp` as a `url` entry in
+installed (`https://mcp.cloudgrid.io/mcp` as a `url` entry in
 `~/.codex/config.toml` or `~/.cursor/mcp.json`). See INSTALL.md for exact
 snippets. Run one CloudGrid MCP server per client — not both local and remote.
 Running both duplicates the 14 shared `grid_*` tool names and splits sign-in
@@ -186,17 +185,11 @@ state.
 These connect to **remote** MCP servers (by URL), not local ones. The hosted web
 edition is live — add it as a custom connector:
 
-Two endpoints, two postures:
-
 ```
-https://mcp.cloudgrid.io/mcp              connect without an account; sign in from inside the conversation before the first publish
-https://mcp-connected.cloudgrid.io/mcp    OAuth sign-in at add-time (the connected endpoint)
+https://mcp.cloudgrid.io/mcp
 ```
 
-The connected endpoint runs the client's own OAuth connect at add-time (sign in
-with CloudGrid right in the flow); every plug is owned from the first one. The
-other endpoint connects without an account; sign in from inside the conversation
-(`grid_login`) before the first publish.
+The connector asks you to sign in with CloudGrid the first time a tool needs it.
 
 - **claude.ai web** — Settings → Connectors → add custom connector.
 - **ChatGPT** — add it as a custom connector (Developer Mode; availability depends

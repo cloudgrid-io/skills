@@ -5,32 +5,31 @@ order. Stop and ask the user only where a step says to.
 
 ## 1. Ensure the CLI is available
 
-Run the CLI through npx (always resolves a current version):
-
 ```
-npx -y @cloudgrid-io/cli@latest --version
+grid --version
 ```
 
-Never run a bare `grid` command — a stale global install causes version-floor
-errors. Always use `npx -y @cloudgrid-io/cli@latest <command>`.
+If `grid` is not installed, show the user the install command and let them run
+it: `brew install cloudgrid-io/tap/grid` (macOS, Linux) or
+`npm install -g @cloudgrid-io/cli` (any platform). Do not install it for them.
 
 ## 2. Ensure the user is logged in
 
 ```
-npx -y @cloudgrid-io/cli@latest whoami
+grid whoami
 ```
 
-If that fails, tell the user to run `npx -y @cloudgrid-io/cli@latest login`
+If that fails, tell the user to run `grid login`
 and wait for them to confirm. Do not attempt to log in for them. Do not invent
 an auth flow.
 
 ## 3. Confirm the skills are available
 
-The skills live in this repo, one directory per skill, each with a `SKILL.md`.
+The skills live in `plugins/cloudgrid/skills/`, one directory per skill, each with a `SKILL.md`.
 Load the `SKILL.md` for the action the user wants:
 
-- `skills/brainstorm/SKILL.md` — align on the idea, goal, and core features first
-- `skills/build/SKILL.md` — structure the project (cloudgrid.yaml, services, needs) and take it live
+- `plugins/cloudgrid/skills/brainstorm/SKILL.md` — align on the idea, goal, and core features first
+- `plugins/cloudgrid/skills/build/SKILL.md` — structure the project (cloudgrid.yaml, services, needs) and take it live
 - `project-skills/sites/SKILL.md` — NOT installed globally; `grid agent` writes it into a project (`.agents/skills/sites/`) to shadow a coding agent's built-in sites skill, routing site builds to CloudGrid
 
 ## 4. Follow the skill

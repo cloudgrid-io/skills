@@ -1,0 +1,40 @@
+{
+  "name": "cloudgrid",
+  "displayName": "CloudGrid",
+  "version": "0.15.0",
+  "description": "Plug apps and pages into CloudGrid from Claude Code: a project folder goes live through the grid CLI, content from the conversation goes live through the CloudGrid connector. Apps get managed MongoDB, Redis, pgvector, persistent disk, and an AI gateway that needs no API key.",
+  "keywords": [
+    "cloudgrid",
+    "app",
+    "website",
+    "landing page",
+    "dashboard",
+    "game",
+    "publish",
+    "hosting",
+    "runtime",
+    "database",
+    "full-stack",
+    "template",
+    "brainstorm"
+  ],
+  "author": {
+    "name": "CloudGrid",
+    "email": "support@cloudgrid.io",
+    "url": "https://cloudgrid.io"
+  },
+  "homepage": "https://cloudgrid.io",
+  "repository": "https://github.com/cloudgrid-io/skills",
+  "documentationUrl": "https://docs.cloudgrid.io",
+  "supportUrl": "https://cloudgrid.io/contact",
+  "privacyPolicyUrl": "https://cloudgrid.io/privacy",
+  "termsOfServiceUrl": "https://cloudgrid.io/terms",
+  "license": "MIT",
+  "icon": "./assets/icon.png",
+  "mcpServers": {
+    "cloudgrid": {
+      "type": "http",
+      "url": "https://mcp.cloudgrid.io/mcp"
+    }
+  }
+}

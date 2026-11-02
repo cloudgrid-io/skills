@@ -3,19 +3,20 @@
 This repo is MIT licensed. Contributions are welcome -- skills, docs, bug fixes,
 and CI improvements.
 
-Full authoring guidance lives in `CLAUDE.md`. This file covers the mechanics.
-
 ## Repo structure
 
 ```
-skills/<name>/SKILL.md   one directory per skill, short name (e.g. build)
-.claude-plugin/          marketplace manifest for Claude Code — SOURCE OF TRUTH
-                         for the plugin version
-VERSION                  mirror of plugin.json; read at RUNTIME by
-                         hooks/user-prompt and reported as plugin_version in
-                         telemetry, so it must never drift
-.codex-plugin/           marketplace manifest for Codex
-.cursor-plugin/          marketplace manifest for Cursor
+plugins/cloudgrid/       the Claude Code plugin folder (what the plugin
+                         directory reviews and what users install)
+  .claude-plugin/plugin.json  plugin manifest — SOURCE OF TRUTH for the version
+  skills/<name>/SKILL.md      one directory per skill, short name (e.g. build)
+  README.md                   listing README: what the plugin runs, sends, and
+                              connects to
+.claude-plugin/          marketplace manifest for Claude Code
+VERSION                  mirror of plugin.json
+.codex-plugin/           plugin manifest for Codex (skills path points into
+                         plugins/cloudgrid/skills/)
+.cursor-plugin/          plugin manifest for Cursor (same)
 ```
 
 Each `SKILL.md` has YAML frontmatter and a markdown body:
@@ -36,12 +37,10 @@ the skill's own `grid_*` instructions on hosts that enforce it.
 ## Adding or changing a skill
 
 1. Create a branch. Never commit directly to `main`.
-2. Place the skill in `skills/<name>/` with a `SKILL.md`.
+2. Place the skill in `plugins/cloudgrid/skills/<name>/` with a `SKILL.md`.
 3. The skill body must:
-   - Wrap the `grid` CLI. No direct API calls, with two sanctioned
-     exceptions: anonymous single-page publish (`POST /api/v2/plug`) and
-     CLI-free login (`/auth/login` + `/auth/status`). See `CLAUDE.md` for
-     details.
+   - Use the `grid` CLI for files on disk and the CloudGrid connector tools
+     for content in the conversation. No direct API calls.
    - Print results concisely -- URLs and short summaries, never raw JSON or IDs.
 4. Set `version:` in frontmatter to this skill's own semver. Per-skill versions
    are INDEPENDENT of the plugin version — bump a skill's version when that
@@ -57,7 +56,7 @@ node .github/scripts/lint-skills.mjs
 
 No emoji. No exclamation marks. No marketing adjectives ("seamless", "powerful",
 "easy", "blazing", "leverage", "unlock"). Lead with the noun. One sentence per
-claim. Eighth-grade reading level. Full rules in `CLAUDE.md`.
+claim. Eighth-grade reading level.
 
 ## CI checks
 
@@ -66,7 +65,7 @@ These guards run in CI. All must pass before merge.
 - `license` -- LICENSE file is MIT (`ci.yml`).
 - `lint-skills` -- validates `SKILL.md` YAML frontmatter (required keys are
   present; it does NOT compare version values) (`ci.yml`).
-- `check-versions` -- version coherence: `.claude-plugin/plugin.json` is the
+- `check-versions` -- version coherence: `plugins/cloudgrid/.claude-plugin/plugin.json` is the
   single source of truth, and `VERSION`, `package.json`, `.codex-plugin/plugin.json`,
   and `.cursor-plugin/plugin.json` must mirror it exactly (`ci.yml`).
 - `corpus-tool-names` -- edition-safety: only the 15 shared tool names may
@@ -75,8 +74,6 @@ These guards run in CI. All must pass before merge.
 - `eval-content` -- behavioral content evals: yaml examples obey the platform
   contract; load-bearing teaching lines are present; banned patterns stay out
   (`ci.yml`).
-- `bootstrap-hash` -- the bootstrap sentence hash is locked; guards a
-  hash-locked string in `bin/` (`ci.yml`).
 - `template-python` -- installs each `semantic-search` Python service's
   pinned `requirements.txt` on Python 3.12, imports every module in its `app`
   package, and checks PDF text extraction against a golden output
@@ -102,7 +99,6 @@ node .github/scripts/lint-skills.mjs
 node .github/scripts/check-versions.mjs
 node .github/scripts/corpus-tool-names.mjs
 npm install --no-save yaml && node .github/scripts/eval-content.mjs
-node bin/bootstrap-hash.test.mjs
 node .github/scripts/no-internal-refs.mjs
 ```
 
@@ -124,7 +120,7 @@ template embeds, so a change there re-ranks search results.
 ## Releasing
 
 Skills ship by **merging to main** -- the marketplace serves the repo directly.
-Bump `.claude-plugin/plugin.json` (PATCH by default), then mirror the same value
+Bump `plugins/cloudgrid/.claude-plugin/plugin.json` (PATCH by default), then mirror the same value
 into `VERSION` and `package.json`. There is no npm publish: the npm channel is
 retired (last publish 0.14.0, 2026-07-09) and `package.json` is `private: true`.
 Every documented install path reads the git repo -- `/plugin marketplace add`,
@@ -142,5 +138,17 @@ See `evals/scenarios.md` for structured evaluation scenarios.
 gh skill install cloudgrid-io/skills
 ```
 
-The `gh skill` extension expects the `skills/<name>/SKILL.md` layout with YAML
-frontmatter. That is the format this repo uses, so installation works directly.
+The skills use the `skills/<name>/SKILL.md` layout with YAML frontmatter, inside
+the plugin folder `plugins/cloudgrid/`.
+
+## Plugin directory checks
+
+The plugin folder must pass the Claude plugin directory's checks:
+
+```
+claude plugin validate --profile directory --strict plugins/cloudgrid
+```
+
+Keep the plugin folder small (the directory holds plugins over 512 files for a
+reviewer), keep every file the plugin needs inside it, and keep its README in
+step with what the plugin runs, sends, and connects to.
