@@ -9,6 +9,7 @@
 //   plugins/cloudgrid/.claude-plugin/plugin.json  <- what ships (marketplace)
 //   VERSION, package.json                        <- mirrors
 //   .codex-plugin/plugin.json, .cursor-plugin/plugin.json  <- mirrors
+//   gemini-extension.json                        <- mirror (Gemini CLI)
 //   plugins/cloudgrid/skills/*/SKILL.md          <- per-skill semver, independent
 //
 // They drifted before (VERSION froze at 0.14.0 for weeks while plugin.json
@@ -57,8 +58,8 @@ if (pkg.version !== source) {
   failures.push(`package.json (${pkg.version}) != plugin.json (${source}). Update package.json.`);
 }
 
-// Codex and Cursor manifests must track the same version.
-for (const manifest of [".codex-plugin/plugin.json", ".cursor-plugin/plugin.json"]) {
+// Codex, Cursor and Gemini CLI manifests must track the same version.
+for (const manifest of [".codex-plugin/plugin.json", ".cursor-plugin/plugin.json", "gemini-extension.json"]) {
   try {
     const m = json(manifest);
     if (m.version !== source) {
@@ -89,4 +90,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Version coherence OK — plugin.json, VERSION, package.json, codex, cursor all at ${source}; npm channel live.`);
+console.log(`Version coherence OK — plugin.json, VERSION, package.json, codex, cursor, gemini all at ${source}; npm channel live.`);

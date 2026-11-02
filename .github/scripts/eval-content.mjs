@@ -13,7 +13,7 @@
 // Full agent-in-the-loop scenarios live in evals/scenarios.md; this script is
 // the deterministic subset that runs on every PR.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -194,6 +194,27 @@ for (const file of YAML_SOURCES) {
   for (const [re, why] of BANNED) {
     const m = text.match(re);
     if (m) fail(file, `banned pattern (${why}): '${m[0]}'`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 3. The Gemini CLI extension connects the same connector as the Claude
+//    plugin, over streamable HTTP, and loads skill text that exists
+//    (skills#177). Gemini CLI reads `httpUrl` as streamable HTTP and `url` as
+//    SSE, so a copied `url` key would pick the wrong transport.
+// ---------------------------------------------------------------------------
+{
+  const GEMINI = "gemini-extension.json";
+  const claudeUrl = JSON.parse(read("plugins/cloudgrid/.claude-plugin/plugin.json")).mcpServers?.cloudgrid?.url;
+  const gemini = JSON.parse(read(GEMINI));
+  const server = gemini.mcpServers?.cloudgrid ?? {};
+  if (server.httpUrl !== claudeUrl) fail(GEMINI, `mcpServers.cloudgrid.httpUrl (${server.httpUrl}) != the Claude plugin connector (${claudeUrl})`);
+  if ("url" in server) fail(GEMINI, "mcpServers.cloudgrid has a url key, which Gemini CLI reads as SSE; use httpUrl only");
+  const ctx = [gemini.contextFileName ?? []].flat();
+  if (ctx.length === 0) fail(GEMINI, "contextFileName is missing");
+  for (const f of ctx) {
+    if (!f.startsWith("plugins/cloudgrid/skills/")) fail(GEMINI, `contextFileName ${f} is not plugin skill text (keep one copy of the guidance)`);
+    else if (!existsSync(join(repoRoot, f))) fail(GEMINI, `contextFileName ${f} does not exist`);
   }
 }
 

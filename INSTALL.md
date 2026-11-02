@@ -117,7 +117,15 @@ Remote variant, nothing installed: `{ "mcpServers": { "cloudgrid": { "url": "htt
 
 ### Gemini CLI
 
-Add the MCP server with the built-in command:
+Install the extension. It connects the hosted connector at
+`https://mcp.cloudgrid.io/mcp` and loads the CloudGrid routing guide as context
+(manifest: `gemini-extension.json`):
+
+```
+gemini extensions install https://github.com/cloudgrid-io/skills
+```
+
+Or add only the MCP server with the built-in command:
 
 ```
 gemini mcp add cloudgrid npx -y @cloudgrid-io/mcp

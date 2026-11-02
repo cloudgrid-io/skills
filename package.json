@@ -27,6 +27,7 @@
     ".claude-plugin",
     ".codex-plugin",
     ".cursor-plugin",
+    "gemini-extension.json",
     "INSTALL.md",
     "INSTALL_FOR_AGENTS.md",
     "COOKBOOK.md",
