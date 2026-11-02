@@ -17,6 +17,8 @@ VERSION                  mirror of plugin.json
 .codex-plugin/           plugin manifest for Codex (skills path points into
                          plugins/cloudgrid/skills/)
 .cursor-plugin/          plugin manifest for Cursor (same)
+gemini-extension.json    Gemini CLI extension manifest: the connector, plus
+                         the using-cloudgrid skill as its context file
 ```
 
 Each `SKILL.md` has YAML frontmatter and a markdown body:
@@ -80,13 +82,15 @@ These guards run in CI. All must pass before merge.
   present; it does NOT compare version values) (`ci.yml`).
 - `check-versions` -- version coherence: `plugins/cloudgrid/.claude-plugin/plugin.json` is the
   single source of truth, and `VERSION`, `package.json`, `.codex-plugin/plugin.json`,
-  and `.cursor-plugin/plugin.json` must mirror it exactly (`ci.yml`).
+  `.cursor-plugin/plugin.json`, and `gemini-extension.json` must mirror it
+  exactly (`ci.yml`).
 - `corpus-tool-names` -- edition-safety: only the 15 shared tool names may
   appear as bare `grid_*` tokens in corpus and skill prose (`ci.yml`). The
   allowlist must match the one in `cloudgrid-io/mcp`; `corpus-drift` checks it.
 - `eval-content` -- behavioral content evals: yaml examples obey the platform
-  contract; load-bearing teaching lines are present; banned patterns stay out
-  (`ci.yml`).
+  contract; load-bearing teaching lines are present; banned patterns stay out;
+  the Gemini CLI manifest connects the same connector over `httpUrl` and its
+  context file exists (`ci.yml`).
 - `template-python` -- installs each `semantic-search` Python service's
   pinned `requirements.txt` on Python 3.12, imports every module in its `app`
   package, and checks PDF text extraction against a golden output
