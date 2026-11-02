@@ -63,7 +63,7 @@ build, plug it in, tail logs, share, and read feedback.
 `cloudgrid:build` publishes a single HTML page (or deploys a full app) and hands
 back a public URL. Describe what you want ("build me a landing page for my
 podcast"), or point it at an existing project directory. The skill handles
-sign-in, scaffolding, and plugging — you get a live link.
+sign-in, scaffolding, and plugging. You get a live link.
 
 ## Skills
 

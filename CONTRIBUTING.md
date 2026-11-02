@@ -8,7 +8,7 @@ and CI improvements.
 ```
 plugins/cloudgrid/       the Claude Code plugin folder (what the plugin
                          directory reviews and what users install)
-  .claude-plugin/plugin.json  plugin manifest — SOURCE OF TRUTH for the version
+  .claude-plugin/plugin.json  plugin manifest; SOURCE OF TRUTH for the version
   skills/<name>/SKILL.md      one directory per skill, short name (e.g. build)
   README.md                   listing README: what the plugin runs, sends, and
                               connects to
@@ -43,7 +43,7 @@ the skill's own `grid_*` instructions on hosts that enforce it.
      for content in the conversation. No direct API calls.
    - Print results concisely -- URLs and short summaries, never raw JSON or IDs.
 4. Set `version:` in frontmatter to this skill's own semver. Per-skill versions
-   are INDEPENDENT of the plugin version — bump a skill's version when that
+   are INDEPENDENT of the plugin version: bump a skill's version when that
    skill changes, not on every release. (An older instruction here said the
    frontmatter must equal `VERSION`; that was never enforced and never true.)
 5. Run the linter locally before pushing:
@@ -52,11 +52,24 @@ the skill's own `grid_*` instructions on hosts that enforce it.
 node .github/scripts/lint-skills.mjs
 ```
 
+## Scope
+
+In this repo: the skills, the plugin and marketplace manifests, the app
+templates and workflows, and the install and usage docs.
+
+Not in this repo, and not to be added:
+
+- The `grid` CLI. Do not re-implement or fork CLI behavior here; if a skill
+  needs something the CLI does not do, file an issue on cloudgrid-io/cli.
+- Platform code (API, manifests, infrastructure).
+- Any sign-in flow other than `grid login` and the connector's own sign-in.
+- Partnership claims or internal team and organization names in public docs.
+
 ## Voice rules
 
 No emoji. No exclamation marks. No marketing adjectives ("seamless", "powerful",
 "easy", "blazing", "leverage", "unlock"). Lead with the noun. One sentence per
-claim. Eighth-grade reading level.
+claim. No em dashes. Eighth-grade reading level.
 
 ## CI checks
 
@@ -87,7 +100,7 @@ These guards run in CI. All must pass before merge.
   repo and `cloudgrid-io/mcp`, and that both repos' `corpus-tool-names`
   allowlists hold the same names (`corpus-drift.yml`). Other files the mcp
   snapshot renames (the `skill-*.md` and top-level docs) are not compared. Runs on **push to main**, a nightly cron, and
-  `workflow_dispatch` — **not on PRs**, because corpus changes land as paired
+  `workflow_dispatch`, **not on PRs**, because corpus changes land as paired
   PRs and the first of a pair is legitimately ahead. A twinned edit that passes
   all PR checks can still turn main red after merge. Land twinned corpus edits
   as a coordinated pair across both repos.

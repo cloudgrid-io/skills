@@ -1,5 +1,5 @@
 ---
-version: 0.4.0
+version: 0.4.1
 name: brainstorm
 description: |
   Use when the user wants to build, create, plan, or ship something on the grid -
@@ -32,15 +32,15 @@ options, never demand specs.
 
 ## Before Phase A: do not repeat discovery the user already did
 
-If the idea is already aligned — earlier in this conversation, or through whatever
-discovery the user prefers — do not run Phase A again. Pick up what they have and go
+If the idea is already aligned (earlier in this conversation, or through whatever
+discovery the user prefers), do not run Phase A again. Pick up what they have and go
 straight to Phase B.
 
 Otherwise run Phase A below. If the user says "just build it", skip Phase A: infer the
 shape and state it in two lines for a nod.
 
-**Phase B always runs.** It is the part that shapes the idea for the grid — services,
-disk layout, `cloudgrid.yaml`, `needs:` — and nothing else covers it.
+**Phase B always runs.** It is the part that shapes the idea for the grid: services,
+disk layout, `cloudgrid.yaml`, `needs:`. Nothing else covers it.
 
 Never run two discovery passes. Never ask the same question twice.
 
@@ -219,7 +219,7 @@ Once the features are clear you usually know what the app needs. CloudGrid
 provisions everything from `cloudgrid.yaml` and the grid CLI: resources live
 under `needs:`, and the rest are their own yaml blocks (`vault:`, `calls:`,
 `agent:`, service types) or a one-line grid command - it is never only `needs:`.
-`requires:` is the deprecated v1 alias of `needs:` — do not author new yaml
+`requires:` is the deprecated v1 alias of `needs:`. Do not author new yaml
 with it, and never set both (the validator hard-rejects the combination).
 Where a resource injects an env var, read it LAZILY (never at module top level).
 
