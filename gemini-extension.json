@@ -1,6 +1,6 @@
 {
   "name": "cloudgrid",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "Plan, build, and plug apps and pages into CloudGrid, which runs them at a live public URL with managed MongoDB, Redis, pgvector, persistent disk, and an AI gateway that needs no API key.",
   "mcpServers": {
     "cloudgrid": {

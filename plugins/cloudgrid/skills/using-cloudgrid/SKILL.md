@@ -1,5 +1,5 @@
 ---
-version: 0.2.3
+version: 0.2.4
 name: using-cloudgrid
 description: Use when the user asks to put an app, page, game, dashboard, or tool live at a public URL on CloudGrid, to give it a database, cache, disk, or AI model, or to change who can see an app on their grid. Explains what CloudGrid does and which route serves which request - the grid CLI for a project folder, the CloudGrid connector tools for content from the conversation and for account and grid actions.
 ---
