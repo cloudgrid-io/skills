@@ -1,5 +1,5 @@
 ---
-version: 0.3.1
+version: 0.3.2
 name: build
 description: |
   Use when the user wants to create, build, scaffold, or put live an app, web
@@ -178,15 +178,15 @@ name: my-app
 services:
   web:
     type: static
-    path: /                   # URL mount — serves the frontend at the root
+    path: /                   # URL mount: serves the frontend at the root
     build:
       command: npm run build
       output: dist
     depends_on: [api]         # start order; no cron targets, no cycles
   api:
     type: node
-    path: /api                # URL mount, not the filesystem path — code lives in services/api/
-# needs: sit at the app level — shared across all services
+    path: /api                # URL mount, not the filesystem path; code lives in services/api/
+# needs: sit at the app level, shared across all services
 needs:
   database: true
 ```
@@ -200,7 +200,7 @@ structural reference.
 You do not provision anything by hand. Declare what the app needs and the
 platform stands it up and injects the connection details as env vars. The
 simplest form of any need is `true`. `requires:` is the deprecated v1 alias of
-`needs:` — do not author new yaml with it, and never set both (the validator
+`needs:`. Do not author new yaml with it, and never set both (the validator
 hard-rejects the combination).
 
 | need | what it is | injects |
@@ -214,9 +214,9 @@ hard-rejects the combination).
 | `disk` | persistent FS mount (pins to 1 replica) | `DISK_PATH` |
 | `ai` | AI Gateway via `@cloudgrid-io/runtime` | `RUNTIME_GATEWAY_URL` |
 
-One more exists but is **gated — do not author it yet**:
+One more exists but is **gated: do not author it yet**:
 
-- `object_storage` (GCS) — rejected at plug-time (#1678). Use `disk` or a
+- `object_storage` (GCS): rejected at plug-time (#1678). Use `disk` or a
   bring-your-own bucket via a secret.
 
 ```yaml
@@ -279,14 +279,14 @@ The build is server-side and async. When it lands, confirm the URL opens
 
 **Iterating.** To update the live app, edit the source and re-plug the same
 entity: run `grid plug` again in the linked folder, or call `grid_plug` with
-`target_entity_id` for content plugged from the conversation — the `.cloudgrid/link.json` identity means the URL stays the same. For a
+`target_entity_id` for content plugged from the conversation. The `.cloudgrid/link.json` identity means the URL stays the same. For a
 runtime app the rebuild is async; poll `grid_check_deploy` (CLI: `grid status`)
 until it lands, just like the first plug.
 
 **If the build fails**, do not guess: `grid_check_deploy` (CLI: `grid status`)
 returns the failure with the build-log tail and a suggested fix. Read the log,
 fix the cause, re-plug. If it fails in a way that looks like a platform bug,
-offer to report it with `grid_report` — only with the user's consent.
+offer to report it with `grid_report`, only with the user's consent.
 
 ## Rules and gotchas
 

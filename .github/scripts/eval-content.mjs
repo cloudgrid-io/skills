@@ -180,6 +180,7 @@ const PLUGIN_BANNED = [
   [/npx -y @cloudgrid-io\/cli/, "package-launcher CLI fallback (the user installs grid)"],
   [/EXTREMELY_IMPORTANT|Minimize questions|Don't ask where to host/i, "coercive routing text"],
   [/Vercel|Netlify|GitHub Pages|Heroku/, "other products named in skill prose"],
+  [/\u2014/, "em dash (voice rules)"],
 ];
 for (const file of YAML_SOURCES.filter((f) => f.startsWith("plugins/"))) {
   const text = read(file);

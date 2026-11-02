@@ -1,5 +1,5 @@
 ---
-version: 0.2.1
+version: 0.2.2
 name: using-cloudgrid
 description: Use when the user asks to put an app, page, game, dashboard, or tool live at a public URL on CloudGrid, to give it a database, cache, disk, or AI model, or to change who can see an app on their grid. Explains what CloudGrid does and which route serves which request - the grid CLI for a project folder, the CloudGrid connector tools for content from the conversation and for account and grid actions.
 ---
@@ -87,23 +87,23 @@ A single page (a landing page, a poster, a quick tool) skips this. The
 
 ## Notes
 
-- Most builds are static inspirations — a single self-contained HTML file that
+- Most builds are static inspirations: a single self-contained HTML file that
   plugs in seconds. The static archetypes: `landing-page`,
   `saas-marketing`, `docs-site`, `api-docs`, `status-page`, `changelog`,
   `portfolio`, `waitlist`, `web-app`, `dashboard`, `report`, and `presentation`.
   Match the request to one via its workflow `when:` (see `capability-map.md`).
 - When an app needs persistence (a database or cache), declare it in
-  `cloudgrid.yaml` with the canonical `needs:` shape — `needs: { database: true }`.
+  `cloudgrid.yaml` with the canonical `needs:` shape, `needs: { database: true }`.
 - **Existing data / bring-your-own database.** If the user already uses a database
   (Postgres, MySQL, MongoDB, Supabase, Neon, PlanetScale, Firebase, ...), CloudGrid
-  supports both. Two shapes: **managed** —
+  supports both. Two shapes: **managed**:
   `needs: { database: true }` provisions Mongo and injects `DATABASE_MONGODB_URL`;
-  **bring-your-own** — `needs: { database: { tier: external, secret: MY_DB } }` plus
+  **bring-your-own**: `needs: { database: { tier: external, secret: MY_DB } }` plus
   `grid secrets set MY_DB=<connection-string>` (the connection string lives in env
   SECRETS, never committed). Pick the shape from what they have, set the matching
-  `needs:`/`services:`, and wire the secret — see `cloudgrid-yaml.md`.
+  `needs:`/`services:`, and wire the secret. See `cloudgrid-yaml.md`.
   Persistent archetypes: `app-with-data` (a web UI), `api-service` (a plain
-  Node/JSON backend API), and `ai-app` (a chatbot — adds `needs: { ai: true }`
+  Node/JSON backend API), and `ai-app` (a chatbot; adds `needs: { ai: true }`
   and calls the grid AI gateway via `@cloudgrid-io/runtime`). The DB-CRUD family
   (`crm`, `kanban`, `task-manager`, `admin-dashboard`, `invoice`, `inventory`,
   `job-board`, `ticket-system`) shares the `app-with-data` shape, differing only
@@ -116,7 +116,7 @@ A single page (a landing page, a poster, a quick tool) skips this. The
   `product-catalog`, `expense-tracker`, `time-tracking`, `directory`,
   `project-management`, `property-listings`), community (`event-board`,
   `feature-request-board`), education (`quiz-platform`), and vector search
-  (`simple-semantic-search` — one node service on `needs: { vector: pgvector,
+  (`simple-semantic-search`: one node service on `needs: { vector: pgvector,
   ai: true }`, embeds a document and serves search-by-meaning; verified live).
   Match by the workflow
   `when:` in `capability-map.md`.
@@ -131,10 +131,10 @@ A single page (a landing page, a poster, a quick tool) skips this. The
   `subscription-management`, `billing-dashboard`), booking (`booking-system`,
   `calendar-scheduler`, `appointment-booking`, `restaurant-reservations`,
   `travel-booking`), and a RAG `ai-knowledge-base`. All are runtime apps, plugged
-  from a folder. Scheduled `type: cron` services (Python and Node) work on CLI 0.14.0 —
+  from a folder. Scheduled `type: cron` services (Python and Node) work on CLI 0.14.0;
   the booking family's reminder cron and the semantic-search refresh cron are
   supported. The knowledge base's ideal `vector: pgvector` need is available
-  (#1545 shipped; injects `VECTOR_PGVECTOR_URL`) — the shipped blueprint still
+  (#1545 shipped; injects `VECTOR_PGVECTOR_URL`); the shipped blueprint still
   uses Mongo embeddings until it is updated to pgvector.
   See the `cloudgrid-yaml.md` reference for the full config schema, the `needs:`
   vocabulary, service types, and the environment variables the grid injects
@@ -145,5 +145,5 @@ A single page (a landing page, a poster, a quick tool) skips this. The
   form** (`templates/_cloudgrid.yaml.reference`): every platform field is present
   as a comment, and only the archetype's needed fields (`name` + `services`, plus
   `needs:` for runtime apps) are uncommented. Comments are ignored by the parser,
-  so the file plugs to exactly its active fields — the scaffold documents the
+  so the file plugs to exactly its active fields; the scaffold documents the
   whole schema inline without changing what plugs.
