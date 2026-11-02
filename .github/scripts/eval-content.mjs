@@ -161,6 +161,8 @@ const CONTRACTS = [
   ["plugins/cloudgrid/skills/using-cloudgrid/SKILL.md", "npm install -g @cloudgrid-io/cli", "CLI install command shown to the user (skills#170)"],
   ["plugins/cloudgrid/skills/using-cloudgrid/SKILL.md", /grid_visibility/, "account actions route to the connector (skills#170)"],
   ["plugins/cloudgrid/skills/using-cloudgrid/SKILL.md", /grid_start/, "orientation must route through grid_start"],
+  ["plugins/cloudgrid/skills/build/SKILL.md", /need `grid` 0\.25\.0\s+or later/, "minimum CLI for page re-plug, page visibility and folder app plugs (skills#178)"],
+  ["plugins/cloudgrid/skills/using-cloudgrid/SKILL.md", /need `grid` 0\.25\.0\s+or later/, "minimum CLI for page re-plug, page visibility and folder app plugs (skills#178)"],
 ];
 for (const [file, needle, why] of CONTRACTS) {
   const text = read(file);
@@ -181,6 +183,8 @@ const PLUGIN_BANNED = [
   [/EXTREMELY_IMPORTANT|Minimize questions|Don't ask where to host/i, "coercive routing text"],
   [/Vercel|Netlify|GitHub Pages|Heroku/, "other products named in skill prose"],
   [/\u2014/, "em dash (voice rules)"],
+  // CLI 0.24 workarounds that 0.25.0 makes wrong (skills#178).
+  [/cannot change a page's visibility|makes a new link|treats the folder as a\s+one-page site/, "CLI 0.24 workaround (fixed in 0.25.0)"],
 ];
 for (const file of YAML_SOURCES.filter((f) => f.startsWith("plugins/"))) {
   const text = read(file);
