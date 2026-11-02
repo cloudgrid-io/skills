@@ -1,5 +1,5 @@
 ---
-version: 0.2.3
+version: 0.2.4
 name: using-cloudgrid
 description: Use when the user asks to put an app, page, game, dashboard, or tool live at a public URL on CloudGrid, to give it a database, cache, disk, or AI model, or to change who can see an app on their grid. Explains what CloudGrid does and which route serves which request - the grid CLI for a project folder, the CloudGrid connector tools for content from the conversation and for account and grid actions.
 ---
@@ -20,7 +20,7 @@ connector. Pick by where the work lives.
 
 | The request | Route |
 |---|---|
-| A project that is files on disk (a folder, even a few files you just wrote) | `grid` CLI: `grid plug <folder>` for a one-page site with `index.html` at the folder root; `grid plug` with no path, run inside the folder, for an app with a `cloudgrid.yaml` |
+| A project that is files on disk (a folder, even a few files you just wrote) | `grid` CLI: `grid plug <folder>`, which plugs a folder with a `cloudgrid.yaml` as that app and any other folder as a one-page site with `index.html` at the folder root |
 | Logs, secrets, env vars, local run, or downloading an app's source | `grid` CLI: `grid logs`, `grid secrets set`, `grid env set`, `grid dev`, `grid pull` |
 | Content that is not saved anywhere, such as one HTML page written in chat | connector: `grid_plug` with `html` |
 | Who can see an app (private, grid, link, public) | connector: `grid_visibility` |
@@ -38,8 +38,9 @@ show the user the install command and let them run it:
 
 Do not install it for them and do not run it through a package launcher. If the
 user does not want to install the CLI, a small text-only project can go inline
-through `grid_plug` with `artifact_files`. If `grid` reports that it is below the
-supported version, show the upgrade command (`brew upgrade grid` or
+through `grid_plug` with `artifact_files`. These steps need `grid` 0.25.0
+or later. If `grid --version` prints an older version, or `grid` reports that it
+is below the supported version, show the upgrade command (`brew upgrade grid` or
 `npm install -g @cloudgrid-io/cli@latest`).
 
 **Sign-in.** Creating anything needs a signed-in CloudGrid account. The connector
@@ -75,15 +76,16 @@ A single page (a landing page, a poster, a quick tool) skips this. The
 4. **Build.** Fill the template with the user's content.
 5. **Test locally (runtime apps).** `grid dev` runs the app against real grid
    resources.
-6. **Plug.** A one-page site on disk: `grid plug <folder>`. An app with a
-   `cloudgrid.yaml`: `grid plug` with no path, from inside its folder. Content from the conversation:
+6. **Plug.** A folder on disk, a one-page site or an app with a
+   `cloudgrid.yaml`: `grid plug <folder>`. Plugging the same folder again
+   updates it in place and keeps its URL. Content from the conversation:
    `grid_plug`. A runtime build is asynchronous; check `grid_check_deploy` (or
    `grid status`) until it reports success.
-7. **Share.** Ask who should see it. A page plugged from a folder: pass it at
-   plug time, `grid plug <folder> --visibility link`. An app plugged with the
-   CLI: `grid visibility set <name> link`, using the full name `grid plug`
-   printed (it may carry a suffix such as `-5139`). Content plugged with
-   `grid_plug`: `grid_visibility`. Return the live URL.
+7. **Share.** Ask who should see it. A page or an app plugged with the CLI:
+   run the command in the share hint `grid plug` prints,
+   `grid visibility set <name> link` (a page can also take
+   `--visibility link` at plug time). Content plugged with `grid_plug`:
+   `grid_visibility`. Return the live URL.
 
 ## Notes
 
