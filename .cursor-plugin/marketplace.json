@@ -1,0 +1,17 @@
+{
+  "name": "cloudgrid-skills",
+  "owner": {
+    "name": "CloudGrid",
+    "email": "support@cloudgrid.io"
+  },
+  "metadata": {
+    "description": "The CloudGrid plugin for Cursor: skills for planning, building, and plugging apps and pages into CloudGrid, plus the CloudGrid connector."
+  },
+  "plugins": [
+    {
+      "name": "cloudgrid",
+      "source": "plugins/cloudgrid",
+      "description": "Deploy or publish a web page or app: CloudGrid plugs it and gives you a live URL. Apps can use managed MongoDB, Redis, pgvector, disk, and an AI gateway that needs no API key."
+    }
+  ]
+}

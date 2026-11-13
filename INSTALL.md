@@ -106,14 +106,14 @@ Cursor reads Agent Skills natively (v2.4+):
 npx skills add cloudgrid-io/skills -a cursor          # -> ~/.cursor/skills + ~/.agents/skills
 ```
 
-Or install the plugin from Cursor's in-app marketplace (manifest: `.cursor-plugin/`).
+Or add the plugin from this repository (marketplace manifest: `.cursor-plugin/marketplace.json`, plugin: `plugins/cloudgrid/`).
 Or the MCP server, in `~/.cursor/mcp.json`:
 
 ```json
 { "mcpServers": { "cloudgrid": { "command": "npx", "args": ["-y", "@cloudgrid-io/mcp"] } } }
 ```
 
-Remote variant, nothing installed: `{ "mcpServers": { "cloudgrid": { "url": "https://mcp.cloudgrid.io/mcp" } } }`. The Cursor plugin manifest (`.cursor-plugin/`) connects this URL.
+Remote variant, nothing installed: `{ "mcpServers": { "cloudgrid": { "url": "https://mcp.cloudgrid.io/mcp" } } }`. The Cursor plugin (`plugins/cloudgrid/.cursor-plugin/plugin.json`) connects this URL.
 
 ### Gemini CLI
 

@@ -9,6 +9,7 @@ and CI improvements.
 plugins/cloudgrid/       the Claude Code plugin folder (what the plugin
                          directory reviews and what users install)
   .claude-plugin/plugin.json  plugin manifest; SOURCE OF TRUTH for the version
+  .cursor-plugin/plugin.json  Cursor plugin manifest (name, logo, connector)
   skills/<name>/SKILL.md      one directory per skill, short name (e.g. build)
   README.md                   listing README: what the plugin runs, sends, and
                               connects to
@@ -16,7 +17,8 @@ plugins/cloudgrid/       the Claude Code plugin folder (what the plugin
 VERSION                  mirror of plugin.json
 .codex-plugin/           plugin manifest for Codex (skills path points into
                          plugins/cloudgrid/skills/)
-.cursor-plugin/          plugin manifest for Cursor (same)
+.cursor-plugin/          marketplace manifest for Cursor; points at
+                         plugins/cloudgrid/
 gemini-extension.json    Gemini CLI extension manifest: the connector, plus
                          the using-cloudgrid skill as its context file
 ```
@@ -82,7 +84,7 @@ These guards run in CI. All must pass before merge.
   present; it does NOT compare version values) (`ci.yml`).
 - `check-versions` -- version coherence: `plugins/cloudgrid/.claude-plugin/plugin.json` is the
   single source of truth, and `VERSION`, `package.json`, `.codex-plugin/plugin.json`,
-  `.cursor-plugin/plugin.json`, and `gemini-extension.json` must mirror it
+  `plugins/cloudgrid/.cursor-plugin/plugin.json`, and `gemini-extension.json` must mirror it
   exactly (`ci.yml`).
 - `corpus-tool-names` -- edition-safety: only the 15 shared tool names may
   appear as bare `grid_*` tokens in corpus and skill prose (`ci.yml`). The

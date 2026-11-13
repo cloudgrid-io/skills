@@ -1,7 +1,7 @@
 {
   "name": "cloudgrid",
   "displayName": "CloudGrid",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "Plug apps and pages into CloudGrid from Claude Code: a project folder goes live through the grid CLI, content from the conversation goes live through the CloudGrid connector. Apps get managed MongoDB, Redis, pgvector, persistent disk, and an AI gateway that needs no API key.",
   "keywords": [
     "cloudgrid",
