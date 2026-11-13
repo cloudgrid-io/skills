@@ -1,0 +1,20 @@
+{
+  "name": "cloudgrid",
+  "displayName": "CloudGrid",
+  "version": "0.15.2",
+  "description": "Deploy or publish a web page or app: CloudGrid plugs it and gives you a live URL. Apps can use managed MongoDB, Redis, pgvector, disk, and an AI gateway that needs no API key.",
+  "author": {
+    "name": "CloudGrid",
+    "email": "support@cloudgrid.io"
+  },
+  "homepage": "https://cloudgrid.io",
+  "repository": "https://github.com/cloudgrid-io/skills",
+  "license": "MIT",
+  "keywords": ["deploy", "publish", "hosting", "web app", "static site", "html", "database", "mongodb", "redis", "pgvector", "ai gateway", "remote mcp", "cloudgrid"],
+  "logo": "assets/icon.png",
+  "mcpServers": {
+    "cloudgrid": {
+      "url": "https://mcp.cloudgrid.io/mcp"
+    }
+  }
+}

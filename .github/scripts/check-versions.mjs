@@ -8,7 +8,7 @@
 //
 //   plugins/cloudgrid/.claude-plugin/plugin.json  <- what ships (marketplace)
 //   VERSION, package.json                        <- mirrors
-//   .codex-plugin/plugin.json, .cursor-plugin/plugin.json  <- mirrors
+//   .codex-plugin/plugin.json, plugins/cloudgrid/.cursor-plugin/plugin.json  <- mirrors
 //   gemini-extension.json                        <- mirror (Gemini CLI)
 //   plugins/cloudgrid/skills/*/SKILL.md          <- per-skill semver, independent
 //
@@ -59,7 +59,7 @@ if (pkg.version !== source) {
 }
 
 // Codex, Cursor and Gemini CLI manifests must track the same version.
-for (const manifest of [".codex-plugin/plugin.json", ".cursor-plugin/plugin.json", "gemini-extension.json"]) {
+for (const manifest of [".codex-plugin/plugin.json", "plugins/cloudgrid/.cursor-plugin/plugin.json", "gemini-extension.json"]) {
   try {
     const m = json(manifest);
     if (m.version !== source) {
