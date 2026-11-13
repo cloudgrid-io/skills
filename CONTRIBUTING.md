@@ -89,7 +89,7 @@ These guards run in CI. All must pass before merge.
   allowlist must match the one in `cloudgrid-io/mcp`; `corpus-drift` checks it.
 - `eval-content` -- behavioral content evals: yaml examples obey the platform
   contract; load-bearing teaching lines are present; banned patterns stay out;
-  the Gemini CLI manifest connects the same connector over `httpUrl` and its
+  the Gemini CLI manifest connects the same connector over `url` with `type: http` and its
   context file exists (`ci.yml`).
 - `template-python` -- installs each `semantic-search` Python service's
   pinned `requirements.txt` on Python 3.12, imports every module in its `app`

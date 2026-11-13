@@ -204,16 +204,18 @@ for (const file of YAML_SOURCES) {
 // ---------------------------------------------------------------------------
 // 3. The Gemini CLI extension connects the same connector as the Claude
 //    plugin, over streamable HTTP, and loads skill text that exists
-//    (skills#177). Gemini CLI reads `httpUrl` as streamable HTTP and `url` as
-//    SSE, so a copied `url` key would pick the wrong transport.
+//    (skills#177). Gemini CLI reads `url` with `"type": "http"` as streamable
+//    HTTP; `url` without a type falls back to SSE, and `httpUrl` is deprecated
+//    (its validator warns), so the manifest must carry exactly url + type http.
 // ---------------------------------------------------------------------------
 {
   const GEMINI = "gemini-extension.json";
   const claudeUrl = JSON.parse(read("plugins/cloudgrid/.claude-plugin/plugin.json")).mcpServers?.cloudgrid?.url;
   const gemini = JSON.parse(read(GEMINI));
   const server = gemini.mcpServers?.cloudgrid ?? {};
-  if (server.httpUrl !== claudeUrl) fail(GEMINI, `mcpServers.cloudgrid.httpUrl (${server.httpUrl}) != the Claude plugin connector (${claudeUrl})`);
-  if ("url" in server) fail(GEMINI, "mcpServers.cloudgrid has a url key, which Gemini CLI reads as SSE; use httpUrl only");
+  if (server.url !== claudeUrl) fail(GEMINI, `mcpServers.cloudgrid.url (${server.url}) != the Claude plugin connector (${claudeUrl})`);
+  if (server.type !== "http") fail(GEMINI, `mcpServers.cloudgrid.type is ${JSON.stringify(server.type)}; it must be "http" (without it Gemini CLI reads url as SSE)`);
+  if ("httpUrl" in server) fail(GEMINI, "mcpServers.cloudgrid has an httpUrl key, which Gemini CLI deprecates; use url with type http");
   const ctx = [gemini.contextFileName ?? []].flat();
   if (ctx.length === 0) fail(GEMINI, "contextFileName is missing");
   for (const f of ctx) {
