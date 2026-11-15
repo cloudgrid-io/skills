@@ -1,7 +1,7 @@
 {
   "name": "cloudgrid",
   "displayName": "CloudGrid",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "description": "Deploy or publish a web page or app: CloudGrid plugs it and gives you a live URL. Apps can use managed MongoDB, Redis, pgvector, disk, and an AI gateway that needs no API key.",
   "author": {
     "name": "CloudGrid",
